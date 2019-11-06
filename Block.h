@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Record.h"
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include "Record.h"
+#include "RecordBuffer.h"
 
 using namespace std;
 
