@@ -27,6 +27,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InputFileHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SequencedSet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testDriver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Record.h">
@@ -38,5 +47,19 @@
     <ClInclude Include="rbuffer1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InputFileHeader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SequencedSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="currentHeader.txt" />
+    <Text Include="tinysample.txt" />
+    <Text Include="us_postal_codes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="testBash.sh" />
   </ItemGroup>
 </Project>

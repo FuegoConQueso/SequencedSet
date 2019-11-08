@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
+#include "InputFileHeader.h"
 using namespace std;
 
 InputFileHeader::InputFileHeader()

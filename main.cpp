@@ -3,7 +3,7 @@
 #include <vector>
 #include "rbuffer1.h"
 
-int main()
+/*int main()
 {
 	 //set up the record sizes
 	 vector<tuple<string, int, Record::FieldType>> fieldInfos = vector<tuple<string, int, Record::FieldType>>();
@@ -28,4 +28,4 @@ int main()
 	 rec2 = r0.pack(rec);
 	 cout << rec2;
 	 return 0;
-}
+}*/

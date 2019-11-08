@@ -1,5 +1,16 @@
 #include "Block.h"
 
+int Block::size;
+
+int Block::getSize()
+{
+	 return size;
+}
+
+void Block::setSize(int size)
+{
+	 Block::size = size;
+}
 
 Block::Block() {
 	 records = vector<Record>();
@@ -22,7 +33,7 @@ vector<string> Block::pack() {
 	 vector<string> packed = vector<string>();
 	 packed.push_back(to_string(blockNumber));
 	 packed.push_back(to_string(nextBlock));
-	 int size = blockSize();
+	 int size = recordCount();
 	 packed.push_back(to_string(size));
 
 	 for (int i = 0; i < size; i++) {
@@ -32,7 +43,7 @@ vector<string> Block::pack() {
 	 return packed;
 }
 
-int Block::blockSize() {
+int Block::recordCount() {
 	 return records.size();
 }
 

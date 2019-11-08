@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream> 
 #include "InputFileHeader.h"
+#include "SequencedSet.h"
 using namespace std;
 
 SequencedSet::SequencedSet(){

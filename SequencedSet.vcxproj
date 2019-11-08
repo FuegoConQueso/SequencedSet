@@ -124,14 +124,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="InputFileHeader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
+    <ClCompile Include="SequencedSet.cpp" />
+    <ClCompile Include="testDriver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="InputFileHeader.h" />
     <ClInclude Include="rbuffer1.h" />
     <ClInclude Include="Record.h" />
+    <ClInclude Include="SequencedSet.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="currentHeader.txt" />
+    <Text Include="tinysample.txt" />
+    <Text Include="us_postal_codes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="testBash.sh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
