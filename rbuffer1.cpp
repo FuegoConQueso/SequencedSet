@@ -50,7 +50,7 @@ vector<string> recordBuffer::unpack()
 	{
 			string subs1, subs2;
 			int beginPos = 0;
-			subs1 = record.substr(position, Record::getFieldSize());
+			subs1 = record.substr(position, Record::getFieldSize(i));
 			if(i == 0 || i == 4 || i == 5)
 			{
 				erasePos = subs1.find_first_not_of(" ");
@@ -62,7 +62,7 @@ vector<string> recordBuffer::unpack()
 			else
 			{
 				erasePos = subs1.find_last_of("abcdefghijklmnopqrstuvwxz");
-				int fieSize = Record::getFieldSize();
+				int fieSize = Record::getFieldSize(i);
 				int endRead = erasePos - fieSize;
 				erasePos += 1;
 				subs1.erase(erasePos, endRead);	
