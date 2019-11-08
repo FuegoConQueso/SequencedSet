@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
   </ItemGroup>
   <ItemGroup>
