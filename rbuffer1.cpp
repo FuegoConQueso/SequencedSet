@@ -62,7 +62,8 @@ vector<string> recordBuffer::unpack()
 			else
 			{
 				erasePos = subs1.find_last_of("abcdefghijklmnopqrstuvwxz");
-				int endRead = erasePos - fas[i];
+				int fieSize = Record::getFieldSize();
+				int endRead = erasePos - fieSize;
 				erasePos += 1;
 				subs1.erase(erasePos, endRead);	
 				recFields2.push_back(subs1);
