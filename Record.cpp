@@ -1,9 +1,10 @@
 #include "Record.h"
 
+vector<tuple<string, int, Record::FieldType>> Record::fieldInfo;
 
-void Record::setFieldInfo(vector<tuple<string, int, FieldType>> fieldInfo)
+void Record::setFieldInfo(vector<tuple<string, int, Record::FieldType>> fieldInfo)
 {
-	 Record::fieldInfo = fieldInfo;
+	 Record::fieldInfo = vector<tuple< string, int, Record::FieldType>>(fieldInfo);
 }
 
 string Record::getFieldName(int index)

@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "Record.h"
-#include "RecordBuffer.h"
+#include "rbuffer1.h"
 
 using namespace std;
 

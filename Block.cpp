@@ -26,9 +26,10 @@ vector<string> Block::pack() {
 	 packed.push_back(to_string(size));
 
 	 for (int i = 0; i < size; i++) {
-		  packed.push_back(RecordBuffer.buffer(records[i].pack()));
+		  recordBuffer rb = recordBuffer();
+		  packed.push_back(rb.pack(records[i].pack()));
 	 }
-
+	 return packed;
 }
 
 int Block::blockSize() {
@@ -37,12 +38,13 @@ int Block::blockSize() {
 
 void Block::unpack(vector<string> packedBlock)
 {
-	 int size = packedBlock.size;
+	 int size = packedBlock.size();
 	 blockNumber = stoi(packedBlock[0]);
 	 nextBlock = stoi(packedBlock[1]);
 	 //skips reading size
 	 for (int i = 3; i < size; i++) {
+		  recordBuffer rb = recordBuffer();
 		  //unbuffers, and then uses that to construct a new record which is placed at the end
-		  records.emplace_back(RecordBuffer.unbuffer(packedBlock[i]));
+		  //records.emplace_back(rb.unpack(packedBlock[i]));
 	 }
 }

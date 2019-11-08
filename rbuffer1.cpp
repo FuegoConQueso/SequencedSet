@@ -1,31 +1,18 @@
-#include <string>
-#include <iostream>
-#include <vector>
-#include "Record.h"
-using namespace std;
-
-class recordBuffer
-{
-	protected:
-		string record;
-	public:
-		recordBuffer(){};
-		string pack(vector<string> f1, vector<int> fs);
-};
+#include "rbuffer1.h"
 
 /*f1 is a vector containing the fields in the order of zip, placename, state, county, latitude, and longitude.
 fs in a vector containing the maximum size of each field in the same order as f1*/
-string recordBuffer::pack(vector<string> f1, vector<int> fs)
+string recordBuffer::pack(vector<string> f1)
 {
 	string f2;
 	for(int index = 0; index < f1.size(); index++)
 	{
 		f2.clear();
 		f2 = f1[index];		//the field in the vector is copied to string f2
-		if(f2.size() < fs[index])	
+		if(f2.size() < Record::getFieldSize(index))
 		{
 			int fieldS1 = f2.size();
-			int fieldMS = Record.;
+			int fieldMS = Record::getFieldSize(index);
 			/* obtain the difference between the size of the field 
 			and the maximum size of the field*/
 			fieldMS -= fieldS1;
@@ -52,26 +39,3 @@ string recordBuffer::pack(vector<string> f1, vector<int> fs)
 	f1.clear();
 	return record;
 }
-
-int main()
-{
-	vector<string> rec;
-	vector<int> fieldSize;
-	fieldSize.push_back(6);
-	fieldSize.push_back(31);
-	fieldSize.push_back(2);
-	fieldSize.push_back(36);
-	fieldSize.push_back(9);
-	fieldSize.push_back(10);
-	recordBuffer r0;
-	string rec2;
-	rec.push_back("1001");
-	rec.push_back("Agawam");
-	rec.push_back("NY");
-	rec.push_back("Hampden");
-	rec.push_back("42.0702");
-	rec.push_back("-72.6227");
-	rec2 = r0.pack(rec, fieldSize);
-	cout << rec2;
-	return 0;
-}	
