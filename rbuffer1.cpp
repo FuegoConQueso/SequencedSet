@@ -39,3 +39,35 @@ string recordBuffer::pack(vector<string> f1)
 	f1.clear();
 	return record;
 }
+
+vector<string> recordBuffer::unpack()
+{
+	int position = 0;
+	int erasePos = 0;
+	vector<string> recFields2;
+	for(int i = 0; i < numberOfFields; i++)
+	{
+			string subs1, subs2;
+			int beginPos = 0;
+			subs1 = record.substr(position, Record::getFieldSize());
+			if(i == 0 || i == 4 || i == 5)
+			{
+				erasePos = subs1.find_first_not_of(" ");
+				subs1.erase(beginPos, erasePos);
+				recFields2.push_back(subs1);
+			}
+			else if(i == 2)
+				recFields2.push_back(subs1);		
+			else
+			{
+				erasePos = subs1.find_last_of("abcdefghijklmnopqrstuvwxz");
+				int endRead = erasePos - fas[i];
+				erasePos += 1;
+				subs1.erase(erasePos, endRead);	
+				recFields2.push_back(subs1);
+			}
+			subs1.clear();
+			position = getFieldSize() + 1;
+	}
+	 return recFields2;
+}
