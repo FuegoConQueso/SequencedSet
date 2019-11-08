@@ -68,7 +68,7 @@ vector<string> recordBuffer::unpack()
 				recFields2.push_back(subs1);
 			}
 			subs1.clear();
-			position = getFieldSize() + 1;
+			position = getFieldSize();
 	}
 	 return recFields2;
 }
