@@ -40,6 +40,7 @@ string recordBuffer::pack(vector<string> f1)
 	return record;
 }
 
+//I havent tested this with the rest of the sequence set code
 vector<string> recordBuffer::unpack()
 {
 	int position = 0;
