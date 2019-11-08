@@ -1,0 +1,10 @@
+US Postal Codes
+HeaderSize: 180
+Record Size: 94
+Field Name  |   column range    |   type
+ZipCode |1-6| u_integer
+PlaceName |7-37| text
+State |38-39| text
+County |40-75| text
+Latitude |76-84| float
+Longitude |85-94| float
