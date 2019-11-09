@@ -19,5 +19,4 @@ class InputFileHeader {
 		int getRecordSize(){return recordSize;}
 };
 
-#include "InputFileHeader.cpp"
 #endif 

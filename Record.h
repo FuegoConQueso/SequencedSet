@@ -21,7 +21,7 @@ public:
 	 static string getFieldName(int index); //gets the name of the field at position index
 	 static int getFieldSize(int index); //gets the size of the field at position index
 	 static FieldType getFieldType(int index); //gets the FieldType of the field at position index
-	 static int getNumOfFields(int index); //returns the number of fields
+	 static int getNumOfFields(); //returns the number of fields
 
 	 //constructors
 	 Record(); //default constructor

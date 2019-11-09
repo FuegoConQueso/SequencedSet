@@ -9,6 +9,7 @@
 using namespace std;
 
 void InputFileHeaderReadTest(ifstream&);
+void BlockStructureTest();
 
 int main(int argc, char *argv[])
 {

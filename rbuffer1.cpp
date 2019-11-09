@@ -41,12 +41,12 @@ string recordBuffer::pack(vector<string> f1)
 }
 
 //I havent tested this with the rest of the sequence set code
-vector<string> recordBuffer::unpack()
+vector<string> recordBuffer::unpack(string record)
 {
 	int position = 0;
 	int erasePos = 0;
 	vector<string> recFields2;
-	for(int i = 0; i < numberOfFields; i++)
+	for(int i = 0; i < Record::getNumOfFields(); i++)
 	{
 			string subs1, subs2;
 			int beginPos = 0;
@@ -61,7 +61,7 @@ vector<string> recordBuffer::unpack()
 				recFields2.push_back(subs1);		
 			else
 			{
-				erasePos = subs1.find_last_of("abcdefghijklmnopqrstuvwxz");
+				erasePos = subs1.find_last_not_of(" ");
 				int fieSize = Record::getFieldSize(i);
 				int endRead = erasePos - fieSize;
 				erasePos += 1;
@@ -69,7 +69,7 @@ vector<string> recordBuffer::unpack()
 				recFields2.push_back(subs1);
 			}
 			subs1.clear();
-			position = getFieldSize();
+			position = Record::getFieldSize(i);
 	}
 	 return recFields2;
 }

@@ -9,8 +9,8 @@ class recordBuffer
 {
 protected:
 	 string record;
-	int something;
 public:
 	 recordBuffer() {};
 	 string pack(vector<string> f1);
+	 vector<string> unpack(string record);
 };

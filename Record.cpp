@@ -22,7 +22,7 @@ Record::FieldType Record::getFieldType(int index)
 	 return get<2>(fieldInfo[index]);
 }
 
-int Record::getNumOfFields(int index)
+int Record::getNumOfFields()
 {
 	 return fieldInfo.size();
 }

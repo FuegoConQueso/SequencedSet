@@ -15,5 +15,4 @@ class SequencedSet{
 
 };
 
-#include "SequencedSet.cpp"
 #endif

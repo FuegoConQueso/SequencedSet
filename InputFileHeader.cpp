@@ -30,7 +30,7 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	int count = 0;
 	while(inputFile >> dummyChar && inputFile.tellg() <= headerSize)
 	{
-		inputFile.seekg(-1, ios_base::cur);	
+		inputFile.seekg(-2, ios_base::cur);	
 		inputFile >> s1;
 		fieldNames.push_back(s1);
 		inputFile.seekg(2, ios_base::cur);
