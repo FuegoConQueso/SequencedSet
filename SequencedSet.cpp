@@ -1,10 +1,14 @@
 #include <iostream>
-#include <fstream> 
+#include <fstream>
+#include <string>
 #include "InputFileHeader.h"
 #include "SequencedSet.h"
+#include "Block.h"
 using namespace std;
 
 SequencedSet::SequencedSet(){
+	 blockCapacity = 4;
+	 blockInitialSize = 4 * 3 / 4;
 }
 
 SequencedSet::~SequencedSet(){
@@ -13,5 +17,56 @@ SequencedSet::~SequencedSet(){
 void SequencedSet::create(ifstream & inputFile){
 	InputFileHeader hfile;
 	hfile.readHeader(inputFile);
+}
+
+void SequencedSet::populate(ifstream& inputFile) {
+	 ofstream outputFile("Storage.txt", ofstream::trunc | ofstream::out);
+	 int recordCount = 0;
+	 int blockCount = 0;
+	 Block tempBlock;
+	 vector<Record> tempRecords;
+	 for (std::string line; getline(inputFile, line); )
+	 {
+		  //decompose into a record, create Record
+		  tempRecords[recordCount] = populateRecord(line);
+		  recordCount++;
+		  //if we have reached the desired number of records in the block, create the block
+		  if (recordCount == blockInitialSize) {
+				//create a block, which will be block number blockCount, with a pointer to Block blockCount+1
+				tempBlock = Block(blockCount, blockCount + 1, tempRecords);
+				blockCount++;
+				//pack the block for output
+				string output = BlockBuffer.pack();
+				outputFile << output;
+		  }
+	 }
+	 outputFile.close();
+	 
+}
+
+Record populateRecord(string line) {
+	 int position = 0;
+	 int erasePos = 0;
+	 vector<string> recFields2;
+	 for (int i = 0; i < Record::getNumOfFields(); i++)
+	 {
+		  string subs1, subs2;
+		  int beginPos = 0;
+		  subs1 = line.substr(position, Record::getFieldSize(i));
+		  //erase leading whitespace
+		  erasePos = subs1.find_first_not_of(" ");
+		  subs1.erase(beginPos, erasePos);
+		  //erase trailing whitespace
+		  erasePos = subs1.find_last_not_of(" ");
+		  int fieSize = Record::getFieldSize(i);
+		  int endRead = erasePos - fieSize;
+		  erasePos += 1;
+		  subs1.erase(erasePos, endRead);
+		  //add field to the record
+		  recFields2.push_back(subs1);
+		  //positions pointer for next call
+		  position += Record::getFieldSize(i);
+	 }
+	 return Record(recFields2);
 }
 

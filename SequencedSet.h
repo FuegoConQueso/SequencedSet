@@ -5,13 +5,15 @@
 using namespace std;
 
 class SequencedSet{
-
 	private:
+		 int blockCapacity;
+		 int blockInitialSize;
 		int headerSize;
 	public:
 		SequencedSet();
 		~SequencedSet();
-		void create(ifstream & inputFile);
+		void create(ifstream& inputFile);
+		void populate(ifstream& inputFile);
 
 };
 

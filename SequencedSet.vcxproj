@@ -130,9 +130,11 @@
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="SequencedSet.cpp" />
     <ClCompile Include="testDriver.cpp" />
+    <ClCompile Include="BlockBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BlockBuffer.h" />
     <ClInclude Include="InputFileHeader.h" />
     <ClInclude Include="rbuffer1.h" />
     <ClInclude Include="Record.h" />

@@ -3,6 +3,7 @@
 #include "InputFileHeader.h"
 #include <fstream>
 #include <tuple>
+#include "SequencedSet.h"
 #include "Record.h"
 #include "Block.h"
 
@@ -50,6 +51,8 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 	header1.readHeader(inputFile);
 	cout << "Header size is: " << header1.getHeaderSize() << endl;
 	cout << "Record size is: " << header1.getRecordSize() << endl;
+	SequencedSet seqSet = SequencedSet();
+	seqSet.populate(inputFile);
 
 }
 
