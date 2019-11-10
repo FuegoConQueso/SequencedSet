@@ -1,10 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "InputFileHeader.h"
 #include "SequencedSet.h"
-#include "Block.h"
-using namespace std;
+
 
 SequencedSet::SequencedSet(){
 	 blockCapacity = 4;
@@ -25,6 +20,8 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 int blockCount = 0;
 	 Block tempBlock;
 	 vector<Record> tempRecords;
+	 string etc;
+	 getline(inputFile, etc);
 	 for (std::string line; getline(inputFile, line); )
 	 {
 		  //decompose into a record, create Record
@@ -36,7 +33,7 @@ void SequencedSet::populate(ifstream& inputFile) {
 				tempBlock = Block(blockCount, blockCount + 1, tempRecords);
 				blockCount++;
 				//pack the block for output
-				string output = BlockBuffer.pack();
+				string output = BlockBuffer::pack(tempBlock.pack());
 				outputFile << output;
 		  }
 	 }
@@ -44,7 +41,7 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 
 }
 
-Record populateRecord(string line) {
+Record SequencedSet::populateRecord(string line) {
 	 int position = 0;
 	 int erasePos = 0;
 	 vector<string> recFields2;

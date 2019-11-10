@@ -21,6 +21,11 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 	 }
 }
 
+string BlockBuffer::pack(vector<string> recbloc1) {
+	 int callback = 0;
+	 return pack(recbloc1, callback);
+}
+
 /*
 int main()
 {
