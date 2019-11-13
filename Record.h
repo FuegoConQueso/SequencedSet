@@ -24,6 +24,7 @@ public:
 	 static int getNumOfFields(); //returns the number of fields
 	 static FieldType toFieldType(string name); //takes a string and converts it to a FieldType
 	 static string fieldTypeToString(FieldType); //takes a FieldType and converts it to a string
+	 static FieldType getKeyType();
 	 static int getRecordSize(); //returns the size of a single Record (in chars)
 
 	 //constructors
@@ -32,7 +33,7 @@ public:
 
 	 //methods
 	 vector<string> pack(); /*returns a vector of strings that the buffer class can prep for writing. */
-	 
+	 string getField(int index); //returns the value of a specific field
 	 
 private:
 	 //static data members

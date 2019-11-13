@@ -18,6 +18,7 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 ofstream outputFile("Storage.txt", ofstream::trunc | ofstream::out);
 	 int recordCount = 0;
 	 int blockCount = 0;
+	 index = Index();
 	 Block tempBlock;
 	 vector<Record> tempRecords = vector<Record>();
 	 string etc;
@@ -38,11 +39,16 @@ void SequencedSet::populate(ifstream& inputFile) {
 				//pack the block for output
 				string output = BlockBuffer::pack(tempBlock.pack());
 				outputFile << output;
+				// create the index entry for this block
+				string indexKey = tempRecords.back().getField(0);
+				int indexBlockNum = tempBlock.getBlockNumber();
+				index.addIndex(indexKey, indexBlockNum);
 				//reset recordCount
 				recordCount = 0;
 				tempRecords.clear();
 		  }
 	 }
+	 cout << index.pack();
 	 outputFile.close();
 }
 

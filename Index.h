@@ -3,6 +3,7 @@
 #include <tuple>
 #include <string>
 #include "Record.h"
+#include "IndexBuffer.h"
 using namespace std;
 
 class Index
@@ -12,6 +13,7 @@ private:
 	 vector<pair<string, int>> indices;
 public:
 	 Index();
+	 string pack();
 	 void addIndex(string key, int blockNum);
 };
 

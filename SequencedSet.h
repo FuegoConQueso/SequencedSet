@@ -7,15 +7,19 @@
 #include <string>
 #include "InputFileHeader.h"
 #include "Block.h"
+#include "Index.h"
+#include "IndexBuffer.h"
 #include "Record.h"
 #include "BlockBuffer.h"
 using namespace std;
 
 class SequencedSet{
 	private:
-		 int blockCapacity;
-		 int blockInitialSize;
-		int headerSize;
+		int blockCapacity; //maximum number of records in a block
+		int blockInitialSize; //initial number of records in a block
+		int headerSize; //size of the header in characters
+		Block block; //the currently open block (if any)
+		Index index; //the index of blocks
 
 		Record populateRecord(string line);
 	public:
@@ -24,7 +28,7 @@ class SequencedSet{
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
 
-
+		Record search(string key);
 };
 
 #endif

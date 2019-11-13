@@ -1,7 +1,8 @@
 #pragma once
-#include "Index.h"
 #include <string>
 #include <vector>
+#include <iostream>
+#include <sstream>
 #include "Record.h"
 #include "BlockBuffer.h"
 
@@ -13,5 +14,6 @@ protected:
 	 static const int blockNumSize = 6;
 public:
 	 static string pack(vector<pair<string, int>> indices, string fieldType);
+	 static vector<pair<string, int>> unpack(string packed, string fieldType);
 };
 

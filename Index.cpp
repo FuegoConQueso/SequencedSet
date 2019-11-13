@@ -6,6 +6,11 @@ Index::Index()
 	 keyType = Record::getFieldType(0);
 }
 
+string Index::pack()
+{
+	 return IndexBuffer::pack(indices,Record::fieldTypeToString(keyType));
+}
+
 void Index::addIndex(string key, int blockNum)
 {
 	 indices.push_back(make_pair(key, blockNum));

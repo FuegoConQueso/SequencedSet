@@ -59,6 +59,11 @@ string Record::fieldTypeToString(FieldType type)
 	 }
 }
 
+Record::FieldType Record::getKeyType()
+{
+	 return getFieldType(0);
+}
+
 int Record::getRecordSize()
 {
 	 int size = 0;
@@ -82,6 +87,11 @@ Record::Record(vector<string> fields)
 vector<string> Record::pack()
 {
 	 return fields;
+}
+
+string Record::getField(int index)
+{
+	 return fields[index];
 }
 
 /* code we might need to use? not sure
