@@ -13,31 +13,47 @@ InputFileHeader::InputFileHeader()
 
 
 void InputFileHeader::readHeader(ifstream &inputFile){
+	char dummyChar;
 	string headerSizeString;
 	string recordSizeString;
 	string s1, s2;
-	int num1, num2;
-	inputFile.seekg(27, ios_base::beg);
+	int num1;
+	int num2;
+	//inputFile.seekg(27, ios_base::beg);
+	for (int i = 0; i < 24; i++)
+	{
+		inputFile >> dummyChar;
+	}
 	inputFile >> headerSizeString;
-	headerSize = stoi(headerSizeString);
-	inputFile.seekg(13, ios_base::cur);
+	//inputFile.seekg(10, ios_base::cur);
+	for (int i = 0; i < 11; i++)
+	{
+		inputFile >> dummyChar;
+	}
 	inputFile >> recordSizeString;
+	//inputFile.seekg(36, ios_base::cur);
+	for (int i = 0; i < 26; i++)
+	{
+		inputFile >> dummyChar;
+	}
+	cout << "Header size string output: " << headerSizeString << endl;
+	cout << "Record size string output: " << recordSizeString << endl;
+	cout << inputFile.tellg() << endl;
 	recordSize = stoi(recordSizeString);
-	inputFile.seekg(41, ios_base::cur);
+	headerSize = stoi(headerSizeString);
 	
 	//While loop for reading ANY subsequent fields
-	char dummyChar;
 	int count = 0;
-	while(inputFile >> dummyChar && inputFile.tellg() <= headerSize)
+	while(inputFile.tellg() <= headerSize)
 	{
-		inputFile.seekg(-2, ios_base::cur);	
 		inputFile >> s1;
 		fieldNames.push_back(s1);
-		inputFile.seekg(2, ios_base::cur);
+		//inputFile.seekg(-1, ios_base::cur);
+		inputFile >> dummyChar;
 		inputFile >> num1;
-		inputFile.seekg(1, ios_base::cur);
+		inputFile >> dummyChar;
 		inputFile >> num2;
-		inputFile.seekg(2, ios_base::cur);
+		inputFile >> dummyChar;
 		inputFile >> s2;
 		fieldTypes.push_back(s2);
 		fieldSizes.push_back(num2-num1+1);
