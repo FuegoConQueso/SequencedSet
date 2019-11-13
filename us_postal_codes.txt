@@ -1,5 +1,5 @@
 US Postal Codes
-HeaderSize: 180
+HeaderSize: 220
 Record Size: 94
 Field Name  |   column range    |   type
 ZipCode |1-6| u_integer
