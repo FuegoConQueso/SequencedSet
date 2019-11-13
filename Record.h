@@ -16,12 +16,15 @@ public:
 		  FLOAT
 	 };
 
-	 //static data members
+	 //static methods
 	 static void setFieldInfo(vector<tuple<string, int, FieldType>> fieldInfo); //sets the info for each field
 	 static string getFieldName(int index); //gets the name of the field at position index
 	 static int getFieldSize(int index); //gets the size of the field at position index
 	 static FieldType getFieldType(int index); //gets the FieldType of the field at position index
 	 static int getNumOfFields(); //returns the number of fields
+	 static FieldType toFieldType(string name); //takes a string and converts it to a FieldType
+	 static string fieldTypeToString(FieldType); //takes a FieldType and converts it to a string
+	 static int getRecordSize(); //returns the size of a single Record (in chars)
 
 	 //constructors
 	 Record(); //default constructor

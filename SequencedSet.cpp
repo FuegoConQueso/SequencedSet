@@ -19,13 +19,16 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 int recordCount = 0;
 	 int blockCount = 0;
 	 Block tempBlock;
-	 vector<Record> tempRecords;
+	 vector<Record> tempRecords = vector<Record>();
 	 string etc;
+	 //deal with garbage
+	 getline(inputFile, etc);
 	 getline(inputFile, etc);
 	 for (std::string line; getline(inputFile, line); )
 	 {
+		  
 		  //decompose into a record, create Record
-		  tempRecords[recordCount] = populateRecord(line);
+		  tempRecords.push_back(populateRecord(line));
 		  recordCount++;
 		  //if we have reached the desired number of records in the block, create the block
 		  if (recordCount == blockInitialSize) {
@@ -35,10 +38,12 @@ void SequencedSet::populate(ifstream& inputFile) {
 				//pack the block for output
 				string output = BlockBuffer::pack(tempBlock.pack());
 				outputFile << output;
+				//reset recordCount
+				recordCount = 0;
+				tempRecords.clear();
 		  }
 	 }
 	 outputFile.close();
-	 
 }
 
 Record SequencedSet::populateRecord(string line) {

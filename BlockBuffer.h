@@ -10,7 +10,7 @@ using namespace std;
 static class BlockBuffer
 {
 protected:
-	 static const int nextBlockSize = 3;
+	 static const int nextBlockSize = 6;
 	 static const int recordCountSize = 3;
 public:
 	 //this works with the hard coded stuff at the moment
@@ -20,4 +20,7 @@ public:
 	 //printing produces an output with no breaks. no new line after a record
 	 static string pack(vector<string> recbloc1, int& place);
 	 static string pack(vector<string> recbloc1);
+
+	 static int getBlockHeaderSize();
+	 static int getBlockSize();
 };

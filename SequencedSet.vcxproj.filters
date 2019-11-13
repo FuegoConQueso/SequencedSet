@@ -39,6 +39,18 @@
     <ClCompile Include="BlockBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SqSetFileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileIterator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Index.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Record.h">
@@ -59,11 +71,24 @@
     <ClInclude Include="BlockBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SqSetFileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileIterator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Index.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="currentHeader.txt" />
     <Text Include="tinysample.txt" />
     <Text Include="us_postal_codes.txt" />
+    <Text Include="Storage.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="testBash.sh" />

@@ -3,7 +3,7 @@
 string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 
 	 {
-		  string strb;
+		  string strb = "\n"; //new block starts with a newline
 		  //tell the calling function where this block is located
 		  place = stoi(recbloc1[0]);
 		  //pad the nextBlock
@@ -14,7 +14,8 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 		  for (int f = recbloc1[2].size(); f < recordCountSize; f++) {
 				recbloc1[2].append(" ");
 		  }
-		  for (int i = 0; i < recbloc1.size(); i++) {
+		  // fill in the block with the nextblock, count, and records
+		  for (int i = 1; i < recbloc1.size(); i++) {
 				strb.append(recbloc1[i]);
 		  }
 		  return strb;
@@ -24,6 +25,19 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 string BlockBuffer::pack(vector<string> recbloc1) {
 	 int callback = 0;
 	 return pack(recbloc1, callback);
+}
+
+int BlockBuffer::getBlockHeaderSize() {
+	 int blockHeaderSize = nextBlockSize + recordCountSize;
+	 return blockHeaderSize;
+}
+
+int BlockBuffer::getBlockSize()
+{
+	 string newLine = "\n";
+	 int RecordSize = Record::getRecordSize();
+	 int blockSize = newLine.size() + RecordSize + getBlockHeaderSize();
+	 return blockSize;
 }
 
 /*

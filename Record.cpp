@@ -27,6 +27,47 @@ int Record::getNumOfFields()
 	 return fieldInfo.size();
 }
 
+Record::FieldType Record::toFieldType(string name)
+{
+	 if (name == "text") {
+		  return FieldType::TEXT;
+	 }
+	 else if (name == "u_integer") {
+		  return FieldType::U_INTEGER;
+	 }
+	 else if (name == "float") {
+		  return FieldType::FLOAT;
+	 }
+	 else {
+		  return FieldType();
+	 }
+}
+
+string Record::fieldTypeToString(FieldType type)
+{
+	 if (type == FieldType::TEXT) {
+		  return "text";
+	 }
+	 else if (type == FieldType::U_INTEGER) {
+		  return "u_integer";
+	 }
+	 else if (type == FieldType::FLOAT) {
+		  return "float";
+	 }
+	 else {
+		  return string();
+	 }
+}
+
+int Record::getRecordSize()
+{
+	 int size = 0;
+	 for (int i = 0; i < fieldInfo.size(); i++) {
+		  size += get<1>(fieldInfo[i]);
+	 }
+	 return size;
+}
+
 
 Record::Record()
 {
