@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 {
 	//ifstream inputFile("us_postal_codes.txt");
 	bool createCheck;
+	bool blockStructTest;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -25,6 +26,10 @@ int main(int argc, char *argv[])
 				{
 					createCheck = true;
 					break;
+				}
+			case 'b':
+				{
+					blockStructTest = true;
 				}
 			default:
 				{
@@ -39,17 +44,18 @@ int main(int argc, char *argv[])
 	{
 		InputFileHeaderReadTest(inputFile);
 	}
-	BlockStructureTest();
+	if (blockStructTest == true)
+		BlockStructureTest();
 	cin.get();
 	return 0;
 }
 
 void InputFileHeaderReadTest(ifstream &inputFile)
 {
-	InputFileHeader header1;	
-	header1.readHeader(inputFile);
-	cout << "Header size is: " << header1.getHeaderSize() << endl;
-	cout << "Record size is: " << header1.getRecordSize() << endl;
+	InputFileHeader* header1 = new InputFileHeader;	
+	header1->readHeader(inputFile);
+	cout << "Header size is: " << header1->getHeaderSize() << endl;
+	cout << "Record size is: " << header1->getRecordSize() << endl;
 
 }
 
