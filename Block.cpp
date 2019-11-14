@@ -47,6 +47,11 @@ int Block::recordCount() {
 	 return records.size();
 }
 
+int Block::getBlockNumber()
+{
+	 return blockNumber;
+}
+
 void Block::unpack(vector<string> packedBlock)
 {
 	 int size = packedBlock.size();

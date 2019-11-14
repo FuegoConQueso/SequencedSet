@@ -124,22 +124,35 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="FileIterator.cpp" />
+    <ClCompile Include="Header.cpp" />
+    <ClCompile Include="Index.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputFileHeader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="SequencedSet.cpp" />
+    <ClCompile Include="SqSetFileManager.cpp" />
     <ClCompile Include="testDriver.cpp" />
+    <ClCompile Include="BlockBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="BlockBuffer.h" />
+    <ClInclude Include="FileIterator.h" />
+    <ClInclude Include="Header.h" />
+    <ClInclude Include="Index.h" />
+    <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputFileHeader.h" />
     <ClInclude Include="rbuffer1.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="SequencedSet.h" />
+    <ClInclude Include="SqSetFileManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="currentHeader.txt" />
+    <Text Include="Storage.txt" />
     <Text Include="tinysample.txt" />
     <Text Include="us_postal_codes.txt" />
   </ItemGroup>

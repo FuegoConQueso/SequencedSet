@@ -27,6 +27,52 @@ int Record::getNumOfFields()
 	 return fieldInfo.size();
 }
 
+Record::FieldType Record::toFieldType(string name)
+{
+	 if (name == "text") {
+		  return FieldType::TEXT;
+	 }
+	 else if (name == "u_integer") {
+		  return FieldType::U_INTEGER;
+	 }
+	 else if (name == "float") {
+		  return FieldType::FLOAT;
+	 }
+	 else {
+		  return FieldType();
+	 }
+}
+
+string Record::fieldTypeToString(FieldType type)
+{
+	 if (type == FieldType::TEXT) {
+		  return "text";
+	 }
+	 else if (type == FieldType::U_INTEGER) {
+		  return "u_integer";
+	 }
+	 else if (type == FieldType::FLOAT) {
+		  return "float";
+	 }
+	 else {
+		  return string();
+	 }
+}
+
+Record::FieldType Record::getKeyType()
+{
+	 return getFieldType(0);
+}
+
+int Record::getRecordSize()
+{
+	 int size = 0;
+	 for (int i = 0; i < fieldInfo.size(); i++) {
+		  size += get<1>(fieldInfo[i]);
+	 }
+	 return size;
+}
+
 
 Record::Record()
 {
@@ -41,6 +87,11 @@ Record::Record(vector<string> fields)
 vector<string> Record::pack()
 {
 	 return fields;
+}
+
+string Record::getField(int index)
+{
+	 return fields[index];
 }
 
 /* code we might need to use? not sure

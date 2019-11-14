@@ -22,9 +22,9 @@ string recordBuffer::pack(vector<string> f1)
 			will be added after the field is put into f2*/
 			if(index == 0 || index == 4 || index == 5)
 			{
-				for(int f = 0; f < fieldMS; f++)
-					f2.append(" ");
-				f2.append(f1[index]);
+				 for (int f = 0; f < fieldMS; f++)
+					  f2.append(" ");
+				 f2.append(f1[index]);
 			}
 			else
 			{

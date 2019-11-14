@@ -23,7 +23,7 @@ public:
 	 //methods
 	 vector<string> pack(); /*returns a vector of strings that the buffer class can prep for writing. Output is as follows: [blockNumber, nextBlock, blockSize, {Each record as a single string}] */
 	 int recordCount(); //returns the current number of records in the block (aka records.size)
-
+	 int getBlockNumber(); //returns the current block number
 private:
 	 //data members
 	 static int size; //the size (in number of characters) of a block 
