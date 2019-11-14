@@ -11,6 +11,7 @@
 #include "IndexBuffer.h"
 #include "Record.h"
 #include "BlockBuffer.h"
+#include "Header.h"
 using namespace std;
 
 class SequencedSet{
@@ -18,10 +19,10 @@ class SequencedSet{
 		int blockCapacity; //maximum number of records in a block
 		int blockInitialSize; //initial number of records in a block
 		int headerSize; //size of the header in characters
-		Block block; //the currently open block (if any)
 		Index index; //the index of blocks
 
 		Record populateRecord(string line);
+		Header header;
 	public:
 		SequencedSet();
 		~SequencedSet();

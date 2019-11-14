@@ -48,7 +48,6 @@ void SequencedSet::populate(ifstream& inputFile) {
 				tempRecords.clear();
 		  }
 	 }
-	 cout << index.pack();
 	 outputFile.close();
 }
 
