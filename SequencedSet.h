@@ -22,13 +22,13 @@ class SequencedSet{
 		Index index; //the index of blocks
 
 		Record populateRecord(string line);
-		Header header;
 	public:
 		SequencedSet();
 		~SequencedSet();
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
 
+		Header header;
 		Record search(string key);
 };
 
