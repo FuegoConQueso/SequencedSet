@@ -12,6 +12,7 @@ SequencedSet::~SequencedSet(){
 void SequencedSet::create(ifstream & inputFile){
 	InputFileHeader hfile;
 	hfile.readHeader(inputFile);
+	header.loadInput(hfile);
 }
 
 void SequencedSet::populate(ifstream& inputFile) {

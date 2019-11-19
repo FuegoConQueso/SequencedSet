@@ -11,6 +11,7 @@ InputFileHeader::InputFileHeader()
 {
 	headerSize = 0;
 	recordSize = 0;
+	filename = " ";
 }
 
 
@@ -46,7 +47,6 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	
 	//While loop for reading ANY subsequent fields
 	int count = 0;
-	vector<tuple<string, int, Record::FieldType>> recordFields = vector<tuple<string, int, Record::FieldType>>();
 	while(inputFile.tellg() <= headerSize)
 	{
 		inputFile >> s1;
@@ -65,5 +65,20 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 		cout << fieldNames[count] << "|" << fieldTypes[count]<< "|" << fieldSizes[count] << endl;
 		count++; 
 	}
-	Record::setFieldInfo(recordFields);
+	//Record::setFieldInfo(recordFields);
+}
+
+string InputFileHeader::getFieldName(int i)
+{
+	return get<0>(recordFields[i]);
+}
+
+int InputFileHeader::getFieldName(int i)
+{
+	return get<1>(recordFields[i]);
+}
+
+Record::FieldType InputFileHeader::getFieldName(int i)
+{
+	return get<2>(recordFields[i]);
 }
