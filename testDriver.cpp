@@ -11,12 +11,14 @@ using namespace std;
 
 void InputFileHeaderReadTest(ifstream&);
 void BlockStructureTest();
+void FileManagerTest();
 
 int main(int argc, char *argv[])
 {
 	//ifstream inputFile("us_postal_codes.txt");
 	bool createCheck;
 	bool blockStructTest;
+	bool fileManagerTest;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -31,6 +33,12 @@ int main(int argc, char *argv[])
 			case 'b':
 				{
 					blockStructTest = true;
+					break;
+				}
+			case 'f':
+	 			{
+				 fileManagerTest = true;
+				 break;
 				}
 			default:
 				{
@@ -47,6 +55,9 @@ int main(int argc, char *argv[])
 	}
 	if (blockStructTest == true)
 		BlockStructureTest();
+	if (fileManagerTest) {
+		 FileManagerTest();
+	}
 	cin.get();
 	return 0;
 }
@@ -62,16 +73,20 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 
 }
 
-void BlockStructureTest() {
+void FileManagerTest() {
 
+}
+
+void BlockStructureTest() {
+	 /*
 	 //set up the record sizes
-	 vector<tuple<string, int, Record::FieldType>> fieldInfos = vector<tuple<string, int, Record::FieldType>>();
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("ZIP", 6, Record::FieldType::U_INTEGER));
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("Place", 31, Record::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("State", 2, Record::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("County", 36, Record::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("Latitude", 9, Record::FieldType::FLOAT));
-	 fieldInfos.push_back(make_tuple<string, int, Record::FieldType>("Longitude", 10, Record::FieldType::FLOAT));
+	 vector<tuple<string, int, Header::FieldType>> fieldInfos = vector<tuple<string, int, Header::FieldType>>();
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("ZIP", 6, Header::FieldType::U_INTEGER));
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Place", 31, Header::FieldType::TEXT));
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("State", 2, Header::FieldType::TEXT));
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("County", 36, Header::FieldType::TEXT));
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Latitude", 9, Header::FieldType::FLOAT));
+	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Longitude", 10, Header::FieldType::FLOAT));
 	 Record::setFieldInfo(fieldInfos);
 
 	 //create the record buffer, test said buffer
@@ -86,4 +101,5 @@ void BlockStructureTest() {
 	 rec.push_back("-72.6227");
 	 rec2 = r0.pack(rec);
 	 cout << rec2;
+	 */
 }

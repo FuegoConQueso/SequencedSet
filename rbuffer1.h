@@ -5,12 +5,10 @@
 #include "Record.h"
 using namespace std;
 
-class recordBuffer
+
+static class recordBuffer
 {
-protected:
-	 string record;
 public:
-	 recordBuffer() {};
-	 string pack(vector<string> f1);
-	 vector<string> unpack(string record);
+	 static string pack(vector<string> f1, SequencedSet* parent);
+	 static vector<string> unpack(string record, SequencedSet* parent);
 };

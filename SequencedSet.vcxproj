@@ -126,6 +126,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="FileIterator.cpp" />
     <ClCompile Include="Header.cpp" />
+    <ClCompile Include="HeaderBuffer.cpp" />
     <ClCompile Include="Index.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputFileHeader.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="BlockBuffer.h" />
     <ClInclude Include="FileIterator.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="HeaderBuffer.h" />
     <ClInclude Include="Index.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputFileHeader.h" />

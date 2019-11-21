@@ -51,28 +51,33 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 outputFile.close();
 }
 
+Header* SequencedSet::sHeader()
+{
+	 return activeHeader;
+}
+
 Record SequencedSet::populateRecord(string line) {
 	 int position = 0;
 	 int erasePos = 0;
 	 vector<string> recFields2;
-	 for (int i = 0; i < Record::getNumOfFields(); i++)
+	 for (int i = 0; i < header.getNumOfFields(); i++)
 	 {
 		  string subs1, subs2;
 		  int beginPos = 0;
-		  subs1 = line.substr(position, Record::getFieldSize(i));
+		  subs1 = line.substr(position, header.getFieldSize(i));
 		  //erase leading whitespace
 		  erasePos = subs1.find_first_not_of(" ");
 		  subs1.erase(beginPos, erasePos);
 		  //erase trailing whitespace
 		  erasePos = subs1.find_last_not_of(" ");
-		  int fieSize = Record::getFieldSize(i);
+		  int fieSize = header.getFieldSize(i);
 		  int endRead = erasePos - fieSize;
 		  erasePos += 1;
 		  subs1.erase(erasePos, endRead);
 		  //add field to the record
 		  recFields2.push_back(subs1);
 		  //positions pointer for next call
-		  position += Record::getFieldSize(i);
+		  position += header.getFieldSize(i);
 	 }
 	 return Record(recFields2);
 }

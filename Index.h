@@ -9,7 +9,7 @@ using namespace std;
 class Index
 {
 private:
-	 Record::FieldType keyType;
+	 Header::FieldType keyType;
 	 vector<pair<string, int>> indices;
 public:
 	 Index();

@@ -1,10 +1,12 @@
 #include "rbuffer1.h"
+#include "SequencedSet.h"
 
 /*f1 is a vector containing the fields in the order of zip, placename, state, county, latitude, and longitude.
 fs in a vector containing the maximum size of each field in the same order as f1*/
-string recordBuffer::pack(vector<string> f1)
+string recordBuffer::pack(vector<string> f1, SequencedSet* parent)
 {
 	string f2;
+	string record;
 	for(int index = 0; index < f1.size(); index++)
 	{
 		f2.clear();
@@ -41,7 +43,7 @@ string recordBuffer::pack(vector<string> f1)
 }
 
 //I havent tested this with the rest of the sequence set code
-vector<string> recordBuffer::unpack(string record)
+vector<string> recordBuffer::unpack(string record, SequencedSet* parent)
 {
 	int position = 0;
 	int erasePos = 0;

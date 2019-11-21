@@ -4,6 +4,7 @@
 #include <string>
 #include <tuple>
 #include "InputFileHeader.h"
+#include "Header.h"
 #include "Record.h"
 using namespace std;
 
@@ -46,7 +47,7 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	
 	//While loop for reading ANY subsequent fields
 	int count = 0;
-	vector<tuple<string, int, Record::FieldType>> recordFields = vector<tuple<string, int, Record::FieldType>>();
+	vector<tuple<string, int, Header::FieldType>> recordFields = vector<tuple<string, int, Header::FieldType>>();
 	while(inputFile.tellg() <= headerSize)
 	{
 		inputFile >> s1;
@@ -60,10 +61,10 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 		inputFile >> s2;
 		fieldTypes.push_back(s2);
 		fieldSizes.push_back(num2-num1+1);
-		tuple<string, int, Record::FieldType> fieldInfo = make_tuple(s1, num2 - num1 + 1, Record::toFieldType(s2));
+		tuple<string, int, Header::FieldType> fieldInfo = make_tuple(s1, num2 - num1 + 1, Header::toFieldType(s2));
 		recordFields.push_back(fieldInfo);
 		cout << fieldNames[count] << "|" << fieldTypes[count]<< "|" << fieldSizes[count] << endl;
 		count++; 
 	}
-	Record::setFieldInfo(recordFields);
+	//Header::setFieldInfo(recordFields);
 }

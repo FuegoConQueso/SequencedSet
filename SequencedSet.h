@@ -22,11 +22,15 @@ class SequencedSet{
 		Index index; //the index of blocks
 
 		Record populateRecord(string line);
+
+		static Header* activeHeader;
 	public:
 		SequencedSet();
 		~SequencedSet();
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
+
+		static Header* sHeader();
 
 		Header header;
 		Record search(string key);

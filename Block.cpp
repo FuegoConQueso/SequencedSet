@@ -1,16 +1,6 @@
 #include "Block.h"
+#include "SequencedSet.h"
 
-int Block::size;
-
-int Block::getSize()
-{
-	 return size;
-}
-
-void Block::setSize(int size)
-{
-	 Block::size = size;
-}
 
 Block::Block() {
 	 records = vector<Record>();
@@ -37,8 +27,7 @@ vector<string> Block::pack() {
 	 packed.push_back(to_string(size));
 
 	 for (int i = 0; i < size; i++) {
-		  recordBuffer rb = recordBuffer();
-		  packed.push_back(rb.pack(records[i].pack()));
+		  packed.push_back(recordBuffer::pack(records[i].pack()));
 	 }
 	 return packed;
 }

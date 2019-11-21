@@ -1,4 +1,6 @@
 #include "BlockBuffer.h"
+#include "SequencedSet.h"
+
 
 string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 
@@ -6,14 +8,13 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 		  string strb = "\n"; //new block starts with a newline
 		  //tell the calling function where this block is located
 		  place = stoi(recbloc1[0]);
+		  Header* header = SequencedSet::sHeader();
 		  //pad the nextBlock
-		  for (int f = recbloc1[1].size(); f < nextBlockSize; f++) {
-				recbloc1[1].append(" ");
-		  }
+		  recbloc1[1] = header->pad(recbloc1[2], header->nextBlockSize());
+
 		  //pad the recordCount
-		  for (int f = recbloc1[2].size(); f < recordCountSize; f++) {
-				recbloc1[2].append(" ");
-		  }
+		  recbloc1[2] = parent->header.pad(recbloc1[2], parent->header.blockRecordCountSize());
+
 		  // fill in the block with the nextblock, count, and records
 		  for (int i = 1; i < recbloc1.size(); i++) {
 				strb.append(recbloc1[i]);
@@ -27,18 +28,6 @@ string BlockBuffer::pack(vector<string> recbloc1) {
 	 return pack(recbloc1, callback);
 }
 
-int BlockBuffer::getBlockHeaderSize() {
-	 int blockHeaderSize = nextBlockSize + recordCountSize;
-	 return blockHeaderSize;
-}
-
-int BlockBuffer::getBlockSize()
-{
-	 string newLine = "\n";
-	 int RecordSize = Record::getRecordSize();
-	 int blockSize = newLine.size() + RecordSize + getBlockHeaderSize();
-	 return blockSize;
-}
 
 /*
 int main()

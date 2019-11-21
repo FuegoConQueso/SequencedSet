@@ -5,6 +5,8 @@
 
 using namespace std;
 
+class SequencedSet;
+
 class Header
 {
 
@@ -17,13 +19,19 @@ public:
 	 };
 
 	 //constructor
-	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo,
-		  int bhNextBlockSize = 6, int bhRecordCountSize = 3, string headerSeperators = "\n",
-		  string hFieldSeperators = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
+	 Header();
+	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity = 4,
+		  int bhNextBlockSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
+		  string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
 
 	 //block size-related methods
 	 int blockSize(); //returns the size of a block (in chars)
 	 int blockHeaderSize(); // returns the size of the block header(in chars)
+	 int blockRecordCountSize(); //returns the size (in chars) of the record count field of the block header
+	 int nextBlockSize(); //returns the size (in chars) of the next block pointer in the block header
+
+	 //block-related methods
+	 int getBlockCapacity(); //returns the maximum number of records in a block
 	 
 	 //field-related methods
 	 string getFieldName(int index); //gets the name of the field at position index
@@ -32,11 +40,16 @@ public:
 	 int getNumOfFields(); //returns the number of fields
 
 	 //header field-related methods
-	 string getFieldSeparator(); //returns the string that is used as a field separator
+	 string getHFieldSeparator(); //returns the string that is used as a field separator between the header strings
+
+	 //header-related methods
+	 int getHeaderSize(); //returns the number of characters in the header
+	 string getHeaderSeperator(); //returns the seperator of the header's parts
+	 int getHeaderSizeSize(); //returns the size (in chars) of the header's size string
 	 
 	 //FieldType conversion methods
-	 FieldType toFieldType(string name); //takes a string and converts it to a FieldType
-	 string fieldTypeToString(FieldType); //takes a FieldType and converts it to a string
+	 static FieldType toFieldType(string name); //takes a string and converts it to a FieldType
+	 static string fieldTypeToString(FieldType type); //takes a FieldType and converts it to a string
 
 	 //key related methods
 	 FieldType getKeyType(); //returns the type of the primary key field
@@ -57,6 +70,8 @@ public:
 private:
 	 string name; //name of the sequenced set fill
 	 string fileName; //name of the file
+	 int headerSizeSize; //size (in chars) of the header's size field
+	 int blockCapacity; //the maximum number of records in a block
 	 int bhNextBlockSize; //size of the next block part of the block header in chars
 	 int bhRecordCountSize; //size of the block count part of the block header in chars
 	 string bhPrefix; //the prefix of the block header (added for readability, and ability to use getline() )

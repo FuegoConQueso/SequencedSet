@@ -54,6 +54,9 @@
     <ClCompile Include="Header.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HeaderBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Record.h">
@@ -87,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

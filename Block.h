@@ -11,10 +11,6 @@ using namespace std;
 class Block
 {
 public:
-	 //static methods
-	 static int getSize(); //returns the size (in characters) of a block
-	 static void setSize(int size); //sets the size (in characters) of a block
-
 	 //constructors
 	 Block(); //creates empty block, with records vector initialized (but empty).
 	 Block(vector<string> packedBlock); //creates a block from the string vector provided (post unbuffering)
@@ -26,7 +22,6 @@ public:
 	 int getBlockNumber(); //returns the current block number
 private:
 	 //data members
-	 static int size; //the size (in number of characters) of a block 
 	 int blockNumber; //what relative block position this block is.
 	 int nextBlock; //the relative block position of the next block.
 	 vector<Record> records; // a vector of the records contained in this block
