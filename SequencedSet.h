@@ -20,7 +20,6 @@ class SequencedSet{
 		int blockInitialSize; //initial number of records in a block
 		int headerSize; //size of the header in characters
 		Index index; //the index of blocks
-
 		Record populateRecord(string line);
 
 		static Header* activeHeader;
@@ -36,4 +35,5 @@ class SequencedSet{
 		Record search(string key);
 };
 
+#include "SequencedSet.cpp"
 #endif

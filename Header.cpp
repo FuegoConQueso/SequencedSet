@@ -1,5 +1,8 @@
 #include "Header.h"
 #include "SequencedSet.h";
+#include "InputFileHeader.h"
+
+using namespace std;
 
 int Header::getRecordSize()
 {
@@ -168,4 +171,18 @@ bool Header::isKeyType(FieldType type) {
 	 else {
 		  return false;
 	 }
+}
+
+
+Header::Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo)
+{
+
+}
+
+void Header::loadInput(InputFileHeader ifh)
+{
+    for (int i = 0; i < ifh.recordFields.get_size())
+    {
+        fieldInfo.push_back(make_tuple(getFieldName(i),getFieldName(i),getFieldName(i)));
+    }
 }
