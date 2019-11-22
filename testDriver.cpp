@@ -64,12 +64,12 @@ int main(int argc, char *argv[])
 
 void InputFileHeaderReadTest(ifstream &inputFile)
 {
-	InputFileHeader* header1 = new InputFileHeader;	
+	InputFileHeader* header1 = new InputFileHeader;
 	SequencedSet seqSet = SequencedSet();
 	seqSet.create(inputFile);
-	cout << "Header size is: " << header1->getHeaderSize() << endl;
-	cout << "Record size is: " << header1->getRecordSize() << endl;
+	cout << "populating...";
 	seqSet.populate(inputFile);
+	cout << "done";
 
 }
 

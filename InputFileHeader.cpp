@@ -43,7 +43,6 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	}
 	cout << "Header size string output: " << headerSizeString << endl;
 	cout << "Record size string output: " << recordSizeString << endl;
-	cout << inputFile.tellg() << endl;
 	recordSize = stoi(recordSizeString);
 	headerSize = stoi(headerSizeString);
 	
