@@ -1,11 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <tuple>
 #include "InputFileHeader.h"
-#include "Header.h"
-#include "Record.h"
 using namespace std;
 
 InputFileHeader::InputFileHeader()
@@ -15,6 +8,14 @@ InputFileHeader::InputFileHeader()
 	filename = " ";
 }
 
+vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
+	 vector<tuple<string, int, Header::FieldType>> fieldInfo = vector<tuple<string, int, Header::FieldType>>();
+	 for (int i = 0; i < recordFields.size(); i++)
+	 {
+		  fieldInfo.push_back(make_tuple(getFieldName(i), getFieldSize(i), getFieldType(i)));
+	 }
+	 return fieldInfo;
+}
 
 void InputFileHeader::readHeader(ifstream &inputFile){
 	char dummyChar;
@@ -61,7 +62,7 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 		inputFile >> s2;
 		fieldTypes.push_back(s2);
 		fieldSizes.push_back(num2-num1+1);
-		tuple<string, int, Record::FieldType> fieldInfo = make_tuple(s1, num2 - num1 + 1, Record::toFieldType(s2));
+		tuple<string, int, Header::FieldType> fieldInfo = make_tuple(s1, num2 - num1 + 1, Header::toFieldType(s2));
 		recordFields.push_back(fieldInfo);
 		cout << fieldNames[count] << "|" << fieldTypes[count]<< "|" << fieldSizes[count] << endl;
 		count++; 
@@ -74,12 +75,12 @@ string InputFileHeader::getFieldName(int i)
 	return get<0>(recordFields[i]);
 }
 
-int InputFileHeader::getFieldName(int i)
+int InputFileHeader::getFieldSize(int i)
 {
-	return get<1>(recordFields[i]);
+	 return fieldSizes[i];
 }
 
-Record::FieldType InputFileHeader::getFieldName(int i)
+Header::FieldType InputFileHeader::getFieldType(int i)
 {
-	return get<2>(recordFields[i]);
+	return Header::toFieldType(fieldTypes[i]);
 }

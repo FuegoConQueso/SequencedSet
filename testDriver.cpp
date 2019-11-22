@@ -16,9 +16,9 @@ void FileManagerTest();
 int main(int argc, char *argv[])
 {
 	//ifstream inputFile("us_postal_codes.txt");
-	bool createCheck;
-	bool blockStructTest;
-	bool fileManagerTest;
+	bool createCheck = false;
+	bool blockStructTest = false;
+	bool fileManagerTest = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -65,10 +65,10 @@ int main(int argc, char *argv[])
 void InputFileHeaderReadTest(ifstream &inputFile)
 {
 	InputFileHeader* header1 = new InputFileHeader;	
-	header1->readHeader(inputFile);
+	SequencedSet seqSet = SequencedSet();
+	seqSet.create(inputFile);
 	cout << "Header size is: " << header1->getHeaderSize() << endl;
 	cout << "Record size is: " << header1->getRecordSize() << endl;
-	SequencedSet seqSet = SequencedSet();
 	seqSet.populate(inputFile);
 
 }

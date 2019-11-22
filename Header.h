@@ -2,10 +2,10 @@
 #include <string>
 #include <vector>
 #include <tuple>
-#include "InputFileHeader.h"
 using namespace std;
 
 class SequencedSet;
+class InputFileHeader;
 
 class Header
 {
@@ -18,12 +18,10 @@ public:
 		  FLOAT
 	 };
 
-	 //default constructor
-	 Header(){;};
 	 //constructor
 	 Header();
 	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity = 4,
-		  int bhNextBlockSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
+		  int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
 		  string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
 
 	 //block size-related methods
@@ -70,22 +68,20 @@ public:
 	 string pad(string toPad, int paddedSize); //pads a string toPad (on the right), using padChar, to make it size paddedSize
 	 string unpad(string padded); //unpads a string on both left and right, removing padChar
 
-	 //load the input file header
-	 void loadInput(InputFileHeader ifh); //loads information from the input file header
 private:
 	 string name; //name of the sequenced set fill
 	 string fileName; //name of the file
 	 int headerSizeSize; //size (in chars) of the header's size field
 	 int blockCapacity; //the maximum number of records in a block
-	 int bhNextBlockSize; //size of the next block part of the block header in chars
+	 int blockNumSize; //size of the next block part of the block header in chars
 	 int bhRecordCountSize; //size of the block count part of the block header in chars
 	 string bhPrefix; //the prefix of the block header (added for readability, and ability to use getline() )
 	 string recordPrefix; //the prefix of the record block (added for readability and ability to use getline() )
 	 string headerSeperators; //the seperator of each part of the header header (added for readability and ability to use getline() )
 	 string hFieldSeperator; //the seperators of the field metadata in the header (added for readability and ability to use getline() )
-	 vector<tuple<std::string, int, Record::FieldType>> fieldInfo; //the field info, in form <name, size(in chars), type>, for each field
+	 vector<tuple<std::string, int, Header::FieldType>> fieldInfo; //the field info, in form <name, size(in chars), type>, for each field
 	 string padChar; //the character used for padding
-	 /* int bhNextBlockSize = 6; 
+	 /* int blockNumSize = 6; 
 	 int bhRecordCountSize = 3;
 	 string headerSeperators = "\n";
 	 string hFieldSeperators = "|"; 

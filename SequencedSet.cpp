@@ -1,9 +1,11 @@
 #include "SequencedSet.h"
 
+Header* SequencedSet::activeHeader;
 
 SequencedSet::SequencedSet(){
+
 	 blockCapacity = 4;
-	 blockInitialSize = 4 * 3 / 4;
+	 blockInitialSize = blockCapacity * 3 / 4;
 }
 
 SequencedSet::~SequencedSet(){
@@ -12,11 +14,13 @@ SequencedSet::~SequencedSet(){
 void SequencedSet::create(ifstream & inputFile){
 	InputFileHeader hfile;
 	hfile.readHeader(inputFile);
-	header.loadInput(hfile);
+	header = Header("Storage.txt", "Doesn't Read in File Name Yet", hfile.makeTuples(), this);
+	activeHeader = &header;
 }
 
 void SequencedSet::populate(ifstream& inputFile) {
-	 ofstream outputFile("Storage.txt", ofstream::trunc | ofstream::out);
+	 ofstream outputFile(header.getFileName(), ofstream::trunc | ofstream::out);
+	 outputFile << HeaderBuffer::pack(header);
 	 int recordCount = 0;
 	 int blockCount = 0;
 	 index = Index();

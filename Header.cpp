@@ -1,5 +1,4 @@
 #include "Header.h"
-#include "SequencedSet.h";
 #include "InputFileHeader.h"
 
 using namespace std;
@@ -78,7 +77,7 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 this->name = name;
 	 this->fieldInfo = fieldInfo;
 	 this->blockCapacity = blockCapacity;
-	 this->bhNextBlockSize = bhNextBlockSize;
+	 this->blockNumSize = bhNextBlockSize;
 	 this->bhRecordCountSize = bhRecordCountSize;
 	 this->headerSizeSize = headerSizeSize;
 	 this->headerSeperators = headerSeperators;
@@ -86,6 +85,7 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 this->bhPrefix = bhPrefix;
 	 this->recordPrefix = recordPrefix;
 	 this->padChar = padChar;
+	 
 }
 int Header::blockSize()
 {
@@ -101,7 +101,7 @@ int Header::blockRecordCountSize()
 }
 int Header::nextBlockSize()
 {
-	 return bhNextBlockSize;
+	 return blockNumSize;
 }
 int Header::getBlockCapacity()
 {
@@ -171,18 +171,4 @@ bool Header::isKeyType(FieldType type) {
 	 else {
 		  return false;
 	 }
-}
-
-
-Header::Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo)
-{
-
-}
-
-void Header::loadInput(InputFileHeader ifh)
-{
-    for (int i = 0; i < ifh.recordFields.get_size())
-    {
-        fieldInfo.push_back(make_tuple(getFieldName(i),getFieldName(i),getFieldName(i)));
-    }
 }

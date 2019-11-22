@@ -6,9 +6,9 @@
 using namespace std;
 
 
-static class recordBuffer
+class recordBuffer
 {
 public:
-	 static string pack(vector<string> f1, SequencedSet* parent);
-	 static vector<string> unpack(string record, SequencedSet* parent);
+	 static string pack(vector<string> f1);
+	 static vector<string> unpack(string record);
 };

@@ -13,7 +13,7 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 		  recbloc1[1] = header->pad(recbloc1[2], header->nextBlockSize());
 
 		  //pad the recordCount
-		  recbloc1[2] = parent->header.pad(recbloc1[2], parent->header.blockRecordCountSize());
+		  recbloc1[2] = header->pad(recbloc1[2], header->blockRecordCountSize());
 
 		  // fill in the block with the nextblock, count, and records
 		  for (int i = 1; i < recbloc1.size(); i++) {

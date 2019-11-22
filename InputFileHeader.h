@@ -4,7 +4,8 @@
 #include <vector>
 #include <tuple>
 #include <fstream>
-#include "Record.h"
+#include <string>
+#include "Header.h"
 using namespace std;
 
 class InputFileHeader {
@@ -23,9 +24,9 @@ class InputFileHeader {
 		void setFileName(string fn){filename = fn;}
 		string getFieldName(int i);
 		int getFieldSize(int i);
-		Record::FieldType getFieldType(int i);
-		vector<tuple<string, int, Record::FieldType>> recordFields;
+		Header::FieldType getFieldType(int i);
+		vector<tuple<string, int, Header::FieldType>> recordFields;
+		vector<tuple<string, int, Header::FieldType>> makeTuples();
 };
 
-#include "InputFileHeader.cpp"
 #endif 

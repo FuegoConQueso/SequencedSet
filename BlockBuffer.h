@@ -7,7 +7,7 @@
 
 using namespace std;
 
-static class BlockBuffer
+class BlockBuffer
 {
 public:
 	 //this works with the hard coded stuff at the moment

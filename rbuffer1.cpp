@@ -3,18 +3,19 @@
 
 /*f1 is a vector containing the fields in the order of zip, placename, state, county, latitude, and longitude.
 fs in a vector containing the maximum size of each field in the same order as f1*/
-string recordBuffer::pack(vector<string> f1, SequencedSet* parent)
+string recordBuffer::pack(vector<string> f1)
 {
+	Header* header = SequencedSet::sHeader();
 	string f2;
 	string record;
 	for(int index = 0; index < f1.size(); index++)
 	{
 		f2.clear();
 		f2 = f1[index];		//the field in the vector is copied to string f2
-		if(f2.size() < Record::getFieldSize(index))
+		if(f2.size() < header->getFieldSize(index))
 		{
 			int fieldS1 = f2.size();
-			int fieldMS = Record::getFieldSize(index);
+			int fieldMS = header->getFieldSize(index);
 			/* obtain the difference between the size of the field 
 			and the maximum size of the field*/
 			fieldMS -= fieldS1;
@@ -43,16 +44,17 @@ string recordBuffer::pack(vector<string> f1, SequencedSet* parent)
 }
 
 //I havent tested this with the rest of the sequence set code
-vector<string> recordBuffer::unpack(string record, SequencedSet* parent)
+vector<string> recordBuffer::unpack(string record)
 {
+	Header* header = SequencedSet::sHeader();
 	int position = 0;
 	int erasePos = 0;
 	vector<string> recFields2;
-	for(int i = 0; i < Record::getNumOfFields(); i++)
+	for(int i = 0; i < header->getNumOfFields(); i++)
 	{
 			string subs1, subs2;
 			int beginPos = 0;
-			subs1 = record.substr(position, Record::getFieldSize(i));
+			subs1 = record.substr(position, header->getFieldSize(i));
 			if(i == 0 || i == 4 || i == 5)
 			{
 				erasePos = subs1.find_first_not_of(" ");
@@ -64,14 +66,14 @@ vector<string> recordBuffer::unpack(string record, SequencedSet* parent)
 			else
 			{
 				erasePos = subs1.find_last_not_of(" ");
-				int fieSize = Record::getFieldSize(i);
+				int fieSize = header->getFieldSize(i);
 				int endRead = erasePos - fieSize;
 				erasePos += 1;
-				subs1.erase(erasePos, endRead);	
+				subs1.erase(erasePos, endRead);
 				recFields2.push_back(subs1);
 			}
 			subs1.clear();
-			position = Record::getFieldSize(i);
+			position = header->getFieldSize(i);
 	}
 	 return recFields2;
 }

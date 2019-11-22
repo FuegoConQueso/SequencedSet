@@ -12,13 +12,13 @@
 #include "Record.h"
 #include "BlockBuffer.h"
 #include "Header.h"
+#include "HeaderBuffer.h"
 using namespace std;
 
 class SequencedSet{
 	private:
 		int blockCapacity; //maximum number of records in a block
 		int blockInitialSize; //initial number of records in a block
-		int headerSize; //size of the header in characters
 		Index index; //the index of blocks
 		Record populateRecord(string line);
 
@@ -35,5 +35,4 @@ class SequencedSet{
 		Record search(string key);
 };
 
-#include "SequencedSet.cpp"
 #endif

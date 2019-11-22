@@ -130,7 +130,6 @@
     <ClCompile Include="Index.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputFileHeader.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="SequencedSet.cpp" />
@@ -142,6 +141,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockBuffer.h" />
     <ClInclude Include="FileIterator.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="HeaderBuffer.h" />
     <ClInclude Include="Index.h" />
