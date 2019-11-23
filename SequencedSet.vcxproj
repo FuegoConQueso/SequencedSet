@@ -133,6 +133,7 @@
     <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="SequencedSet.cpp" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="SqSetFileManager.cpp" />
     <ClCompile Include="testDriver.cpp" />
     <ClCompile Include="BlockBuffer.cpp" />
@@ -154,12 +155,18 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="currentHeader.txt" />
-    <Text Include="Storage.txt" />
+    <Text Include="Storage.txt">
+      <DeploymentContent>false</DeploymentContent>
+    </Text>
     <Text Include="tinysample.txt" />
-    <Text Include="us_postal_codes.txt" />
+    <Text Include="us_postal_codes.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="testBash.sh" />
+    <None Include="testBash.sh">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

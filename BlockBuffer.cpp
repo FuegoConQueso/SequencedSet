@@ -10,14 +10,19 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 		  place = stoi(recbloc1[0]);
 		  Header* header = SequencedSet::sHeader();
 		  //pad the nextBlock
-		  recbloc1[1] = header->pad(recbloc1[2], header->nextBlockSize());
-
+		  recbloc1[1] = header->pad(recbloc1[1], header->nextBlockSize());
 		  //pad the recordCount
+		  int recordCount = stoi(recbloc1[2]);
 		  recbloc1[2] = header->pad(recbloc1[2], header->blockRecordCountSize());
 
 		  // fill in the block with the nextblock, count, and records
 		  for (int i = 1; i < recbloc1.size(); i++) {
 				strb.append(recbloc1[i]);
+		  }
+
+		  //add blank records up to capacity
+		  for (int i = recordCount; i < header->getBlockCapacity(); i++) {
+				strb.append(header->pad("", header->getRecordSize()));
 		  }
 		  return strb;
 	 }
@@ -28,60 +33,29 @@ string BlockBuffer::pack(vector<string> recbloc1) {
 	 return pack(recbloc1, callback);
 }
 
-
-/*
-int main()
+// this works on the hard code without a header.
+Block BlockBuffer::unpack(int blockNum, string blocrec1)
 {
-	vector<string> rec, rec12, rec13;
-	vector<int> fieldSize;
-	vector<string> rec1;
-	fieldSize.push_back(6);
-	fieldSize.push_back(31);
-	fieldSize.push_back(2);
-	fieldSize.push_back(36);
-	fieldSize.push_back(9);
-	fieldSize.push_back(10);
-	recordBuffer r0;
-	BlockBuffer b1;
-	string rec2;
-	vector<string> vecrec;
-
-	rec.push_back("1001");
-	rec.push_back("Agawam");
-	rec.push_back("NY");
-	rec.push_back("Hamp den");
-	rec.push_back("42.0702");
-	rec.push_back("-72.6227");
-
-	rec12.push_back("501");
-	rec12.push_back("Holtsville");
-	rec12.push_back("NY");
-	rec12.push_back("Suffolk");
-	rec12.push_back("40.8154");
-	rec12.push_back("-73.0451");
-
-	rec13.push_back("504");
-	rec13.push_back("Holtsville");
-	rec13.push_back("NY");
-	rec13.push_back("Suffolk");
-	rec13.push_back("40.8154");
-	rec13.push_back("-73.0451");
-
-	rec2 = r0.pack(rec);
-	vecrec.push_back(rec2);
-	rec2.clear();
-
-	rec2 = r0.pack(rec12);
-	vecrec.push_back(rec2);
-	rec2.clear();
-
-	rec2 = r0.pack(rec13);
-	vecrec.push_back(rec2);
-	rec2.clear();
-	rec2 = b1.pack(vecrec, blockNumber);
-	cout << rec2;
-
-	rec1 = r0.unpack(fieldSize);
-
-	return 0;
-}	*/
+	 Header* header = SequencedSet::sHeader();
+	 vector<Record> records;
+	 string holdrec;
+	 //position to start reading in the string
+	 int startReadPos = 0;
+	 string nextBlockStr = blocrec1.substr(startReadPos, header->nextBlockSize());
+	 int nextBlock = stoi(header->unpad(nextBlockStr));
+	 startReadPos += header->nextBlockSize();
+	 //number of records
+	 string recordCountStr = blocrec1.substr(startReadPos, header->blockRecordCountSize());
+	 int recordCount = stoi(header->unpad(recordCountStr));
+	 //a substring cosisting of one record will be produced from the string containing the block
+	 //the substring will then be put into the vector
+	 //the read position will then be updated and he substring cleared
+	 for (int y = 0; y < recordCount; y++)
+	 {
+		  holdrec = blocrec1.substr(startReadPos, header->getRecordSize());
+		  records.emplace_back(recordBuffer::unpack(holdrec));
+		  startReadPos += header->getRecordSize();
+		  holdrec.clear();
+	 }
+	 return Block(blockNum, nextBlock, records);
+}

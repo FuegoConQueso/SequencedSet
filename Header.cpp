@@ -24,9 +24,9 @@ string Header::getName()
 
 string Header::pad(string toPad, int paddedSize)
 {
-	 for (int c = toPad.size(); c < paddedSize; c++) {
-		  toPad.append(" ");
-	 }
+	 int padLength = paddedSize - toPad.size();
+	 string pad = string(padLength, ' ');
+	 toPad.append(pad);
 	 return toPad;
 }
 

@@ -15,6 +15,7 @@ private:
 	 vector<pair<string, int>> indices;
 public:
 	 Index();
+	 Index(vector<pair<string, int>> indices);
 	 void Create();
 	 string pack();
 	 void addIndex(string key, int blockNum);
