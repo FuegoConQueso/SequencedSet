@@ -8,9 +8,8 @@ class SequencedSet;
 class FileManager
 {
 	protected:
-		fstream indexfile;
 		fstream filefile;
-		SequencedSet *ptrSeqSet; //SequencedSet not included
+		string indexfilename;
 	public:
 		void create(string filename, string indexfilename);
 		//void open(string filname, indfilname); //string
