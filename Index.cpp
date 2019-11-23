@@ -12,6 +12,13 @@ Index::Index(vector<pair<string, int>> indices)
 	 keyType = header->getKeyType();
 }
 
+Index::Index(string packed)
+{
+	 Header* header = SequencedSet::sHeader();
+	 string headerStr = header->fieldTypeToString(header->getKeyType());
+	 *this = Index::Index(IndexBuffer::unpack(packed, headerStr));
+}
+
 void Index::Create() {
 	 Header* header = SequencedSet::sHeader();
 	 indices = vector<pair<string, int>>();
