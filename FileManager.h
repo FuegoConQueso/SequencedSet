@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "Index.h"
+#include "Block.h"
 using namespace std;
 
 class SequencedSet;
