@@ -39,6 +39,49 @@ string Header::unpad(string padded)
 	 return padded;
 }
 
+int Header::compare(string a, string b, FieldType f)
+{
+	switch (f) 
+	{
+	case FieldType::U_INTEGER:
+	{
+		if (stoi(a) < stoi(b))
+			return -1;
+		else if (stoi(a) > stoi(b))
+			return 1;
+		else
+			return 0;
+		break;
+	}
+	case FieldType::FLOAT:
+	{	
+		if (stof(a) < stof(b))
+			return -1;
+		else if (stof(a) > stof(b))
+			return 1;
+		else
+			return 0;
+		break;
+	}
+	case FieldType::TEXT:
+	{
+		if (a.compare(b) < 0)
+			return -1;
+		else if (a.compare(b) > 0)
+			return 1;
+		else
+			return 0;
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+
+	return 0;
+}
+
 string Header::getHFieldSeparator()
 {
 	 return hFieldSeperator;

@@ -72,6 +72,9 @@ public:
 	 string pad(string toPad, int paddedSize); //pads a string toPad (on the right), using padChar, to make it size paddedSize
 	 string unpad(string padded); //unpads a string on both left and right, removing padChar
 
+
+	 //comparison method
+	 static int compare(string a, string b, FieldType f);
 private:
 	 string name; //name of the sequenced set fill
 	 string fileName; //name of the file
