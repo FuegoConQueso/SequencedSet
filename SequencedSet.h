@@ -28,6 +28,7 @@ class SequencedSet{
 		~SequencedSet();
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
+		int searchForBlock(int primaryKey, ifstream& indexFile);
 
 		static Header* sHeader();
 

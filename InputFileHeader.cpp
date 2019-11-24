@@ -44,7 +44,7 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	cout << "Header size string output: " << headerSizeString << endl;
 	cout << "Record size string output: " << recordSizeString << endl;
 	recordSize = stoi(recordSizeString);
-	headerSize = stoi(headerSizeString);
+	headerSize = stoi(headerSizeString); // should probably catch exception OR make sure only int values are read.
 	
 	//While loop for reading ANY subsequent fields
 	int count = 0;

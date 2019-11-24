@@ -69,12 +69,12 @@ Header::Header()
 {
 }
 
-Header::Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity,
+Header::Header(string fileName, string name, string indexName, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity,
 	 int bhNextBlockSize, int bhRecordCountSize, int headerSizeSize, string headerSeperators,
 	 string hFieldSeperator, string bhPrefix, string recordPrefix, string padChar)
 {
 	 this->fileName = fileName;
-	 this->name = name;
+	 this->name = name; // What is the difference between this and fileName?
 	 this->fieldInfo = fieldInfo;
 	 this->blockCapacity = blockCapacity;
 	 this->blockNumSize = bhNextBlockSize;
@@ -85,6 +85,7 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 this->bhPrefix = bhPrefix;
 	 this->recordPrefix = recordPrefix;
 	 this->padChar = padChar;
+	 this->indexName = indexName;
 	 
 }
 int Header::blockSize()

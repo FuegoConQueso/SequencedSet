@@ -20,7 +20,7 @@ public:
 
 	 //constructor
 	 Header();
-	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity = 4,
+	 Header(string fileName, string name, string indexName, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity = 4,
 		  int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
 		  string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
 
@@ -71,6 +71,7 @@ public:
 private:
 	 string name; //name of the sequenced set fill
 	 string fileName; //name of the file
+	 string indexName;//name of the index file
 	 int headerSizeSize; //size (in chars) of the header's size field
 	 int blockCapacity; //the maximum number of records in a block
 	 int blockNumSize; //size of the next block part of the block header in chars
@@ -89,4 +90,3 @@ private:
 	 string recordPrefix = "";
 	 string padChar = " "; */
 };
-

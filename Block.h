@@ -29,4 +29,3 @@ private:
 	 //methods
 	 void unpack(vector<string> packedBlock); //loads the unbuffered string vector into the block
 };
-

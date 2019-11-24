@@ -16,4 +16,3 @@ class FileIterator : public iterator<forward_iterator_tag, string, ptrdiff_t, in
 	 bool operator!=(const FileIterator& rhs) const { return blockNum != rhs.blockNum; }
 	 int& operator*() { return blockNum; }
 };
-

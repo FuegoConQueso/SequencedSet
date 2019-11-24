@@ -12,6 +12,7 @@ using namespace std;
 void InputFileHeaderReadTest(ifstream&);
 void BlockStructureTest();
 void FileManagerTest();
+void searchTestFunction();
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,7 @@ int main(int argc, char *argv[])
 	bool createCheck = false;
 	bool blockStructTest = false;
 	bool fileManagerTest = false;
+	bool searchTest = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -37,8 +39,12 @@ int main(int argc, char *argv[])
 				}
 			case 'f':
 	 			{
-				 fileManagerTest = true;
-				 break;
+					fileManagerTest = true;
+					break;
+				}
+			case 's':
+				{
+					searchTest = true;
 				}
 			default:
 				{
@@ -58,6 +64,8 @@ int main(int argc, char *argv[])
 	if (fileManagerTest) {
 		 FileManagerTest();
 	}
+	if (searchTest)
+		searchTestFunction();
 	cin.get();
 	return 0;
 }
@@ -75,6 +83,22 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 
 void FileManagerTest() {
 
+}
+
+void searchTestFunction()
+{
+	int primaryKey;
+	SequencedSet seqSet = SequencedSet();
+	cout << "\nSearch test is on.\n";
+	cout << "What zip code would you like to search for? > ";
+	cin >> primaryKey;
+	ifstream indexFile("index.txt");
+	int blockNum = seqSet.searchForBlock(primaryKey, indexFile);
+	if (blockNum == -1)
+		cout << "Key not found\n";
+	else
+		cout << primaryKey << " should be located in block " << blockNum;
+	indexFile.close();
 }
 
 void BlockStructureTest() {
@@ -103,3 +127,5 @@ void BlockStructureTest() {
 	 cout << rec2;
 	 */
 }
+
+

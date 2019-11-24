@@ -22,6 +22,7 @@ Header HeaderBuffer::unpack(fstream mainFile, string fileName, SequencedSet* par
 	 //create variables
 	 string headerSizeString;
 	 string name;
+	 string indexName;
 	 vector<tuple<string, int, Header::FieldType>> fieldInfos = vector<tuple<string,int,Header::FieldType>>();
 	 //get headerSize
 	 getline(mainFile, headerSizeString);
@@ -55,5 +56,5 @@ Header HeaderBuffer::unpack(fstream mainFile, string fileName, SequencedSet* par
 	 }
 
 	 
-	 return Header(fileName,name,fieldInfos, parent);
+	 return Header(fileName,name, "index.txt", fieldInfos, parent);
 }

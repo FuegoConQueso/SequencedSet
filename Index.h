@@ -2,6 +2,7 @@
 #include <vector>
 #include <tuple>
 #include <string>
+#include <fstream>
 #include "Record.h"
 #include "IndexBuffer.h"
 #include "Header.h"
@@ -13,10 +14,11 @@ class Index
 private:
 	 Header::FieldType keyType;
 	 vector<pair<string, int>> indices;
+	 string outputFileName;
 public:
 	 Index();
 	 void Create();
 	 string pack();
 	 void addIndex(string key, int blockNum);
+	 void writeIndex(ofstream& indexOutput);
 };
-

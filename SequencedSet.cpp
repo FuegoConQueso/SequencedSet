@@ -1,4 +1,5 @@
 #include "SequencedSet.h"
+#include <string>
 
 Header* SequencedSet::activeHeader;
 
@@ -14,8 +15,8 @@ SequencedSet::~SequencedSet(){
 void SequencedSet::create(ifstream & inputFile){
 	InputFileHeader hfile;
 	hfile.readHeader(inputFile);
-	header = Header("Storage.txt", "Doesn't Read in File Name Yet", hfile.makeTuples(), this);
-	activeHeader = &header;
+	header = Header("Storage.txt", "Doesn't Read in File Name Yet", "index.txt" ,hfile.makeTuples(), this);
+	activeHeader = &header; //why make this?
 }
 
 void SequencedSet::populate(ifstream& inputFile) {
@@ -29,10 +30,9 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 string etc;
 	 //deal with garbage
 	 getline(inputFile, etc);
-	 getline(inputFile, etc);
+	 //getline(inputFile, etc); // printing etc to cout reveals that this is actually skipping a record.
 	 for (std::string line; getline(inputFile, line); )
 	 {
-		  
 		  //decompose into a record, create Record
 		  tempRecords.push_back(populateRecord(line));
 		  recordCount++;
@@ -53,7 +53,44 @@ void SequencedSet::populate(ifstream& inputFile) {
 				tempRecords.clear();
 		  }
 	 }
+	 ofstream indexFile("index.txt");
+	 index.writeIndex(indexFile);
+	 indexFile.close();
 	 outputFile.close();
+}
+
+int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
+{
+
+	cout << "Searching for " << primaryKey << "...\n";
+	int returnValue = -1;
+	bool found = 0;
+	int previousPrimKey = 0;
+	string testString = "";
+	while (!indexFile.eof() && !found)
+	{
+		getline(indexFile, testString);
+		stringstream line = stringstream(testString);
+		string primKeyString;
+		string blkNumString;
+		int primKey;
+		int blkNum;
+		line >> primKeyString;
+		line >> blkNumString;
+		try
+		{
+			primKey = stoi(primKeyString);
+			blkNum = stoi(blkNumString);
+			if (primKey >= primaryKey)
+			{
+				returnValue = blkNum;
+				found = true;
+			}
+		}
+		catch (exception e) {}
+
+	}
+	return returnValue;
 }
 
 Header* SequencedSet::sHeader()

@@ -15,4 +15,3 @@ public:
 
 	 static Header unpack(fstream mainFile, string fileName, SequencedSet* parent);
 };
-
