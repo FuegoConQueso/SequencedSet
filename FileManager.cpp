@@ -1,6 +1,6 @@
 #include "FileManager.h"
 #include "SequencedSet.h"
-/*
+
 void FileManager::create(string filename, string indexfilename) 
 {
 	 filefile.open(filename, ios::in | ios::out | ios::trunc); 
@@ -13,14 +13,14 @@ void FileManager::open(string filename, string indexfilename)
 	 this->indexfilename = indexfilename;
 }
 
-fstream FileManager::getFile()
+fstream& FileManager::getFile()
 {
 	return filefile;
 }
 
-fstream FileManager::getIndexFile()
+string FileManager::getIndexFileName()
 {
-	return indexfile;
+	return indexfilename;
 }
 
 //I used an array is an intermediate step as I am unsure if i can use the write function with a string.
@@ -48,7 +48,8 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 bsize = header -> blockSize();
 	 position += blockNumber * bsize;
 	 filefile.seekp(position, ios_base::beg);
-	 filefile.write(wBlock, bsize);
+	 char* s = new char(*wBlock.c_str());
+	 filefile.write(s, bsize);
 }
 
 Index FileManager::readIndexFile()
@@ -58,8 +59,10 @@ Index FileManager::readIndexFile()
 	index1.open(indexfilename, ios::in);
 	index1.seekg(0, index1.end);
 	int indexSize = index1.tellg();
-	index1.seekg(0, index.beg);
-	index1.read(indexPass, indexSize);
+	index1.seekg(0, ios::beg);
+	char* s = new char[indexSize+1];
+	index1.read(s, indexSize);
+	indexPass = string(s);
 	return Index(indexPass);
 }
 
@@ -69,9 +72,8 @@ void FileManager::writeIndexFile(Index* ind)
 	string inda;
 	inda = ind -> pack();
 	indexfile.open(indexfilename, ios::in | ios::out | ios::trunc);
-	indexfile.write(inda, inda.size());
+	const char* s = inda.c_str();
+	indexfile.write(s, inda.size());
 	indexfile.close();
 	
 }
-
-*/

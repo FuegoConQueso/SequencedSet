@@ -1,6 +1,9 @@
+#pragma once
+
 #include <string>
 #include <fstream>
 #include <iostream>
+#include "Index.h"
 using namespace std;
 
 class SequencedSet;
@@ -12,7 +15,12 @@ class FileManager
 		string indexfilename;
 	public:
 		void create(string filename, string indexfilename);
-		//void open(string filname, indfilname); //string
-		fstream getFileIndex();
+		fstream& getFile();
+		void open(string filname, string indfilname);
+		string getIndexFileName();
+
+		Index readIndexFile();
+		void writeIndexFile(Index* ind);
 		string getBlock(int blockNumber);
+		void writeBlock(string wBlock, int blockNumber);
 };
