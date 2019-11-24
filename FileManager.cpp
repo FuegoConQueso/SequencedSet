@@ -24,7 +24,7 @@ string FileManager::getIndexFileName()
 }
 
 //I used an array is an intermediate step as I am unsure if i can use the write function with a string.
-string FileManager::getBlock(int blockNumber)
+Block FileManager::getBlock(int blockNumber)
 {
 	 Header* header = SequencedSet::sHeader();
 	 string blockG;
@@ -36,7 +36,7 @@ string FileManager::getBlock(int blockNumber)
 	 filefile.seekg(position, ios_base::beg);
 	 filefile.read(buf, bsize);
 		blockG = string(buf);
-	 return blockG;
+	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 
 void FileManager::writeBlock(string wBlock, int blockNumber)
