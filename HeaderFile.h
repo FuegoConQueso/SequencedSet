@@ -18,6 +18,7 @@ class HeaderFile(){
 		int getHeaderSize(){return headerSize;}
 		int getRecordSize(){return recordSize;}
 		int getNumFields(){return numFields;}
+		int compare(string a, string b, FieldType f);
 		void loadInputHeader;
 	
 };
