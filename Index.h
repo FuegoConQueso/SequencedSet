@@ -17,6 +17,8 @@ private:
 	 string outputFileName;
 public:
 	 Index();
+	 Index(vector<pair<string, int>> indices);
+	 Index(string packed);
 	 void Create();
 	 string pack();
 	 void addIndex(string key, int blockNum);

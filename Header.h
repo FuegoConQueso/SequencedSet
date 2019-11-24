@@ -20,8 +20,8 @@ public:
 
 	 //constructor
 	 Header();
-	 Header(string fileName, string name, string indexName, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity = 4,
-		  int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
+	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, int startBlockIndex, int startAvailIndex,
+		  int blockCapacity = 4, int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
 		  string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
 
 	 //block size-related methods
@@ -46,6 +46,10 @@ public:
 	 int getHeaderSize(); //returns the number of characters in the header
 	 string getHeaderSeperator(); //returns the seperator of the header's parts
 	 int getHeaderSizeSize(); //returns the size (in chars) of the header's size string
+	 int getStartBlock(); //returns the index of the start block
+	 int getStartAvail(); //returns the index of the start of the avail list
+	 void setStartBlock(int index); //sets the start block index
+	 void setStartAvail(int index); //sets the start of the avail list's index
 	 
 	 //FieldType conversion methods
 	 static FieldType toFieldType(string name); //takes a string and converts it to a FieldType
@@ -71,6 +75,8 @@ public:
 private:
 	 string name; //name of the sequenced set fill
 	 string fileName; //name of the file
+	 int startBlock;
+	 int startAvail;
 	 string indexName;//name of the index file
 	 int headerSizeSize; //size (in chars) of the header's size field
 	 int blockCapacity; //the maximum number of records in a block

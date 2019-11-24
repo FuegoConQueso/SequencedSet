@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "rbuffer1.h"
+#include "Block.h"
 
 using namespace std;
 
@@ -17,4 +18,5 @@ public:
 	 //printing produces an output with no breaks. no new line after a record
 	 static string pack(vector<string> recbloc1, int& place);
 	 static string pack(vector<string> recbloc1);
+	 Block unpack(int blockNum, string blocrec1);
 };

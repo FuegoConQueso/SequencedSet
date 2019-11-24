@@ -48,8 +48,7 @@ void Block::unpack(vector<string> packedBlock)
 	 nextBlock = stoi(packedBlock[1]);
 	 //skips reading size
 	 for (int i = 3; i < size; i++) {
-		  recordBuffer rb = recordBuffer();
 		  //unbuffers, and then uses that to construct a new record which is placed at the end
-		  //records.emplace_back(rb.unpack(packedBlock[i]));
+		  records.emplace_back(recordBuffer::unpack(packedBlock[i]));
 	 }
 }

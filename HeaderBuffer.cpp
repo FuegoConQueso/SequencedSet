@@ -1,10 +1,12 @@
 #include "HeaderBuffer.h"
 
-string HeaderBuffer::pack(Header header)
+string HeaderBuffer::pack(Header& header)
 {
 	 string s = header.getHeaderSeperator();
 	 string output = s;
 	 output.append(header.getName());
+	 output.append(s + to_string(header.getStartBlock()));
+	 output.append(s + to_string(header.getStartAvail()));
 	 string fs = header.getHFieldSeparator();
 	 for (int i = 0; i < header.getNumOfFields(); i++) {
 		  output.append(s);
@@ -17,11 +19,13 @@ string HeaderBuffer::pack(Header header)
 	 return output;
 }
 
-Header HeaderBuffer::unpack(fstream mainFile, string fileName, SequencedSet* parent)
+Header HeaderBuffer::unpack(fstream& mainFile, string fileName)
 {
 	 //create variables
 	 string headerSizeString;
 	 string name;
+	 string startBlockStr;
+	 string startAvailStr;
 	 string indexName;
 	 vector<tuple<string, int, Header::FieldType>> fieldInfos = vector<tuple<string,int,Header::FieldType>>();
 	 //get headerSize
@@ -29,6 +33,12 @@ Header HeaderBuffer::unpack(fstream mainFile, string fileName, SequencedSet* par
 	 int headerSize = stoi(headerSizeString);
 	 //get sequencedSet name
 	 getline(mainFile, name);
+	 //get startBlock;
+	 getline(mainFile, startBlockStr);
+	 int startBlock = stoi(startBlockStr);
+	 //get startAvail
+	 getline(mainFile, startAvailStr);
+	 int startAvail = stoi(startAvailStr);
 	 //get info for the fields
 	 while (mainFile.tellg() < headerSize) {
 		  string field;
@@ -56,5 +66,5 @@ Header HeaderBuffer::unpack(fstream mainFile, string fileName, SequencedSet* par
 	 }
 
 	 
-	 return Header(fileName,name, "index.txt", fieldInfos, parent);
+	 return Header(fileName,name,fieldInfos,startBlock,startAvail);
 }

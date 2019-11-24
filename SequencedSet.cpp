@@ -15,22 +15,30 @@ SequencedSet::~SequencedSet(){
 void SequencedSet::create(ifstream & inputFile){
 	InputFileHeader hfile;
 	hfile.readHeader(inputFile);
-	header = Header("Storage.txt", "Doesn't Read in File Name Yet", "index.txt" ,hfile.makeTuples(), this);
-	activeHeader = &header; //why make this?
+	header = Header("Storage.txt", "Doesn't Read in File Name Yet", hfile.makeTuples(), 0, -1);
+	activeHeader = &header;
 }
 
 void SequencedSet::populate(ifstream& inputFile) {
-	 ofstream outputFile(header.getFileName(), ofstream::trunc | ofstream::out);
+	 //initialize filemanager
+	 fileManager = FileManager();
+	 fileManager.create("Storage.txt", "Index.txt");
+	 //get the filestream to use for the main file
+	 fstream& outputFile = fileManager.getFile();
+	 //write the header to the file
 	 outputFile << HeaderBuffer::pack(header);
+	 //create the Index
+	 index = Index();
+	 index.Create();
+	 //variables used for the loop
 	 int recordCount = 0;
 	 int blockCount = 0;
-	 index = Index();
 	 Block tempBlock;
 	 vector<Record> tempRecords = vector<Record>();
-	 string etc;
-	 //deal with garbage
-	 getline(inputFile, etc);
-	 //getline(inputFile, etc); // printing etc to cout reveals that this is actually skipping a record.
+	 //deal with extra newline character
+	 string garbage;
+	 getline(inputFile, garbage);
+	 //loop to read remaining file
 	 for (std::string line; getline(inputFile, line); )
 	 {
 		  //decompose into a record, create Record
@@ -53,10 +61,23 @@ void SequencedSet::populate(ifstream& inputFile) {
 				tempRecords.clear();
 		  }
 	 }
-	 ofstream indexFile("index.txt");
-	 index.writeIndex(indexFile);
-	 indexFile.close();
+	 //if additional records, create final block
+	 if (recordCount > 0) {
+		  tempBlock = Block(blockCount, blockCount + 1, tempRecords);
+		  string output = BlockBuffer::pack(tempBlock.pack());
+		  outputFile << output;
+		  // create the index entry for this block
+		  string indexKey = tempRecords.back().getField(0);
+		  int indexBlockNum = tempBlock.getBlockNumber();
+		  index.addIndex(indexKey, indexBlockNum);
+		  blockCount++;
+	 }
+	 //update the header's Avail pointer
+	 header.setStartAvail(blockCount);
+	 //TODO: add Filemanager "update avail start" function call
 	 outputFile.close();
+
+	 fileManager.writeIndexFile(&index);
 }
 
 int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)

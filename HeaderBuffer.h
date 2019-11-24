@@ -11,7 +11,7 @@ using namespace std;
 class HeaderBuffer
 {
 public:
-	 static string pack(Header header);
+	 static string pack(Header& header);
 
-	 static Header unpack(fstream mainFile, string fileName, SequencedSet* parent);
+	 static Header unpack(fstream& mainFile, string fileName);
 };

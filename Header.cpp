@@ -1,5 +1,6 @@
 #include "Header.h"
 #include "InputFileHeader.h"
+#include "HeaderBuffer.h"
 
 using namespace std;
 
@@ -24,9 +25,9 @@ string Header::getName()
 
 string Header::pad(string toPad, int paddedSize)
 {
-	 for (int c = toPad.size(); c < paddedSize; c++) {
-		  toPad.append(" ");
-	 }
+	 int padLength = paddedSize - toPad.size();
+	 string pad = string(padLength, ' ');
+	 toPad.append(pad);
 	 return toPad;
 }
 
@@ -44,16 +45,7 @@ string Header::getHFieldSeparator()
 }
 int Header::getHeaderSize()
 {
-	 int s = headerSeperators.size();
-	 int size = headerSizeSize + s;
-	 size += name.size();
-	 int fs = hFieldSeperator.size();
-	 for (int i = 0; i < getNumOfFields(); i++) {
-		  size += s;
-		  size += getFieldName(i).size() + fs;
-		  size += to_string(getFieldSize(i)).size() + fs;
-		  size += fieldTypeToString(getFieldType(i)).size();
-	 }
+	 int size = HeaderBuffer::pack(*this).size();
 	 return size;
 }
 string Header::getHeaderSeperator()
@@ -65,17 +57,39 @@ int Header::getHeaderSizeSize()
 	 return headerSizeSize;
 }
 
+int Header::getStartBlock()
+{
+	 return startBlock;
+}
+
+int Header::getStartAvail()
+{
+	 return startAvail;
+}
+
+void Header::setStartBlock(int index)
+{
+	 startBlock = index;
+}
+
+void Header::setStartAvail(int index)
+{
+	 startAvail = index;
+}
+
 Header::Header()
 {
 }
 
-Header::Header(string fileName, string name, string indexName, vector<tuple<string, int, FieldType>> fieldInfo, SequencedSet* parent, int blockCapacity,
-	 int bhNextBlockSize, int bhRecordCountSize, int headerSizeSize, string headerSeperators,
-	 string hFieldSeperator, string bhPrefix, string recordPrefix, string padChar)
+Header::Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, int startBlockIndex,
+	 int startAvailIndex, int blockCapacity, int bhNextBlockSize, int bhRecordCountSize, int headerSizeSize,
+	 string headerSeperators, string hFieldSeperator, string bhPrefix, string recordPrefix, string padChar)
 {
 	 this->fileName = fileName;
 	 this->name = name; // What is the difference between this and fileName?
 	 this->fieldInfo = fieldInfo;
+	 this->startBlock = startBlockIndex;
+	 this->startAvail = startAvailIndex;
 	 this->blockCapacity = blockCapacity;
 	 this->blockNumSize = bhNextBlockSize;
 	 this->bhRecordCountSize = bhRecordCountSize;

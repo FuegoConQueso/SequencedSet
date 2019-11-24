@@ -1,5 +1,7 @@
-136 
+141 
 Doesn't Read in File Name Yet
+0
+-1
 ZipCode|6|u_integer
 PlaceName|31|text
 State|2|text

@@ -13,6 +13,7 @@
 #include "BlockBuffer.h"
 #include "Header.h"
 #include "HeaderBuffer.h"
+#include "FileManager.h"
 using namespace std;
 
 class SequencedSet{
@@ -22,9 +23,11 @@ class SequencedSet{
 		Index index; //the index of blocks
 		Record populateRecord(string line);
 
+		FileManager fileManager;
 		static Header* activeHeader;
 	public:
 		SequencedSet();
+		SequencedSet(const SequencedSet& other);
 		~SequencedSet();
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
