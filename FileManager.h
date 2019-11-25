@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "Index.h"
+#include "Block.h"
 using namespace std;
 
 class SequencedSet;
@@ -21,6 +22,6 @@ class FileManager
 
 		Index readIndexFile();
 		void writeIndexFile(Index* ind);
-		string getBlock(int blockNumber);
+		Block getBlock(int blockNumber);
 		void writeBlock(string wBlock, int blockNumber);
 };
