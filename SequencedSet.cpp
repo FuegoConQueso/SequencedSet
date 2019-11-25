@@ -92,32 +92,49 @@ int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
 	cout << "Searching for " << primaryKey << "...\n";
 	int returnValue = -1;
 	bool found = 0;
-	int previousPrimKey = 0;
 	string testString = "";
+	string garbage = "";
+	getline(indexFile, garbage); // get the garbage
 	while (!indexFile.eof() && !found)
 	{
 		getline(indexFile, testString);
 		stringstream line = stringstream(testString);
 		string primKeyString;
 		string blkNumString;
-		int primKey;
-		int blkNum;
 		line >> primKeyString;
 		line >> blkNumString;
-		try
+		Header::FieldType keyFieldType = header.getKeyType();
+		if (Header::compare(primKeyString, primaryKey, keyFieldType) == 1 || Header::compare(primKeyString, primaryKey, keyFieldType) == 0)
 		{
-			primKey = stoi(primKeyString);
-			blkNum = stoi(blkNumString);
-			if (primKey >= primaryKey)
-			{
-				returnValue = blkNum;
-				found = true;
-			}
+			returnValue = stoi(blkNumString);
+			found = true;
 		}
-		catch (exception e) {}
-
 	}
 	return returnValue;
+}
+
+int SequencedSet::searchForRecord(int rbn, string primaryKey)
+{
+	Block block;
+	string compstring;
+	block = fileManager.getBlock(rbn);
+	int midpoint, r, l, compnum;
+	r = block.recordCount() - 1;
+	l = 0;
+	while (l <= r)
+	{
+		midpoint = l + (r - l) / 2;
+		compstring.clear();
+		compstring = block.getRecord(midpoint).getField(0);
+		compnum = header.compare(primaryKey, compstring, header.getKeyType());
+			if (compnum == 0)
+				return midpoint;
+			else if (compnum == -1)
+				r = midpoint - 1;
+			else
+				l = midpoint + 1;
+	}
+	return -1;
 }
 
 Header* SequencedSet::sHeader()

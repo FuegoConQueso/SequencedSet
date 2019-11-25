@@ -12,7 +12,7 @@ using namespace std;
 void InputFileHeaderReadTest(ifstream&);
 void BlockStructureTest();
 void FileManagerTest();
-void searchTestFunction();
+void searchTestFunction(ifstream&);
 
 int main(int argc, char *argv[])
 {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 		 FileManagerTest();
 	}
 	if (searchTest)
-		searchTestFunction();
+		searchTestFunction(inputFile);
 	cin.get();
 	return 0;
 }
@@ -78,17 +78,8 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 	cout << "populating...";
 	seqSet.populate(inputFile);
 	cout << "done";
-
-}
-
-void FileManagerTest() {
-
-}
-
-void searchTestFunction()
-{
-	int primaryKey;
-	SequencedSet seqSet = SequencedSet();
+	cout << seqSet.searchForRecord(0, "544");
+	string primaryKey;
 	cout << "\nSearch test is on.\n";
 	cout << "What zip code would you like to search for? > ";
 	cin >> primaryKey;
@@ -99,6 +90,14 @@ void searchTestFunction()
 	else
 		cout << primaryKey << " should be located in block " << blockNum;
 	indexFile.close();
+}
+
+void FileManagerTest() {
+
+}
+
+void searchTestFunction(ifstream &inputFile)
+{
 }
 
 void BlockStructureTest() {
