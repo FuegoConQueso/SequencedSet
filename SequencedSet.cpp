@@ -80,36 +80,29 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 fileManager.writeIndexFile(&index);
 }
 
-int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
+int SequencedSet::searchForBlock(string primaryKey, ifstream& indexFile)
 {
 
 	cout << "Searching for " << primaryKey << "...\n";
 	int returnValue = -1;
 	bool found = 0;
-	int previousPrimKey = 0;
 	string testString = "";
+	string garbage = "";
+	getline(indexFile, garbage); // get the garbage
 	while (!indexFile.eof() && !found)
 	{
 		getline(indexFile, testString);
 		stringstream line = stringstream(testString);
 		string primKeyString;
 		string blkNumString;
-		int primKey;
-		int blkNum;
 		line >> primKeyString;
 		line >> blkNumString;
-		try
+		Header::FieldType keyFieldType = header.getKeyType();
+		if (Header::compare(primKeyString, primaryKey, keyFieldType) == 1 || Header::compare(primKeyString, primaryKey, keyFieldType) == 0)
 		{
-			primKey = stoi(primKeyString);
-			blkNum = stoi(blkNumString);
-			if (primKey >= primaryKey)
-			{
-				returnValue = blkNum;
-				found = true;
-			}
+			returnValue = stoi(blkNumString);
+			found = true;
 		}
-		catch (exception e) {}
-
 	}
 	return returnValue;
 }
