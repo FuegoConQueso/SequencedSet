@@ -35,6 +35,21 @@ void Index::addIndex(string key, int blockNum)
 	 indices.push_back(make_pair(key, blockNum));
 }
 
+pair<string, int> Index::getIndex(int indexPosition)
+{
+	 return indices[indexPosition];
+}
+
+void Index::deleteIndex(int indexPosition)
+{
+	 indices.erase(indices.begin() + indexPosition);
+}
+
+int Index::size()
+{
+	 return indices.size();
+}
+
 void Index::writeIndex(ofstream& indexOutput)
 {
 	for (int i = 0; i < indices.size(); i++)

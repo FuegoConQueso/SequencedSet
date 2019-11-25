@@ -32,13 +32,12 @@ class SequencedSet{
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
-		int searchForBlock(string primaryKey, ifstream& indexFile);
-		int searchForRecord(int rbn, string primaryKey);
+		int searchForBlock(string primaryKey);
+		Record searchForRecord(int rbn, string primaryKey);
 
 		static Header* sHeader();
 
 		Header header;
-		Record search(string key);
 };
 
 #endif

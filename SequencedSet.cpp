@@ -85,34 +85,34 @@ void SequencedSet::load(string fileName, string indexFileName)
 	 fileManager.open(fileName, indexFileName);
 }
 
-int SequencedSet::searchForBlock(string primaryKey, ifstream& indexFile)
+int SequencedSet::searchForBlock(string primaryKey)
 {
 
-	cout << "Searching for " << primaryKey << "...\n";
-	int returnValue = -1;
-	bool found = 0;
-	string testString = "";
-	string garbage = "";
-	getline(indexFile, garbage); // get the garbage
-	while (!indexFile.eof() && !found)
+	cout << "Searching for " << primaryKey << "...\n"; string compstring;
+	int midpoint = -1, r, l, compnum = 0;
+	r = index.size() - 1;
+	l = 0;
+	while (l <= r)
 	{
-		getline(indexFile, testString);
-		stringstream line = stringstream(testString);
-		string primKeyString;
-		string blkNumString;
-		line >> primKeyString;
-		line >> blkNumString;
-		Header::FieldType keyFieldType = header.getKeyType();
-		if (Header::compare(primKeyString, primaryKey, keyFieldType) == 1 || Header::compare(primKeyString, primaryKey, keyFieldType) == 0)
-		{
-			returnValue = stoi(blkNumString);
-			found = true;
-		}
+		 midpoint = l + (r - l) / 2;
+		 compstring.clear();
+		 compstring = index.getIndex(midpoint).first;
+		 compnum = header.compare(primaryKey, compstring, header.getKeyType());
+		 if (compnum == 0)
+			  return midpoint;
+		 else if (compnum == -1)
+			  r = midpoint - 1;
+		 else
+			  l = midpoint + 1;
 	}
-	return returnValue;
+	if (compnum == 1) {
+		 midpoint += 1;
+	}
+	return midpoint;
+	
 }
 
-int SequencedSet::searchForRecord(int rbn, string primaryKey)
+Record SequencedSet::searchForRecord(int rbn, string primaryKey)
 {
 	Block block;
 	string compstring;
@@ -126,14 +126,17 @@ int SequencedSet::searchForRecord(int rbn, string primaryKey)
 		compstring.clear();
 		compstring = block.getRecord(midpoint).getField(0);
 		compnum = header.compare(primaryKey, compstring, header.getKeyType());
-			if (compnum == 0)
-				return midpoint;
-			else if (compnum == -1)
-				r = midpoint - 1;
-			else
-				l = midpoint + 1;
+		cout << "Compstring: " << compstring << endl;
+		cout << "CompNum: " << compnum <<endl;
+		cout << "primaryKey: " << primaryKey << endl;
+		if (compnum == 0)
+		  return block.getRecord(midpoint);
+		else if (compnum == -1)
+		  r = midpoint - 1;
+		else
+		  l = midpoint + 1;
 	}
-	return -1;
+	return Record();
 }
 
 Header* SequencedSet::sHeader()

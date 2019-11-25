@@ -78,18 +78,21 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 	cout << "populating...";
 	seqSet.populate(inputFile);
 	cout << "done";
-	cout << seqSet.searchForRecord(0, "544") << endl;
 	string primaryKey;
 	cout << "\nSearch test is on.\n";
 	cout << "What zip code would you like to search for? > ";
 	cin >> primaryKey;
-	ifstream indexFile("index.txt");
-	int blockNum = seqSet.searchForBlock(primaryKey, indexFile);
-	if (blockNum == -1)
-		cout << "Key not found\n";
+	int blockNum = seqSet.searchForBlock(primaryKey);
+	if (blockNum == -1) {
+		 cout << "Key not found\n";
+	}
 	else
-		cout << primaryKey << " should be located in block " << blockNum;
-	indexFile.close();
+	{
+		 cout << primaryKey << " should be located in block " << blockNum << endl;
+		 Record record = seqSet.searchForRecord(blockNum, primaryKey);
+		 cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+	}
+
 }
 
 void FileManagerTest() {

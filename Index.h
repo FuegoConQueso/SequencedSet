@@ -22,6 +22,9 @@ public:
 	 void Create();
 	 string pack();
 	 void addIndex(string key, int blockNum);
+	 pair<string, int> getIndex(int indexPosition);
+	 void deleteIndex(int indexPosition);
+	 int size();
 	 void writeIndex(ofstream& indexOutput);
 	 
 };

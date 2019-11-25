@@ -41,10 +41,11 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 	 string holdrec;
 	 //position to start reading in the string
 	 int startReadPos = 0;
+	 //read next block
 	 string nextBlockStr = blocrec1.substr(startReadPos, header->nextBlockSize());
 	 int nextBlock = stoi(header->unpad(nextBlockStr));
 	 startReadPos += header->nextBlockSize();
-	 //number of records
+	 //read number of records
 	 string recordCountStr = blocrec1.substr(startReadPos, header->blockRecordCountSize());
 	 int recordCount = stoi(header->unpad(recordCountStr));
 	 startReadPos += header->blockRecordCountSize();

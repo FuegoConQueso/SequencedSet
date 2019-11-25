@@ -35,9 +35,8 @@ Block FileManager::getBlock(int blockNumber)
 	 position += blockNumber * bsize;
 	 filefile.seekg(position);
 	 filefile.read(buf, bsize);
-	 buf[386] = '\0';
+	 buf[bsize] = '\0';
 	 blockG = string(buf);
-	 cout << blockG;
 	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 
