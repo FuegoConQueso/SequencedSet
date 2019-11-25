@@ -3,13 +3,13 @@
 
 void FileManager::create(string filename, string indexfilename) 
 {
-	 filefile.open(filename, ios::in | ios::out | ios::trunc); 
+	 filefile.open(filename, ios::in | ios::out | ios::trunc | ios::binary);
 	 this->indexfilename = indexfilename;
 }
 
 void FileManager::open(string filename, string indexfilename)
 {
-	 filefile.open(filename, ios::in | ios::out); 
+	 filefile.open(filename, ios::in | ios::out | ios::binary); 
 	 this->indexfilename = indexfilename;
 }
 
@@ -30,12 +30,14 @@ Block FileManager::getBlock(int blockNumber)
 	 string blockG;
 	 int bsize;
 	 int position = header -> getHeaderSize();
-	 char* buf = new char[header -> blockSize()+1]; //use header->blockSize
 	 bsize = header -> blockSize();
+	 char* buf = new char[bsize+1]; //use header->blockSize
 	 position += blockNumber * bsize;
-	 filefile.seekg(position, ios_base::beg);
+	 filefile.seekg(position);
 	 filefile.read(buf, bsize);
-		blockG = string(buf);
+	 buf[386] = '\0';
+	 blockG = string(buf);
+	 cout << blockG;
 	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 

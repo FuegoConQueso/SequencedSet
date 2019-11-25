@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "Index.h"
+#include <sstream>
 #include "Block.h"
 using namespace std;
 

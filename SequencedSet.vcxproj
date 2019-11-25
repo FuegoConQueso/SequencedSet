@@ -134,7 +134,6 @@
     <ClCompile Include="Record.cpp" />
     <ClCompile Include="SequencedSet.cpp" />
     <ClCompile Include="FileManager.cpp" />
-    <ClCompile Include="SqSetFileManager.cpp" />
     <ClCompile Include="testDriver.cpp" />
     <ClCompile Include="BlockBuffer.cpp" />
   </ItemGroup>
@@ -151,7 +150,6 @@
     <ClInclude Include="rbuffer1.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="SequencedSet.h" />
-    <ClInclude Include="SqSetFileManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="currentHeader.txt" />

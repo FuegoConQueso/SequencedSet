@@ -78,7 +78,7 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 	cout << "populating...";
 	seqSet.populate(inputFile);
 	cout << "done";
-	cout << seqSet.searchForRecord(0, "544");
+	cout << seqSet.searchForRecord(0, "544") << endl;
 	string primaryKey;
 	cout << "\nSearch test is on.\n";
 	cout << "What zip code would you like to search for? > ";

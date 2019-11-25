@@ -5,8 +5,8 @@ string HeaderBuffer::pack(Header& header)
 	 string s = header.getHeaderSeperator();
 	 string output = s;
 	 output.append(header.getName());
-	 output.append(s + to_string(header.getStartBlock()));
-	 output.append(s + to_string(header.getStartAvail()));
+	 output.append(s + header.pad(to_string(header.getStartBlock()), header.nextBlockSize()));
+	 output.append(s + header.pad(to_string(header.getStartAvail()), header.nextBlockSize()));
 	 string fs = header.getHFieldSeparator();
 	 for (int i = 0; i < header.getNumOfFields(); i++) {
 		  output.append(s);

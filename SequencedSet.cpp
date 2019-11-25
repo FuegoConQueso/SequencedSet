@@ -75,7 +75,6 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 //update the header's Avail pointer
 	 header.setStartAvail(blockCount);
 	 //TODO: add Filemanager "update avail start" function call
-	 outputFile.close();
 
 	 fileManager.writeIndexFile(&index);
 }
@@ -86,7 +85,7 @@ void SequencedSet::load(string fileName, string indexFileName)
 	 fileManager.open(fileName, indexFileName);
 }
 
-int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
+int SequencedSet::searchForBlock(string primaryKey, ifstream& indexFile)
 {
 
 	cout << "Searching for " << primaryKey << "...\n";

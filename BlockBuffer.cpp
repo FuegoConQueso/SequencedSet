@@ -47,6 +47,7 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 	 //number of records
 	 string recordCountStr = blocrec1.substr(startReadPos, header->blockRecordCountSize());
 	 int recordCount = stoi(header->unpad(recordCountStr));
+	 startReadPos += header->blockRecordCountSize();
 	 //a substring cosisting of one record will be produced from the string containing the block
 	 //the substring will then be put into the vector
 	 //the read position will then be updated and he substring cleared

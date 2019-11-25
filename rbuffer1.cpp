@@ -20,20 +20,9 @@ string recordBuffer::pack(vector<string> f1)
 			and the maximum size of the field*/
 			fieldMS -= fieldS1;
 			f2.clear();
-			/* if the field is zip, latitude or longitude
-			the field will be right justified. Otherwise, the padding 
-			will be added after the field is put into f2*/
-			if(index == 0 || index == 4 || index == 5)
-			{
-				 for (int f = 0; f < fieldMS; f++)
-					  f2.append(" ");
-				 f2.append(f1[index]);
-			}
-			else
-			{
-				f2.append(f1[index]);
-				for(int indj = 0; indj < fieldMS; indj++)
-					f2.append(" ");
+			f2.append(f1[index]);
+			for (int f = 0; f < fieldMS; f++) {
+				 f2.append(" ");
 			}
 		}
 		record.append(f2);	//the field with padding is appended to string Record
@@ -55,24 +44,8 @@ vector<string> recordBuffer::unpack(string record)
 			string subs1, subs2;
 			int beginPos = 0;
 			subs1 = record.substr(position, header->getFieldSize(i));
-			if(i == 0 || i == 4 || i == 5)
-			{
-				erasePos = subs1.find_first_not_of(" ");
-				subs1.erase(beginPos, erasePos);
-				recFields2.push_back(subs1);
-			}
-			else if(i == 2)
-				recFields2.push_back(subs1);		
-			else
-			{
-				erasePos = subs1.find_last_not_of(" ");
-				int fieSize = header->getFieldSize(i);
-				int endRead = erasePos - fieSize;
-				erasePos += 1;
-				subs1.erase(erasePos, endRead);
-				recFields2.push_back(subs1);
-			}
-			subs1.clear();
+			subs1 = header->unpad(subs1);
+			recFields2.push_back(subs1);
 			position = header->getFieldSize(i);
 	}
 	 return recFields2;
