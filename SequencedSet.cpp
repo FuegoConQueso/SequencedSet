@@ -4,25 +4,21 @@
 Header* SequencedSet::activeHeader;
 
 SequencedSet::SequencedSet(){
-
-	 blockCapacity = 4;
-	 blockInitialSize = blockCapacity * 3 / 4;
 }
 
 SequencedSet::~SequencedSet(){
 }
 
-void SequencedSet::create(ifstream & inputFile){
-	InputFileHeader hfile;
-	hfile.readHeader(inputFile);
-	header = Header("Storage.txt", "Doesn't Read in File Name Yet", hfile.makeTuples(), 0, -1);
-	activeHeader = &header;
-}
-
-void SequencedSet::populate(ifstream& inputFile) {
+void SequencedSet::populate(string inputFileName, string fileName, string indexFileName) {
+	 ifstream inputFile = ifstream(inputFileName);
 	 //initialize filemanager
 	 fileManager = FileManager();
-	 fileManager.create("Storage.txt", "Index.txt");
+	 fileManager.create(fileName, indexFileName);
+	 //header loading
+	 InputFileHeader hfile;
+	 hfile.readHeader(inputFile);
+	 header = Header(fileName, hfile.getFileName(), hfile.makeTuples(), 0, -1);
+	 activeHeader = &header;
 	 //get the filestream to use for the main file
 	 fstream& outputFile = fileManager.getFile();
 	 //write the header to the file
@@ -33,6 +29,9 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 //variables used for the loop
 	 int recordCount = 0;
 	 int blockCount = 0;
+	 int blockMinSize = header.getBlockMinSize();
+	 int blockCapacity = header.getBlockCapacity();
+	 int blockInitialSize = blockMinSize + (blockCapacity - blockMinSize) / 2;
 	 Block tempBlock;
 	 vector<Record> tempRecords = vector<Record>();
 	 //deal with extra newline character
@@ -74,15 +73,22 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 }
 	 //update the header's Avail pointer
 	 header.setStartAvail(blockCount);
-	 //TODO: add Filemanager "update avail start" function call
-
+	 //rewrites the header with the new Avail pointer
+	 //TODO: change to Filemanager "update avail start" function call
+	 fileManager.writeHeader(&header);
 	 fileManager.writeIndexFile(&index);
 }
 
 void SequencedSet::load(string fileName, string indexFileName)
 {
+	 //start filemanager
 	 fileManager = FileManager();
 	 fileManager.open(fileName, indexFileName);
+	 //load header object
+	 header = fileManager.readHeader();
+	 activeHeader = &header;
+	 //load index file
+	 index = fileManager.readIndexFile();
 }
 
 int SequencedSet::searchForBlock(string primaryKey)

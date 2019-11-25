@@ -21,7 +21,7 @@ class InputFileHeader {
 		void readHeader(ifstream &inputFile);
 		int getHeaderSize(){return headerSize;}
 		int getRecordSize(){return recordSize;}
-		void setFileName(string fn){filename = fn;}
+		string getFileName() { return filename; }
 		string getFieldName(int i);
 		int getFieldSize(int i);
 		Header::FieldType getFieldType(int i);

@@ -21,8 +21,8 @@ public:
 	 //constructor
 	 Header();
 	 Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, int startBlockIndex, int startAvailIndex,
-		  int blockCapacity = 4, int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4, string headerSeperators = "\n",
-		  string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
+		  int blockCapacity = 4, int blockMinSize = 2, int blockNumSize = 6, int bhRecordCountSize = 3, int headerSizeSize = 4,
+		  string headerSeperators = "\n", string hFieldSeperator = "|", string bhPrefix = "\n", string recordPrefix = "", string padChar = " ");
 
 	 //block size-related methods
 	 int blockSize(); //returns the size of a block (in chars)
@@ -32,6 +32,7 @@ public:
 
 	 //block-related methods
 	 int getBlockCapacity(); //returns the maximum number of records in a block
+	 int getBlockMinSize(); //returns the minimum number of records in a block
 	 
 	 //field-related methods
 	 string getFieldName(int index); //gets the name of the field at position index
@@ -83,6 +84,7 @@ private:
 	 string indexName;//name of the index file
 	 int headerSizeSize; //size (in chars) of the header's size field
 	 int blockCapacity; //the maximum number of records in a block
+	 int blockMinSize; //the minimum number of records in a block
 	 int blockNumSize; //size of the next block part of the block header in chars
 	 int bhRecordCountSize; //size of the block count part of the block header in chars
 	 string bhPrefix; //the prefix of the block header (added for readability, and ability to use getline() )

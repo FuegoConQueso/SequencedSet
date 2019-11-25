@@ -4,12 +4,14 @@
 void FileManager::create(string filename, string indexfilename) 
 {
 	 filefile.open(filename, ios::in | ios::out | ios::trunc | ios::binary);
+	 this->filefilename = filename;
 	 this->indexfilename = indexfilename;
 }
 
 void FileManager::open(string filename, string indexfilename)
 {
 	 filefile.open(filename, ios::in | ios::out | ios::binary); 
+	 this->filefilename = filename;
 	 this->indexfilename = indexfilename;
 }
 
@@ -83,4 +85,11 @@ Header FileManager::readHeader()
 {
 
 	 return HeaderBuffer::unpack(filefile, "Storage.txt");
+}
+
+void FileManager::writeHeader(Header* header)
+{
+	 filefile.seekp(0);
+	 string packed = HeaderBuffer::pack(*header);
+	 filefile.write(packed.c_str(), packed.size());
 }
