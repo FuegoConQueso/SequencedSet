@@ -32,6 +32,7 @@ class SequencedSet{
 		void create(ifstream& inputFile);
 		void populate(ifstream& inputFile);
 		int searchForBlock(int primaryKey, ifstream& indexFile);
+		int searchForRecord(int rbn, string primaryKey);
 
 		static Header* sHeader();
 

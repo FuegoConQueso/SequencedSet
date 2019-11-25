@@ -78,6 +78,7 @@ void InputFileHeaderReadTest(ifstream &inputFile)
 	cout << "populating...";
 	seqSet.populate(inputFile);
 	cout << "done";
+	cout << seqSet.searchForRecord(0, "544");
 
 }
 
