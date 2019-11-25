@@ -22,6 +22,7 @@ class FileManager
 
 		Index readIndexFile();
 		void writeIndexFile(Index* ind);
+		Header readHeader();
 		Block getBlock(int blockNumber);
 		void writeBlock(string wBlock, int blockNumber);
 };

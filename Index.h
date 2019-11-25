@@ -23,4 +23,5 @@ public:
 	 string pack();
 	 void addIndex(string key, int blockNum);
 	 void writeIndex(ofstream& indexOutput);
+	 
 };

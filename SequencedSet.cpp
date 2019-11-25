@@ -80,6 +80,12 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 fileManager.writeIndexFile(&index);
 }
 
+void SequencedSet::load(string fileName, string indexFileName)
+{
+	 fileManager = FileManager();
+	 fileManager.open(fileName, indexFileName);
+}
+
 int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
 {
 

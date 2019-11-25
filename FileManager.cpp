@@ -30,7 +30,7 @@ Block FileManager::getBlock(int blockNumber)
 	 string blockG;
 	 int bsize;
 	 int position = header -> getHeaderSize();
-	 char* buf = new char[header -> blockSize()]; //use header->blockSize
+	 char* buf = new char[header -> blockSize()+1]; //use header->blockSize
 	 bsize = header -> blockSize();
 	 position += blockNumber * bsize;
 	 filefile.seekg(position, ios_base::beg);
@@ -76,4 +76,10 @@ void FileManager::writeIndexFile(Index* ind)
 	indexfile.write(s, inda.size());
 	indexfile.close();
 	
+}
+
+Header FileManager::readHeader()
+{
+
+	 return HeaderBuffer::unpack(filefile, "Storage.txt");
 }
