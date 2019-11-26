@@ -9,10 +9,11 @@
 
 using namespace std;
 
-void InputFileHeaderReadTest(ifstream&);
+void InputFileHeaderReadTest(string);
 void BlockStructureTest();
 void FileManagerTest();
-void searchTestFunction(ifstream&);
+void searchTestFunction();
+void tylersTemporaryTest();
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +22,7 @@ int main(int argc, char *argv[])
 	bool blockStructTest = false;
 	bool fileManagerTest = false;
 	bool searchTest = false;
+	bool tylersTest = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -46,6 +48,10 @@ int main(int argc, char *argv[])
 				{
 					searchTest = true;
 				}
+			case 't':
+				{
+					tylersTest = true;
+				}
 			default:
 				{
 					break;
@@ -53,7 +59,7 @@ int main(int argc, char *argv[])
 		}
 		i++;
 	}
-	ifstream inputFile(argv[i]);
+	string inputFile(argv[i]);
 	
 	if (createCheck == true)
 	{
@@ -65,39 +71,61 @@ int main(int argc, char *argv[])
 		 FileManagerTest();
 	}
 	if (searchTest)
-		searchTestFunction(inputFile);
+		searchTestFunction();
+	if (tylersTest)
+		tylersTemporaryTest();
 	cin.get();
 	return 0;
 }
 
-void InputFileHeaderReadTest(ifstream &inputFile)
+void InputFileHeaderReadTest(string inputFile)
 {
-	InputFileHeader* header1 = new InputFileHeader;
 	SequencedSet seqSet = SequencedSet();
-	seqSet.create(inputFile);
-	cout << "populating...";
+	cout << "populating...\n";
 	seqSet.populate(inputFile);
 	cout << "done";
-	cout << seqSet.searchForRecord(0, "544");
 	string primaryKey;
 	cout << "\nSearch test is on.\n";
 	cout << "What zip code would you like to search for? > ";
 	cin >> primaryKey;
-	ifstream indexFile("index.txt");
-	int blockNum = seqSet.searchForBlock(primaryKey, indexFile);
-	if (blockNum == -1)
-		cout << "Key not found\n";
+	int blockNum = seqSet.searchForBlock(primaryKey);
+	if (blockNum == -1) {
+		 cout << "Key not found\n";
+	}
 	else
-		cout << primaryKey << " should be located in block " << blockNum;
-	indexFile.close();
+	{
+		 cout << primaryKey << " should be located in block " << blockNum << endl;
+		 Record record = seqSet.searchForRecord(blockNum, primaryKey);
+		 cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
+	}
+
 }
 
 void FileManagerTest() {
 
 }
 
-void searchTestFunction(ifstream &inputFile)
+void searchTestFunction()
 {
+	 SequencedSet seqSet = SequencedSet();
+	 cout << "loading...\n";
+	 seqSet.load();
+	 cout << "done";
+	 string primaryKey;
+	 cout << "\nSearch test is on.\n";
+	 cout << "What zip code would you like to search for? > ";
+	 cin >> primaryKey;
+	 int blockNum = seqSet.searchForBlock(primaryKey);
+	 if (blockNum == -1) {
+		  cout << "Key not found\n";
+	 }
+	 else
+	 {
+		  cout << primaryKey << " should be located in block " << blockNum << endl;
+		  Record record = seqSet.searchForRecord(blockNum, primaryKey);
+		  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+	 }
+
 }
 
 void BlockStructureTest() {
@@ -127,4 +155,20 @@ void BlockStructureTest() {
 	 */
 }
 
+void tylersTemporaryTest()
+{
+	SequencedSet seqSet = SequencedSet();
+	seqSet.load();
+	Block blk = seqSet.getBlockFromFile(455);
+	for (int i = 0; i < blk.pack().size(); i++)
+		cout << blk.pack()[i];
+	string searchTerm;
+	cout << "What record would you like to insert into the above block? > ";
+	cin >> searchTerm;
+	int insertPoint = seqSet.searchForInsertion(blk, searchTerm);
+	cout << "Term can be inserted at position " << insertPoint << endl;
+	cout << "Next, pick a primary key to do a global search on: > " << endl;
+	cin >> searchTerm;
+	seqSet.add(searchTerm);
+}
 

@@ -3,13 +3,15 @@
 
 void FileManager::create(string filename, string indexfilename) 
 {
-	 filefile.open(filename, ios::in | ios::out | ios::trunc); 
+	 filefile.open(filename, ios::in | ios::out | ios::trunc | ios::binary);
+	 this->filefilename = filename;
 	 this->indexfilename = indexfilename;
 }
 
 void FileManager::open(string filename, string indexfilename)
 {
-	 filefile.open(filename, ios::in | ios::out); 
+	 filefile.open(filename, ios::in | ios::out | ios::binary); 
+	 this->filefilename = filename;
 	 this->indexfilename = indexfilename;
 }
 
@@ -23,6 +25,11 @@ string FileManager::getIndexFileName()
 	return indexfilename;
 }
 
+string FileManager::getFileFileName()
+{
+	return filefilename;
+}
+
 //I used an array is an intermediate step as I am unsure if i can use the write function with a string.
 Block FileManager::getBlock(int blockNumber)
 {
@@ -30,12 +37,13 @@ Block FileManager::getBlock(int blockNumber)
 	 string blockG;
 	 int bsize;
 	 int position = header -> getHeaderSize();
-	 char* buf = new char[header -> blockSize()+1]; //use header->blockSize
 	 bsize = header -> blockSize();
+	 char* buf = new char[bsize+1]; //use header->blockSize
 	 position += blockNumber * bsize;
-	 filefile.seekg(position, ios_base::beg);
+	 filefile.seekg(position);
 	 filefile.read(buf, bsize);
-		blockG = string(buf);
+	 buf[bsize] = '\0';
+	 blockG = string(buf);
 	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 
@@ -82,4 +90,11 @@ Header FileManager::readHeader()
 {
 
 	 return HeaderBuffer::unpack(filefile, "Storage.txt");
+}
+
+void FileManager::writeHeader(Header* header)
+{
+	 filefile.seekp(0);
+	 string packed = HeaderBuffer::pack(*header);
+	 filefile.write(packed.c_str(), packed.size());
 }

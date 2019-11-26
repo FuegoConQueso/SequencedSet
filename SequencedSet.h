@@ -18,8 +18,6 @@ using namespace std;
 
 class SequencedSet{
 	private:
-		int blockCapacity; //maximum number of records in a block
-		int blockInitialSize; //initial number of records in a block
 		Index index; //the index of blocks
 		Record populateRecord(string line);
 
@@ -30,18 +28,18 @@ class SequencedSet{
 		SequencedSet();
 		SequencedSet(const SequencedSet& other);
 		~SequencedSet();
-		void create(ifstream& inputFile);
-		void populate(ifstream& inputFile);
+		void populate(string inputFile, string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
-		int searchForBlock(int primaryKey, ifstream& indexFile);
-		int searchForRecord(int rbn, string primaryKey);
+		int searchForBlock(string primaryKey); 
+		Record searchForRecord(int rbn, string primaryKey);
+		int searchForInsertion(Block toSearch, string keyToInsert);
+		void add(string primaryKey);
+		Block getBlockFromFile(int); //takes output of int searchForBlock
 		vector<Record> searchMatches(string toSearch, int fieldNum);
-
 
 		static Header* sHeader();
 
 		Header header;
-		Record search(string key);
 };
 
 #endif

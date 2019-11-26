@@ -125,7 +125,7 @@ Header::Header()
 }
 
 Header::Header(string fileName, string name, vector<tuple<string, int, FieldType>> fieldInfo, int startBlockIndex,
-	 int startAvailIndex, int blockCapacity, int bhNextBlockSize, int bhRecordCountSize, int headerSizeSize,
+	 int startAvailIndex, int blockCapacity, int blockMinSize, int bhNextBlockSize, int bhRecordCountSize, int headerSizeSize,
 	 string headerSeperators, string hFieldSeperator, string bhPrefix, string recordPrefix, string padChar)
 {
 	 this->fileName = fileName;
@@ -134,6 +134,7 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 this->startBlock = startBlockIndex;
 	 this->startAvail = startAvailIndex;
 	 this->blockCapacity = blockCapacity;
+	 this->blockMinSize = blockMinSize;
 	 this->blockNumSize = bhNextBlockSize;
 	 this->bhRecordCountSize = bhRecordCountSize;
 	 this->headerSizeSize = headerSizeSize;
@@ -143,7 +144,6 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 this->recordPrefix = recordPrefix;
 	 this->padChar = padChar;
 	 this->indexName = indexName;
-	 
 }
 int Header::blockSize()
 {
@@ -164,6 +164,10 @@ int Header::nextBlockSize()
 int Header::getBlockCapacity()
 {
 	 return blockCapacity;
+}
+int Header::getBlockMinSize()
+{
+	 return blockMinSize;
 }
 string Header::getFieldName(int index)
 {

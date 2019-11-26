@@ -4,25 +4,21 @@
 Header* SequencedSet::activeHeader;
 
 SequencedSet::SequencedSet(){
-
-	 blockCapacity = 4;
-	 blockInitialSize = blockCapacity * 3 / 4;
 }
 
 SequencedSet::~SequencedSet(){
 }
 
-void SequencedSet::create(ifstream & inputFile){
-	InputFileHeader hfile;
-	hfile.readHeader(inputFile);
-	header = Header("Storage.txt", "Doesn't Read in File Name Yet", hfile.makeTuples(), 0, -1);
-	activeHeader = &header;
-}
-
-void SequencedSet::populate(ifstream& inputFile) {
+void SequencedSet::populate(string inputFileName, string fileName, string indexFileName) {
+	 ifstream inputFile = ifstream(inputFileName);
 	 //initialize filemanager
 	 fileManager = FileManager();
-	 fileManager.create("Storage.txt", "Index.txt");
+	 fileManager.create(fileName, indexFileName);
+	 //header loading
+	 InputFileHeader hfile;
+	 hfile.readHeader(inputFile);
+	 header = Header(fileName, hfile.getFileName(), hfile.makeTuples(), 0, -1);
+	 activeHeader = &header;
 	 //get the filestream to use for the main file
 	 fstream& outputFile = fileManager.getFile();
 	 //write the header to the file
@@ -33,6 +29,9 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 //variables used for the loop
 	 int recordCount = 0;
 	 int blockCount = 0;
+	 int blockMinSize = header.getBlockMinSize();
+	 int blockCapacity = header.getBlockCapacity();
+	 int blockInitialSize = blockMinSize + (blockCapacity - blockMinSize) / 2;
 	 Block tempBlock;
 	 vector<Record> tempRecords = vector<Record>();
 	 //deal with extra newline character
@@ -74,46 +73,52 @@ void SequencedSet::populate(ifstream& inputFile) {
 	 }
 	 //update the header's Avail pointer
 	 header.setStartAvail(blockCount);
-	 //TODO: add Filemanager "update avail start" function call
-	 outputFile.close();
-
+	 //rewrites the header with the new Avail pointer
+	 //TODO: change to Filemanager "update avail start" function call
+	 fileManager.writeHeader(&header);
 	 fileManager.writeIndexFile(&index);
 }
 
 void SequencedSet::load(string fileName, string indexFileName)
 {
+	 //start filemanager
 	 fileManager = FileManager();
 	 fileManager.open(fileName, indexFileName);
+	 //load header object
+	 header = fileManager.readHeader();
+	 activeHeader = &header;
+	 //load index file
+	 index = fileManager.readIndexFile();
 }
 
-int SequencedSet::searchForBlock(int primaryKey, ifstream& indexFile)
+int SequencedSet::searchForBlock(string primaryKey)
 {
 
-	cout << "Searching for " << primaryKey << "...\n";
-	int returnValue = -1;
-	bool found = 0;
-	string testString = "";
-	string garbage = "";
-	getline(indexFile, garbage); // get the garbage
-	while (!indexFile.eof() && !found)
+	cout << "Searching for " << primaryKey << "...\n"; string compstring;
+	int midpoint = -1, r, l, compnum = 0;
+	r = index.size() - 1;
+	l = 0;
+	while (l <= r)
 	{
-		getline(indexFile, testString);
-		stringstream line = stringstream(testString);
-		string primKeyString;
-		string blkNumString;
-		line >> primKeyString;
-		line >> blkNumString;
-		Header::FieldType keyFieldType = header.getKeyType();
-		if (Header::compare(primKeyString, primaryKey, keyFieldType) == 1 || Header::compare(primKeyString, primaryKey, keyFieldType) == 0)
-		{
-			returnValue = stoi(blkNumString);
-			found = true;
-		}
+		 midpoint = l + (r - l) / 2;
+		 compstring.clear();
+		 compstring = index.getIndex(midpoint).first;
+		 compnum = header.compare(primaryKey, compstring, header.getKeyType());
+		 if (compnum == 0)
+			  return midpoint;
+		 else if (compnum == -1)
+			  r = midpoint - 1;
+		 else
+			  l = midpoint + 1;
 	}
-	return returnValue;
+	if (compnum == 1) {
+		 midpoint += 1;
+	}
+	return midpoint;
+	
 }
 
-int SequencedSet::searchForRecord(int rbn, string primaryKey)
+Record SequencedSet::searchForRecord(int rbn, string primaryKey)
 {
 	Block block;
 	string compstring;
@@ -127,14 +132,39 @@ int SequencedSet::searchForRecord(int rbn, string primaryKey)
 		compstring.clear();
 		compstring = block.getRecord(midpoint).getField(0);
 		compnum = header.compare(primaryKey, compstring, header.getKeyType());
-			if (compnum == 0)
-				return midpoint;
-			else if (compnum == -1)
-				r = midpoint - 1;
-			else
-				l = midpoint + 1;
+		cout << "Compstring: " << compstring << endl;
+		cout << "CompNum: " << compnum <<endl;
+		cout << "primaryKey: " << primaryKey << endl;
+		if (compnum == 0)
+		  return block.getRecord(midpoint);
+		else if (compnum == -1)
+		  r = midpoint - 1;
+		else
+		  l = midpoint + 1;
 	}
-	return -1;
+	return Record();
+}
+
+int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
+{
+	int insertionPoint = 0;
+	bool inserted = false;
+	while ((!inserted) && (insertionPoint < toSearch.recordCount()))
+	{
+		Record curRec = toSearch.getRecord(insertionPoint);
+		if (Header::compare(curRec.getField(0), keyToInsert, header.getFieldType(0)) == 1)
+			break;
+		insertionPoint++;
+	}
+	return insertionPoint;
+}
+
+void SequencedSet::add(string primaryKey)
+{
+	int blockNum = searchForBlock(primaryKey);
+	Block insertionBlock = getBlockFromFile(blockNum);
+	int insertPoint = searchForInsertion(insertionBlock, primaryKey);
+	cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
 }
 
 Header* SequencedSet::sHeader()
@@ -193,3 +223,25 @@ vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 	}
 	return matches;
 }
+Block SequencedSet::getBlockFromFile(int blkNum)
+{
+	Block blk;
+	ifstream iFile(fileManager.getFileFileName()); 
+	cout << "In getBlockFromFile!\n";
+	string rec = "";
+	//Get rid of header in indexFile
+	for (int i = 0; i < 10; i++) //Any way to get 11 from the program itself instead of magic number?
+	{
+		getline(iFile, rec);
+	}
+	for (int i = 0; i < blkNum; i++)
+	{
+		getline(iFile, rec);
+	}
+	string blockString;
+	getline(iFile, blockString);
+	BlockBuffer blbuff;
+	blk = blbuff.unpack(blkNum, blockString);
+	return blk;
+}
+
