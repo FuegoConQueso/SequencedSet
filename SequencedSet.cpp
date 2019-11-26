@@ -159,12 +159,27 @@ int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 	return insertionPoint;
 }
 
-void SequencedSet::add(string primaryKey)
+void SequencedSet::add(Record rec)
 {
+	string primaryKey = rec.getField(0);
 	int blockNum = searchForBlock(primaryKey);
 	Block insertionBlock = getBlockFromFile(blockNum);
-	int insertPoint = searchForInsertion(insertionBlock, primaryKey);
-	cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
+	bool duplicate = false;
+	for (int i = 0; i < insertionBlock.recordCount(); i++)
+	{
+		if (Header::compare(insertionBlock.getRecord(i).getField(0), primaryKey, header.getFieldType(0)) == 0)
+			duplicate = true;
+	}
+	if (duplicate)
+		cout << "Primary key duplicated: record not inserted." << endl;
+	else
+	{
+		int insertPoint = searchForInsertion(insertionBlock, primaryKey);
+		insertionBlock.insertRecord(insertPoint, rec);
+		cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
+	}
+
+	fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
 }
 
 Header* SequencedSet::sHeader()
@@ -202,7 +217,6 @@ Block SequencedSet::getBlockFromFile(int blkNum)
 {
 	Block blk;
 	ifstream iFile(fileManager.getFileFileName()); 
-	cout << "In getBlockFromFile!\n";
 	string rec = "";
 	//Get rid of header in indexFile
 	for (int i = 0; i < 10; i++) //Any way to get 11 from the program itself instead of magic number?
@@ -218,5 +232,18 @@ Block SequencedSet::getBlockFromFile(int blkNum)
 	BlockBuffer blbuff;
 	blk = blbuff.unpack(blkNum, blockString);
 	return blk;
+}
+
+Record SequencedSet::specifyRecord()
+{
+	vector<string> customFields;
+	string currentString;
+	for (int i = 0; i < header.getNumOfFields(); i++)
+	{
+		cout << "Enter " << header.getFieldName(i) << ": ";
+		cin >> currentString;
+		customFields.push_back(currentString);
+	}
+	return Record(customFields);
 }
 

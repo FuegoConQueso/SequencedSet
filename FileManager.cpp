@@ -56,7 +56,7 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 bsize = header -> blockSize();
 	 position += blockNumber * bsize;
 	 filefile.seekp(position, ios_base::beg);
-	 char* s = new char(*wBlock.c_str());
+	 const char* s = wBlock.c_str();
 	 filefile.write(s, bsize);
 }
 

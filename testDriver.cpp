@@ -167,8 +167,7 @@ void tylersTemporaryTest()
 	cin >> searchTerm;
 	int insertPoint = seqSet.searchForInsertion(blk, searchTerm);
 	cout << "Term can be inserted at position " << insertPoint << endl;
-	cout << "Next, pick a primary key to do a global search on: > " << endl;
-	cin >> searchTerm;
-	seqSet.add(searchTerm);
+	Record rec = seqSet.specifyRecord();
+	seqSet.add(rec);
 }
 

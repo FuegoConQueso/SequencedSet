@@ -21,6 +21,7 @@ public:
 	 int recordCount(); //returns the current number of records in the block (aka records.size)
 	 int getBlockNumber(); //returns the current block number
 	 Record getRecord(int index); 
+	 void insertRecord(int index, Record rec);
 private:
 	 //data members
 	 int blockNumber; //what relative block position this block is.

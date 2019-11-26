@@ -32,8 +32,9 @@ class SequencedSet{
 		int searchForBlock(string primaryKey); 
 		Record searchForRecord(int rbn, string primaryKey);
 		int searchForInsertion(Block toSearch, string keyToInsert);
-		void add(string primaryKey);
+		void add(Record rec);
 		Block getBlockFromFile(int); //takes output of int searchForBlock
+		Record specifyRecord(); // allows user to build record
 
 		static Header* sHeader();
 

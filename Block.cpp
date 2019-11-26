@@ -45,6 +45,11 @@ Record Block::getRecord(int index) {
 	 return records[index];
 }
 
+void Block::insertRecord(int index, Record rec)
+{
+	records.insert(records.begin() + index, rec);
+}
+
 void Block::unpack(vector<string> packedBlock)
 {
 	 int size = packedBlock.size();
