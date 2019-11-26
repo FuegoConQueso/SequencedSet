@@ -23,6 +23,7 @@ class SequencedSet{
 		Index index; //the index of blocks
 		Record populateRecord(string line);
 
+
 		FileManager fileManager;
 		static Header* activeHeader;
 	public:
@@ -34,6 +35,8 @@ class SequencedSet{
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		int searchForBlock(int primaryKey, ifstream& indexFile);
 		int searchForRecord(int rbn, string primaryKey);
+		vector<Record> searchMatches(string toSearch, int fieldNum);
+
 
 		static Header* sHeader();
 

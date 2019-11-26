@@ -168,3 +168,28 @@ Record SequencedSet::populateRecord(string line) {
 	 return Record(recFields2);
 }
 
+vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
+{
+	vector<Record> matches;
+	int matchNum;
+	int startTrav;
+	Block curBlock;
+	Record currentRec;
+	startTrav = header.getStartBlock();
+	while (startTrav != header.getStartAvail())
+	{
+		curBlock = fileManager.getBlock(startTrav);
+		string compRecStr;
+		for (int recNum = 0; recNum < curBlock.recordCount(); recNum++)
+		{
+			currentRec = curBlock.getRecord(recNum);
+			compRecStr = currentRec.getField(fieldNum);
+			matchNum = Header::compare(compRecStr, toSearch, header.getFieldType(fieldNum));
+			if (matchNum == 0)
+				matches.push_back(currentRec);
+			compRecStr.clear();
+		}
+		startTrav = curBlock.getBlockNextNumber();
+	}
+	return matches;
+}
