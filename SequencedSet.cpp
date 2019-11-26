@@ -213,6 +213,32 @@ Record SequencedSet::populateRecord(string line) {
 	 return Record(recFields2);
 }
 
+vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
+{
+	vector<Record> matches;
+	int matchNum;
+	int startTrav;
+	Block curBlock;
+	Record currentRec;
+	startTrav = header.getStartBlock();
+	while (startTrav != header.getStartAvail())
+	{
+		curBlock = fileManager.getBlock(startTrav);
+		string compRecStr;
+		for (int recNum = 0; recNum < curBlock.recordCount(); recNum++)
+		{
+			currentRec = curBlock.getRecord(recNum);
+			compRecStr = currentRec.getField(fieldNum);
+			matchNum = Header::compare(compRecStr, toSearch, header.getFieldType(fieldNum));
+			if (matchNum == 0)
+				matches.push_back(currentRec);
+			compRecStr.clear();
+		}
+		startTrav = curBlock.getBlockNextNumber();
+	}
+	return matches;
+}
+
 Block SequencedSet::getBlockFromFile(int blkNum)
 {
 	Block blk;
@@ -234,6 +260,35 @@ Block SequencedSet::getBlockFromFile(int blkNum)
 	return blk;
 }
 
+Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
+{
+	int highest = 0;
+	string comp1, comp2;
+	for (int i = 1; i < vecToSearch.size(); i++)
+	{
+		comp1 = vecToSearch[highest].getField(fieldNumber);;
+		comp2 = vecToSearch[i].getField(fieldNumber);
+		Header::compare(comp1, comp2, header.getFieldType(fieldNumber));
+		if (comp2 > comp1)
+			highest = i;
+	}
+	return vecToSearch[highest];
+}
+
+Record SequencedSet::findLeast(vector<Record> vecToSearch, int fieldNumber)
+{
+	int lowest = 0;
+	string comp1, comp2;
+	for (int i = 1; i < vecToSearch.size(); i++)
+	{
+		comp1 = vecToSearch[lowest].getField(fieldNumber);
+		comp2 = vecToSearch[i].getField(fieldNumber);
+		Header::compare(comp1, comp2, header.getFieldType(fieldNumber));
+		if (comp2 < comp1)
+			lowest = i;
+	}
+	return vecToSearch[lowest];
+}
 Record SequencedSet::specifyRecord()
 {
 	vector<string> customFields;

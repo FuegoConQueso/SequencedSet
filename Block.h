@@ -22,6 +22,7 @@ public:
 	 int getBlockNumber(); //returns the current block number
 	 Record getRecord(int index); 
 	 void insertRecord(int index, Record rec);
+	 int getBlockNextNumber() { return nextBlock; };
 private:
 	 //data members
 	 int blockNumber; //what relative block position this block is.

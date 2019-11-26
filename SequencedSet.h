@@ -21,6 +21,7 @@ class SequencedSet{
 		Index index; //the index of blocks
 		Record populateRecord(string line);
 
+
 		FileManager fileManager;
 		static Header* activeHeader;
 	public:
@@ -35,6 +36,9 @@ class SequencedSet{
 		void add(Record rec);
 		Block getBlockFromFile(int); //takes output of int searchForBlock
 		Record specifyRecord(); // allows user to build record
+		Record findMost(vector<Record> vecToSearch, int fieldNumber);
+		Record findLeast(vector<Record> vecToSearch, int fieldNumber);
+		vector<Record> searchMatches(string toSearch, int fieldNum);
 
 		static Header* sHeader();
 
