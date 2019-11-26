@@ -35,6 +35,8 @@ class SequencedSet{
 		int searchForInsertion(Block toSearch, string keyToInsert);
 		void add(string primaryKey);
 		Block getBlockFromFile(int); //takes output of int searchForBlock
+		Record findMost(vector<Record> vecToSearch, int fieldNumber);
+		Record findLeast(vector<Record> vecToSearch, int fieldNumber);
 		vector<Record> searchMatches(string toSearch, int fieldNum);
 
 		static Header* sHeader();
