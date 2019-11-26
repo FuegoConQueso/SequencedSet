@@ -25,6 +25,11 @@ string FileManager::getIndexFileName()
 	return indexfilename;
 }
 
+string FileManager::getFileFileName()
+{
+	return filefilename;
+}
+
 //I used an array is an intermediate step as I am unsure if i can use the write function with a string.
 Block FileManager::getBlock(int blockNumber)
 {

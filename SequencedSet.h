@@ -29,8 +29,11 @@ class SequencedSet{
 		~SequencedSet();
 		void populate(string inputFile, string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
-		int searchForBlock(string primaryKey);
+		int searchForBlock(string primaryKey); 
 		Record searchForRecord(int rbn, string primaryKey);
+		int searchForInsertion(Block toSearch, string keyToInsert);
+		void add(string primaryKey);
+		Block getBlockFromFile(int); //takes output of int searchForBlock
 
 		static Header* sHeader();
 

@@ -21,6 +21,7 @@ class FileManager
 		fstream& getFile();
 		void open(string filname, string indfilname);
 		string getIndexFileName();
+		string getFileFileName();
 
 		Index readIndexFile();
 		void writeIndexFile(Index* ind);
