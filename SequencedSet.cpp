@@ -122,7 +122,7 @@ int SequencedSet::searchForBlock(string primaryKey)
 	
 }
 
-Record SequencedSet::searchForRecord(int rbn, string primaryKey)
+Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 {
 	Block block;
 	string compstring;
@@ -140,7 +140,10 @@ Record SequencedSet::searchForRecord(int rbn, string primaryKey)
 		cout << "CompNum: " << compnum <<endl;
 		cout << "primaryKey: " << primaryKey << endl;
 		if (compnum == 0)
-		  return block.getRecord(midpoint);
+		{
+			rrn = midpoint;
+			return block.getRecord(midpoint);
+		}
 		else if (compnum == -1)
 		  r = midpoint - 1;
 		else
@@ -191,6 +194,26 @@ void SequencedSet::add(Record rec)
 	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
 	fileManager.closeFile();
 	fileManager.open(fileManager.getFileFileName(), fileManager.getIndexFileName()); 
+}
+
+void SequencedSet::deleteRecord(string primaryKey)
+{
+	int recordBlock = searchForBlock(primaryKey);
+	if (recordBlock == -1)
+		cout << "Record with that primary key not found.\n";
+	else
+	{
+		int rrn = -1;
+		Record foundRecord = searchForRecord(recordBlock, primaryKey, rrn);
+		if (rrn = -1)
+		{
+			cout << "Record not found." << endl;
+		}
+		else
+		{
+			Block blk = fileManager.getBlock(recordBlock);
+		}
+	}
 }
 
 void SequencedSet::split(Block blk)

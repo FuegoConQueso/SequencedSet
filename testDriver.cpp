@@ -95,7 +95,8 @@ void InputFileHeaderReadTest(string inputFile)
 	else
 	{
 		 cout << primaryKey << " should be located in block " << blockNum << endl;
-		 Record record = seqSet.searchForRecord(blockNum, primaryKey);
+		 int rrn = 0;
+		 Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
 		 cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
 	}
 
@@ -122,7 +123,8 @@ void searchTestFunction()
 	 else
 	 {
 		  cout << primaryKey << " should be located in block " << blockNum << endl;
-		  Record record = seqSet.searchForRecord(blockNum, primaryKey);
+		  int rrn = -1;
+		  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
 		  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
 	 }
 
@@ -171,5 +173,11 @@ void addTestFunction()
 	seqSet.add(rec);
 	Record rec2 = seqSet.specifyRecord();
 	seqSet.add(rec2);
+
+	//Testing delete
+	cout << "Enter a record's primary key and the record will be removed. > ";
+	string primaryKey;
+	cin >> primaryKey;
+	seqSet.deleteRecord(primaryKey);
 }
 
