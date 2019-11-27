@@ -77,6 +77,10 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 	 //TODO: change to Filemanager "update avail start" function call
 	 fileManager.writeHeader(&header);
 	 fileManager.writeIndexFile(&index);
+	 //Create empty block at current avail;
+	 vector<Record> lastBlockRecords;
+	 Block lastBlock(header.getStartAvail(), header.getStartAvail() + 1, lastBlockRecords);
+	 fileManager.writeBlock(BlockBuffer::pack(lastBlock.pack()), header.getStartAvail());
 }
 
 void SequencedSet::load(string fileName, string indexFileName)
@@ -178,8 +182,41 @@ void SequencedSet::add(Record rec)
 		insertionBlock.insertRecord(insertPoint, rec);
 		cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
 	}
-
 	fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
+	if (insertionBlock.recordCount() > header.getBlockCapacity())
+	{
+		split(insertionBlock);
+	}
+	
+	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
+	fileManager.closeFile();
+	fileManager.open(fileManager.getFileFileName(), fileManager.getIndexFileName()); 
+}
+
+void SequencedSet::split(Block blk)
+{
+	int newBlockPosition = header.getStartAvail();
+	int newBlockNext = getBlockFromFile(header.getStartAvail()).getBlockNextNumber();
+	vector<Record> newRecords;
+	vector<Record> newRecords2;
+	for (int i = 0; i < blk.recordCount(); i++)
+	{
+		if (i <= blk.recordCount() / 2)
+		{
+			newRecords.push_back(blk.getRecord(i));
+		}
+		else
+			newRecords2.push_back(blk.getRecord(i));
+	}
+	Block newBlock(blk.getBlockNumber(), blk.getBlockNextNumber(), newRecords);
+	Block newBlock2(newBlockPosition, newBlockNext, newRecords2);
+	fileManager.writeBlock(BlockBuffer::pack(newBlock.pack()), newBlock.getBlockNumber());
+	fileManager.writeBlock(BlockBuffer::pack(newBlock2.pack()), newBlock2.getBlockNumber());
+	header.setStartAvail(newBlock2.getBlockNextNumber());
+	index.addIndex(newBlock.getRecord(newBlock.recordCount() - 1).getField(0), newBlock.getBlockNumber());
+	index.addIndex(newBlock.getRecord(newBlock2.recordCount() - 1).getField(0), newBlock2.getBlockNumber());
+	fileManager.writeHeader(&header);
+	fileManager.writeIndexFile(&index);
 }
 
 Header* SequencedSet::sHeader()
@@ -257,6 +294,7 @@ Block SequencedSet::getBlockFromFile(int blkNum)
 	getline(iFile, blockString);
 	BlockBuffer blbuff;
 	blk = blbuff.unpack(blkNum, blockString);
+	iFile.close();
 	return blk;
 }
 

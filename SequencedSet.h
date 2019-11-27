@@ -34,6 +34,7 @@ class SequencedSet{
 		Record searchForRecord(int rbn, string primaryKey);
 		int searchForInsertion(Block toSearch, string keyToInsert);
 		void add(Record rec);
+		void split(Block blk);
 		Block getBlockFromFile(int); //takes output of int searchForBlock
 		Record specifyRecord(); // allows user to build record
 		Record findMost(vector<Record> vecToSearch, int fieldNumber);

@@ -129,7 +129,7 @@ Header::Header(string fileName, string name, vector<tuple<string, int, FieldType
 	 string headerSeperators, string hFieldSeperator, string bhPrefix, string recordPrefix, string padChar)
 {
 	 this->fileName = fileName;
-	 this->name = name; // What is the difference between this and fileName?
+	 this->name = name; 
 	 this->fieldInfo = fieldInfo;
 	 this->startBlock = startBlockIndex;
 	 this->startAvail = startAvailIndex;

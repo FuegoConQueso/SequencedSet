@@ -13,7 +13,7 @@ void InputFileHeaderReadTest(string);
 void BlockStructureTest();
 void FileManagerTest();
 void searchTestFunction();
-void tylersTemporaryTest();
+void addTestFunction();
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	bool blockStructTest = false;
 	bool fileManagerTest = false;
 	bool searchTest = false;
-	bool tylersTest = false;
+	bool addTest = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
 				{
 					searchTest = true;
 				}
-			case 't':
+			case 'a':
 				{
-					tylersTest = true;
+					addTest = true;
 				}
 			default:
 				{
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
 	}
 	if (searchTest)
 		searchTestFunction();
-	if (tylersTest)
-		tylersTemporaryTest();
+	if (addTest)
+		addTestFunction();
 	cin.get();
 	return 0;
 }
@@ -155,7 +155,7 @@ void BlockStructureTest() {
 	 */
 }
 
-void tylersTemporaryTest()
+void addTestFunction()
 {
 	SequencedSet seqSet = SequencedSet();
 	seqSet.load();
@@ -169,5 +169,7 @@ void tylersTemporaryTest()
 	cout << "Term can be inserted at position " << insertPoint << endl;
 	Record rec = seqSet.specifyRecord();
 	seqSet.add(rec);
+	Record rec2 = seqSet.specifyRecord();
+	seqSet.add(rec2);
 }
 

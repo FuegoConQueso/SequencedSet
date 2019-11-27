@@ -60,6 +60,21 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 filefile.write(s, bsize);
 }
 
+void FileManager::createSpace(int blockNumber)
+{
+	filefile.close();
+	filefile.open(this->filefilename, ios::app | ios::in);
+	Header* header = SequencedSet::sHeader();
+	int bsize;
+	int position = header->getHeaderSize();
+	bsize = header->blockSize();
+	position += blockNumber * bsize;
+	filefile.seekg(blockNumber, ios_base::beg);
+	filefile << "\n";
+	filefile.close();
+	this->open(this->filefilename, this->indexfilename);
+}
+
 Index FileManager::readIndexFile()
 {
 	fstream index1;
@@ -97,4 +112,9 @@ void FileManager::writeHeader(Header* header)
 	 filefile.seekp(0);
 	 string packed = HeaderBuffer::pack(*header);
 	 filefile.write(packed.c_str(), packed.size());
+}
+
+void FileManager::closeFile()
+{
+	filefile.close();
 }
