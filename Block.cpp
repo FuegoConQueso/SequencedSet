@@ -45,6 +45,11 @@ Record Block::getRecord(int index) {
 	 return records[index];
 }
 
+int Block::getBlockNextNumber()
+{
+	 return nextBlock;
+}
+
 void Block::insertRecord(int index, Record rec)
 {
 	records.insert(records.begin() + index, rec);
