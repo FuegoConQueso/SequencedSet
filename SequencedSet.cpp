@@ -10,6 +10,12 @@ SequencedSet::SequencedSet(){
 SequencedSet::~SequencedSet(){
 }
 
+/** Converts an input file into our file storage format, saving it as a storage file and index.
+
+@param inputFileName The name of the file you want to input. Must be located in the SequencedSet directory.
+@param fileName The name of the file that will be used to store the SequencedSet data. Defaults to "Storage.txt"
+@param indexFileName The name of the file that will be used to store the index. Defaults to "Index.txt"
+*/
 void SequencedSet::populate(string inputFileName, string fileName, string indexFileName) {
 	 ifstream inputFile = ifstream(inputFileName);
 	 //initialize filemanager

@@ -5,7 +5,7 @@ InputFileHeader::InputFileHeader()
 {
 	headerSize = 0;
 	recordSize = 0;
-	filename = " ";
+	name = "";
 }
 
 vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
@@ -20,7 +20,6 @@ vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
 void InputFileHeader::readHeader(ifstream &inputFile){
 	char dummyChar;
 	char* buf = new char[128];
-	string name;
 	string headerSizeString;
 	string recordSizeString;
 	string s1, s2;
