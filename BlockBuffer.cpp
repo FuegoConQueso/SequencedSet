@@ -40,7 +40,7 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 	 vector<Record> records;
 	 string holdrec;
 	 //position to start reading in the string
-	 int startReadPos = 0;
+	 int startReadPos = 1;
 	 //read next block
 	 string nextBlockStr = blocrec1.substr(startReadPos, header->nextBlockSize());
 	 int nextBlock = stoi(header->unpad(nextBlockStr));

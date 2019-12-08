@@ -1,6 +1,7 @@
 #include "Header.h"
 #include "InputFileHeader.h"
 #include "HeaderBuffer.h"
+#include "SequencedSet.h"
 
 using namespace std;
 
@@ -113,11 +114,13 @@ int Header::getStartAvail()
 void Header::setStartBlock(int index)
 {
 	 startBlock = index;
+	 SequencedSet::updateHeader();
 }
 
 void Header::setStartAvail(int index)
 {
 	 startAvail = index;
+	 SequencedSet::updateHeader();
 }
 
 Header::Header()

@@ -14,6 +14,7 @@
 #include "Header.h"
 #include "HeaderBuffer.h"
 #include "FileManager.h"
+#include "DuplicateException.h"
 using namespace std;
 
 class SequencedSet{
@@ -24,6 +25,7 @@ class SequencedSet{
 
 		FileManager fileManager;
 		static Header* activeHeader;
+		static SequencedSet* activeSeqSet;
 	public:
 		SequencedSet();
 		SequencedSet(const SequencedSet& other);
@@ -42,7 +44,9 @@ class SequencedSet{
 		Record findLeast(vector<Record> vecToSearch, int fieldNumber);
 		vector<Record> searchMatches(string toSearch, int fieldNum);
 
+		static void updateHeader(); //called by Header methods to automatically update the header file with each change to the header object
 		static Header* sHeader();
+		static SequencedSet* SeqSet();
 
 		Header header;
 };

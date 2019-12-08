@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockBuffer.h" />
+    <ClInclude Include="DuplicateException.h" />
     <ClInclude Include="FileIterator.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Header.h" />

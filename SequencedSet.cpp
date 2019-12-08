@@ -2,6 +2,7 @@
 #include <string>
 
 Header* SequencedSet::activeHeader;
+SequencedSet* SequencedSet::activeSeqSet;
 
 SequencedSet::SequencedSet(){
 }
@@ -18,7 +19,7 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 	 InputFileHeader hfile;
 	 hfile.readHeader(inputFile);
 	 header = Header(fileName, hfile.getFileName(), hfile.makeTuples(), 0, -1);
-	 activeHeader = &header;
+	 activeSeqSet = this;
 	 //get the filestream to use for the main file
 	 fstream& outputFile = fileManager.getFile();
 	 //write the header to the file
@@ -90,7 +91,7 @@ void SequencedSet::load(string fileName, string indexFileName)
 	 fileManager.open(fileName, indexFileName);
 	 //load header object
 	 header = fileManager.readHeader();
-	 activeHeader = &header;
+	 activeSeqSet = this;
 	 //load index file
 	 index = fileManager.readIndexFile();
 }
@@ -159,8 +160,13 @@ int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 	while ((!inserted) && (insertionPoint < toSearch.recordCount()))
 	{
 		Record curRec = toSearch.getRecord(insertionPoint);
-		if (Header::compare(curRec.getField(0), keyToInsert, header.getFieldType(0)) == 1)
-			break;
+		int compareVal = Header::compare(curRec.getField(0), keyToInsert, header.getFieldType(0));
+		if (compareVal == 0) {
+			 throw new DuplicateException(insertionPoint, "Thrown in searchForInsertion()");
+		}
+		if (compareVal == 1) {
+			 break;
+		}
 		insertionPoint++;
 	}
 	return insertionPoint;
@@ -171,7 +177,7 @@ void SequencedSet::add(Record rec)
 	string primaryKey = rec.getField(0);
 	int blockNum = searchForBlock(primaryKey);
 	Block insertionBlock = getBlockFromFile(blockNum);
-	bool duplicate = false;
+	bool duplicate = false; /*
 	for (int i = 0; i < insertionBlock.recordCount(); i++)
 	{
 		if (Header::compare(insertionBlock.getRecord(i).getField(0), primaryKey, header.getFieldType(0)) == 0)
@@ -180,17 +186,21 @@ void SequencedSet::add(Record rec)
 	if (duplicate)
 		cout << "Primary key duplicated: record not inserted." << endl;
 	else
-	{
-		int insertPoint = searchForInsertion(insertionBlock, primaryKey);
-		insertionBlock.insertRecord(insertPoint, rec);
-		cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
-	}
-	fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
-	if (insertionBlock.recordCount() > header.getBlockCapacity())
-	{
-		split(insertionBlock);
-	}
-	
+	*/
+	 try {
+		  int insertPoint = searchForInsertion(insertionBlock, primaryKey);
+		  insertionBlock.insertRecord(insertPoint, rec);
+		  cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
+		  fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
+		  if (insertionBlock.recordCount() > header.getBlockCapacity())
+		  {
+				split(insertionBlock);
+		  }
+
+	 }
+	 catch (DuplicateException* e) {
+		  cout << e->to_string() << endl;
+	 }
 	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
 	fileManager.closeFile();
 	fileManager.open(fileManager.getFileFileName(), fileManager.getIndexFileName()); 
@@ -242,9 +252,19 @@ void SequencedSet::split(Block blk)
 	fileManager.writeIndexFile(&index);
 }
 
+void SequencedSet::updateHeader()
+{
+	 activeSeqSet->fileManager.writeHeader(&(activeSeqSet->header));
+}
+
 Header* SequencedSet::sHeader()
 {
-	 return activeHeader;
+	 return &(activeSeqSet->header);
+}
+
+SequencedSet* SequencedSet::SeqSet()
+{
+	 return activeSeqSet;
 }
 
 Record SequencedSet::populateRecord(string line) {
@@ -301,24 +321,7 @@ vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 
 Block SequencedSet::getBlockFromFile(int blkNum)
 {
-	Block blk;
-	ifstream iFile(fileManager.getFileFileName()); 
-	string rec = "";
-	//Get rid of header in indexFile
-	for (int i = 0; i < 10; i++) //Any way to get 11 from the program itself instead of magic number?
-	{
-		getline(iFile, rec);
-	}
-	for (int i = 0; i < blkNum; i++)
-	{
-		getline(iFile, rec);
-	}
-	string blockString;
-	getline(iFile, blockString);
-	BlockBuffer blbuff;
-	blk = blbuff.unpack(blkNum, blockString);
-	iFile.close();
-	return blk;
+	 return fileManager.getBlock(blkNum);
 }
 
 Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
