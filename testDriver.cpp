@@ -90,14 +90,19 @@ void InputFileHeaderReadTest(string inputFile)
 	cin >> primaryKey;
 	int blockNum = seqSet.searchForBlock(primaryKey);
 	if (blockNum == -1) {
-		 cout << "Key not found\n";
+		 cout << "Key not located in any blocks\n";
 	}
 	else
 	{
 		 cout << primaryKey << " should be located in block " << blockNum << endl;
 		 int rrn = 0;
-		 Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
-		 cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
+		 try {
+			  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
+			  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
+		 }
+		 catch (RecordNotFoundException * e) {
+			  cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist.";
+		 }
 	}
 
 }
@@ -171,7 +176,7 @@ void addTestFunction()
 		 int insertPoint = seqSet.searchForInsertion(blk, searchTerm);
 		 cout << "Term can be inserted at position " << insertPoint << endl;
 	}
-	catch (DuplicateException* e){
+	catch (DuplicateRecordException* e){
 		 cout << e->to_string() << endl;
 	}
 	Record rec = seqSet.specifyRecord();

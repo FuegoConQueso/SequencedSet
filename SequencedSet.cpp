@@ -95,7 +95,13 @@ void SequencedSet::load(string fileName, string indexFileName)
 	 //load index file
 	 index = fileManager.readIndexFile();
 }
+/** Searches the index for the rbn (relative block number) of a block that
+should contain a record with the primary key (if such a record exists).
 
+@param primaryKey The primary key of the record we are searching for.
+
+@returns the rbn of the block that could contain that primary key, or -1 if not found.
+*/
 int SequencedSet::searchForBlock(string primaryKey)
 {
 
@@ -123,6 +129,16 @@ int SequencedSet::searchForBlock(string primaryKey)
 	
 }
 
+/** Searches a block for a record.
+
+@param[in] rbn The rbn (relative block number) of the block we want to search.
+@param[in] primaryKey The key to search for.
+@param[out] rrn The relative record number of the record that is returned.
+
+@returns The record, if found.
+
+@throws RecordNotFoundException() if no record matching the search key is found.
+*/
 Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 {
 	Block block;
@@ -150,7 +166,11 @@ Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 		else
 		  l = midpoint + 1;
 	}
-	return Record();
+	//if it isn't found
+	if (compnum == 1) {
+		 midpoint += 1;
+	}
+	throw new RecordNotFoundException(midpoint, "Thrown in searchForRecord()");
 }
 
 int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
@@ -162,7 +182,7 @@ int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 		Record curRec = toSearch.getRecord(insertionPoint);
 		int compareVal = Header::compare(curRec.getField(0), keyToInsert, header.getFieldType(0));
 		if (compareVal == 0) {
-			 throw new DuplicateException(insertionPoint, "Thrown in searchForInsertion()");
+			 throw new DuplicateRecordException(insertionPoint, "Thrown in searchForInsertion()");
 		}
 		if (compareVal == 1) {
 			 break;
@@ -177,16 +197,7 @@ void SequencedSet::add(Record rec)
 	string primaryKey = rec.getField(0);
 	int blockNum = searchForBlock(primaryKey);
 	Block insertionBlock = getBlockFromFile(blockNum);
-	bool duplicate = false; /*
-	for (int i = 0; i < insertionBlock.recordCount(); i++)
-	{
-		if (Header::compare(insertionBlock.getRecord(i).getField(0), primaryKey, header.getFieldType(0)) == 0)
-			duplicate = true;
-	}
-	if (duplicate)
-		cout << "Primary key duplicated: record not inserted." << endl;
-	else
-	*/
+	bool duplicate = false;
 	 try {
 		  int insertPoint = searchForInsertion(insertionBlock, primaryKey);
 		  insertionBlock.insertRecord(insertPoint, rec);
@@ -198,7 +209,7 @@ void SequencedSet::add(Record rec)
 		  }
 
 	 }
-	 catch (DuplicateException* e) {
+	 catch (DuplicateRecordException* e) {
 		  cout << e->to_string() << endl;
 	 }
 	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
@@ -208,22 +219,21 @@ void SequencedSet::add(Record rec)
 
 void SequencedSet::deleteRecord(string primaryKey)
 {
-	int recordBlock = searchForBlock(primaryKey);
-	if (recordBlock == -1)
-		cout << "Record with that primary key not found.\n";
-	else
-	{
-		int rrn = -1;
-		Record foundRecord = searchForRecord(recordBlock, primaryKey, rrn);
-		if (rrn = -1)
-		{
-			cout << "Record not found." << endl;
-		}
-		else
-		{
-			Block blk = fileManager.getBlock(recordBlock);
-		}
-	}
+	 try {
+		  int recordBlock = searchForBlock(primaryKey);
+
+		  int rrn = -1;
+		  if (recordBlock == -1) {
+				throw new RecordNotFoundException(-1, "searchForBlock() failed in deleteRecord()");
+		  }
+
+		  Record foundRecord = searchForRecord(recordBlock, primaryKey, rrn);
+
+		  Block blk = fileManager.getBlock(recordBlock);
+	 }
+	 catch (RecordNotFoundException* e) {
+		  cout << "Record not found." << endl;
+	 }
 }
 
 void SequencedSet::split(Block blk)

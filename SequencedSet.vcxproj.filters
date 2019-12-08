@@ -92,7 +92,7 @@
     <ClInclude Include="FileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DuplicateException.h">
+    <ClInclude Include="SeqSetExceptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
