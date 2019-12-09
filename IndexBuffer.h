@@ -4,12 +4,13 @@
 #include <iostream>
 #include <sstream>
 #include "Header.h"
+#include "IndexRecordBuffer.h"
 
 using namespace std;
 
 class IndexBuffer
 {
 public:
-	 static string pack(vector<pair<string, int>> indices, string fieldType);
-	 static vector<pair<string, int>> unpack(string packed, string fieldType);
+	 static string pack(vector<IndexRecord> indices, string fieldType);
+	 static vector<IndexRecord> unpack(string packed, string fieldType);
 };

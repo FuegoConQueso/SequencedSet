@@ -154,7 +154,7 @@ void addTestFunction()
 	cout << "What record would you like to insert into the above block? > ";
 	cin >> searchTerm;
 	try {
-		 int insertPoint = seqSet.searchForInsertion(blk, searchTerm);
+		 int insertPoint = seqSet.searchForInsertion(&blk, searchTerm);
 		 cout << "Term can be inserted at position " << insertPoint << endl;
 	}
 	catch (DuplicateRecordException* e){

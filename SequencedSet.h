@@ -33,13 +33,17 @@ class SequencedSet{
 		void populate(string inputFile, string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		int searchForBlock(string primaryKey, int& indexLocation);
-		int searchForBlock(string primaryKey); 
+		int searchForBlock(string primaryKey);
+		Record searchRecordInBlock(Block* blk, string primaryKey, int& rrn);
+
 		Record searchForRecord(int rbn, string primaryKey, int& rrn); //Searches a block for a record.
-		int searchForInsertion(Block toSearch, string keyToInsert);
+		int searchForInsertion(Block* toSearch, string keyToInsert);
 		void add(Record rec);
 		void deleteRecord(string primaryKey);
+		void redistributeRemove(Block* blk, int indexNum);
 		void redistributeAdd(Block* blk, int indexNum);
 		void split(Block* blk, Block* sibling);
+		void merge(Block* blk, Block* sibling);
 		Block getBlockFromFile(int); //takes output of int searchForBlock
 		Record specifyRecord(); // allows user to build record
 		Record findMost(vector<Record> vecToSearch, int fieldNumber);

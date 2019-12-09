@@ -9,7 +9,7 @@ using namespace std;
 class recordBuffer
 {
 public:
-	 static string pack(vector<string> f1);
+	 static string pack(Record f1);
 	 static vector<string> unpack(string record);
 };
 

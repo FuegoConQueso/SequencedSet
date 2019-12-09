@@ -1,20 +1,23 @@
 #include "Index.h"
 #include "SequencedSet.h"
 
-int Index::findIndexByBlockNum(int blockNum) {
-	 return findIndexByBlockNum(blockNum, false);
+int Index::findIndex(string key) {
+	 return findIndex(key, false);
 }
 
-int Index::findIndexByBlockNum(int blockNum, bool isInsertion)
+int Index::findIndex(string key, bool isInsertion)
 {
-	 int midpoint = -1, r, l, compnum = -1;
+	 Header* header = SequencedSet::sHeader();
+	 int midpoint = 0, r, l, compnum = -1;
+	 string compstring;
 	 r = indices.size() - 1;
 	 l = 0;
 	 while (l <= r)
 	 {
 		  midpoint = l + (r - l) / 2;
-		  compnum = indices[midpoint].second;
-		  if (blockNum == compnum)
+		  compstring = indices[midpoint].key;
+		  compnum = header->compare(key, compstring, header->getKeyType());
+		  if (compnum == 0)
 		  {
 				if (!isInsertion) {
 					 return midpoint;
@@ -23,7 +26,7 @@ int Index::findIndexByBlockNum(int blockNum, bool isInsertion)
 					 throw new DuplicateIndexException(midpoint, "Thrown in findIndexByBlockNum()");
 				}
 		  }
-		  else if (blockNum < compnum)
+		  else if (compnum == -1)
 				r = midpoint - 1;
 		  else
 				l = midpoint + 1;
@@ -32,10 +35,10 @@ int Index::findIndexByBlockNum(int blockNum, bool isInsertion)
 		  return -1;
 	 }
 	 else {
-		  if (blockNum > compnum) {
+		  if (compnum == 1) {
 				midpoint += 1;
 		  }
-				return midpoint;
+			return midpoint;
 	 }
 }
 
@@ -43,7 +46,7 @@ Index::Index()
 {
 }
 
-Index::Index(vector<pair<string, int>> indices)
+Index::Index(vector<IndexRecord> indices)
 {
 	 Header* header = SequencedSet::sHeader();
 	 this->indices = indices;
@@ -59,7 +62,7 @@ Index::Index(string packed)
 
 void Index::Create() {
 	 Header* header = SequencedSet::sHeader();
-	 indices = vector<pair<string, int>>();
+	 indices = vector<IndexRecord>();
 	 keyType = header->getKeyType();
 }
 
@@ -70,42 +73,44 @@ string Index::pack()
 
 void Index::addIndex(string key, int blockNum)
 {
-	 int location = findIndexByBlockNum(blockNum, true);
-	 indices.insert(indices.begin() + location, make_pair(key, blockNum));
+	 int location = findIndex(key, true);
+	 indices.insert(indices.begin() + location, IndexRecord(key, blockNum));
 }
 
-pair<string, int> Index::getIndex(int indexPosition)
+IndexRecord Index::getIndex(int indexPosition)
 {
 	 return indices[indexPosition];
 }
 
-pair<string, int> Index::getLastIndex()
+IndexRecord Index::getLastIndex()
 {
-	 pair<string, int> output = pair<string, int>(indices.back());
+	 IndexRecord output = IndexRecord(indices.back());
 	 return output;
 }
 
-vector<int> Index::getSiblings(int indexPosition)
+vector<IndexRecord> Index::getSiblings(int indexPosition)
 {
-	 vector<int> siblings = vector<int>();
+	 vector<IndexRecord> siblings = vector<IndexRecord>();
 	 if (indexPosition > 0) {
-		  siblings.push_back(indexPosition - 1);
+		  siblings.push_back(getIndex(indexPosition - 1));
 	 }
 	 if (indexPosition < indices.size() - 2) {
-		  siblings.push_back(indexPosition + 1);
+		  siblings.push_back(getIndex(indexPosition + 1));
 	 }
 	 return siblings;
 }
 
-void Index::deleteIndex(int indexPosition)
+void Index::deleteIndex(string key)
 {
-	 indices.erase(indices.begin() + indexPosition);
+	 indices.erase(indices.begin() + findIndex(key));
 }
 
-void Index::updateIndex(int blockToUpdateNum, string key)
+void Index::updateIndex(string oldkey, string newkey)
 {
-	 int targetIndex = findIndexByBlockNum(blockToUpdateNum);
-	 indices[targetIndex].first = key;
+	 if (oldkey.compare(newkey) != 0) {
+		  int targetIndex = findIndex(oldkey);
+		  indices[targetIndex].key = newkey;
+	 }
 }
 
 int Index::size()

@@ -3,14 +3,14 @@
 
 /*f1 is a vector containing the fields in the order of zip, placename, state, county, latitude, and longitude.
 fs in a vector containing the maximum size of each field in the same order as f1*/
-string recordBuffer::pack(vector<string> packed)
+string recordBuffer::pack(Record packed)
 {
 	Header* header = SequencedSet::sHeader();
 	string field;
 	string record;
-	for(int index = 0; index < packed.size(); index++)
+	for(int index = 0; index < header->getNumOfFields(); index++)
 	{
-		field = packed[index];		//the field in the vector is copied to string f2
+		field = packed.getField(index);		//the field in the vector is copied to string f2
 		field = header->pad(field, header->getFieldSize(index));
 		record.append(field);	//the field with padding is appended to string Record
 	}

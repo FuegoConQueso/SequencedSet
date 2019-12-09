@@ -26,6 +26,8 @@ public:
 	 int getBlockNextNumber();
 	 string getLastKey();
 
+	 void deleteRecord(int rrn);
+
 	 Record pop_first();
 	 Record pop_last();
 private:

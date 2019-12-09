@@ -55,6 +55,10 @@ string Block::getLastKey()
 	 return records.back().getField(0);
 }
 
+void Block::deleteRecord(int rrn) {
+	 records.erase(records.begin() + rrn);
+}
+
 Record Block::pop_first()
 {
 	 Record output = records.front();
