@@ -55,6 +55,21 @@ void Block::insertRecord(int index, Record rec)
 	records.insert(records.begin() + index, rec);
 }
 
+bool Block::removeRecord(string primaryKey)
+{
+	cout << "In removeRecord with " << primaryKey << endl;
+	for (int i = 0; i < this->recordCount(); i++)
+	{
+		cout << "Comparing" << (this->getRecord(i).getField(0)) << endl;
+		if (this->getRecord(i).getField(0) == primaryKey)
+		{
+			records.erase(records.begin() + i);
+			return true;
+		}
+	}
+	return false;
+}
+
 void Block::unpack(vector<string> packedBlock)
 {
 	 int size = packedBlock.size();

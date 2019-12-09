@@ -22,6 +22,7 @@ public:
 	 int getBlockNumber(); //returns the current block number
 	 Record getRecord(int index); 
 	 void insertRecord(int index, Record rec);
+	 bool removeRecord(string primaryKey);
 	 int getBlockNextNumber();
 private:
 	 //data members

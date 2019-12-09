@@ -35,6 +35,24 @@ void Index::addIndex(string key, int blockNum)
 	 indices.push_back(make_pair(key, blockNum));
 }
 
+void Index::addIndex2(string key, int blockNum)
+{
+	cout << "In addIndex2 function.\n";
+	cout << "Key: " << key << endl;
+	cout << "Block Number: " << blockNum << endl;
+	cout << "Indices vector size: " << indices.size() << endl;
+	for (int i = 0; i < indices.size(); i++)
+	{
+		if (stoi(get<0>(indices[i])) >= stoi(key))
+		{
+			indices.insert(indices.begin() + i, make_pair(key, blockNum));
+			if (stoi(get<0>(indices[i + 1])) == stoi(key))
+				indices.erase(indices.begin() + (i + 1));
+			break;
+		}
+	}
+}
+
 pair<string, int> Index::getIndex(int indexPosition)
 {
 	 return indices[indexPosition];

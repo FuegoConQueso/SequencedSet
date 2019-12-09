@@ -145,7 +145,7 @@ int SequencedSet::searchForBlock(string primaryKey)
 
 @throws RecordNotFoundException() if no record matching the search key is found.
 */
-Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
+Record SequencedSet::searchForRecord(int rbn, string primaryKey)
 {
 	Block block;
 	string compstring;
@@ -164,7 +164,6 @@ Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 		cout << "primaryKey: " << primaryKey << endl;
 		if (compnum == 0)
 		{
-			rrn = midpoint;
 			return block.getRecord(midpoint);
 		}
 		else if (compnum == -1)
@@ -227,19 +226,15 @@ void SequencedSet::deleteRecord(string primaryKey)
 {
 	 try {
 		  int recordBlock = searchForBlock(primaryKey);
-
-		  int rrn = -1;
-		  if (recordBlock == -1) {
-				throw new RecordNotFoundException(-1, "searchForBlock() failed in deleteRecord()");
-		  }
-
-		  Record foundRecord = searchForRecord(recordBlock, primaryKey, rrn);
-
-		  Block blk = fileManager.getBlock(recordBlock);
+		  Block blk = fileManager.getBlock(recordBlock - 1);
+		  blk.removeRecord(primaryKey);
+		  fileManager.writeBlock(BlockBuffer::pack(blk.pack()), recordBlock);
 	 }
 	 catch (RecordNotFoundException* e) {
 		  cout << "Record not found." << endl;
 	 }
+	 fileManager.closeFile();
+	 fileManager.open(fileManager.getFileFileName(), fileManager.getIndexFileName());
 }
 
 void SequencedSet::split(Block blk)
@@ -262,8 +257,8 @@ void SequencedSet::split(Block blk)
 	fileManager.writeBlock(BlockBuffer::pack(newBlock.pack()), newBlock.getBlockNumber());
 	fileManager.writeBlock(BlockBuffer::pack(newBlock2.pack()), newBlock2.getBlockNumber());
 	header.setStartAvail(newBlock2.getBlockNextNumber());
-	index.addIndex(newBlock.getRecord(newBlock.recordCount() - 1).getField(0), newBlock.getBlockNumber());
-	index.addIndex(newBlock.getRecord(newBlock2.recordCount() - 1).getField(0), newBlock2.getBlockNumber());
+	index.addIndex2(newBlock.getRecord(newBlock.recordCount() - 1).getField(0), newBlock.getBlockNumber());
+	index.addIndex2(newBlock2.getRecord(newBlock2.recordCount() - 1).getField(0), newBlock2.getBlockNumber());
 	fileManager.writeHeader(&header);
 	fileManager.writeIndexFile(&index);
 }

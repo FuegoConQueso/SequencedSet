@@ -33,7 +33,7 @@ class SequencedSet{
 		void populate(string inputFile, string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		void load(string fileName = "Storage.txt", string indexFileName = "Index.txt");
 		int searchForBlock(string primaryKey); 
-		Record searchForRecord(int rbn, string primaryKey, int& rrn); //Searches a block for a record.
+		Record searchForRecord(int rbn, string primaryKey); //Searches a block for a record.
 		int searchForInsertion(Block toSearch, string keyToInsert);
 		void add(Record rec);
 		void deleteRecord(string primaryKey);
