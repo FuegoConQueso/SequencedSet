@@ -45,3 +45,39 @@ public:
 		  return output;
 	 }
 };
+
+class BeyondLastBlockException : public std::exception
+{
+	 string _message;
+
+public:
+	 BeyondLastBlockException(string message = "") {
+		  this->_message = message;
+	 }
+
+	 string message() { return _message; }
+
+	 string to_string() {
+		  string output = "BeyondLastBlockException: " + _message;
+		  return output;
+	 }
+};
+
+class DuplicateIndexException : public std::exception
+{
+	 int duplicateLocation;
+	 string _message;
+
+public:
+	 DuplicateIndexException(int duplicateLocation, string message = "") {
+		  this->duplicateLocation = duplicateLocation;
+		  this->_message = message;
+	 }
+
+	 int location() { return duplicateLocation; }
+	 string message() { return _message; }
+
+	 string to_string() {
+		  return "DuplicateRecordException: " + _message + " (duplicate at index number: " + std::to_string(duplicateLocation) + ")";
+	 }
+};

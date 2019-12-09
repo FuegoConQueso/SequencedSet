@@ -79,15 +79,15 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 		  blockCount++;
 	 }
 	 //update the header's Avail pointer
-	 header.setStartAvail(blockCount);
+	 //header.setStartAvail(blockCount);
 	 //rewrites the header with the new Avail pointer
 	 //TODO: change to Filemanager "update avail start" function call
 	 fileManager.writeHeader(&header);
 	 fileManager.writeIndexFile(&index);
 	 //Create empty block at current avail;
-	 vector<Record> lastBlockRecords;
+	 /*vector<Record> lastBlockRecords;
 	 Block lastBlock(header.getStartAvail(), header.getStartAvail() + 1, lastBlockRecords);
-	 fileManager.writeBlock(BlockBuffer::pack(lastBlock.pack()), header.getStartAvail());
+	 fileManager.writeBlock(BlockBuffer::pack(lastBlock.pack()), header.getStartAvail());*/
 }
 
 void SequencedSet::load(string fileName, string indexFileName)
@@ -104,11 +104,14 @@ void SequencedSet::load(string fileName, string indexFileName)
 /** Searches the index for the rbn (relative block number) of a block that
 should contain a record with the primary key (if such a record exists).
 
-@param primaryKey The primary key of the record we are searching for.
+@param[in] primaryKey The primary key of the record we are searching for.
+@param[out] indexLocation The index number for the block.
 
-@returns the rbn of the block that could contain that primary key, or -1 if not found.
+@returns the rbn of the block that could contain that primary key.
+
+@throws BeyondLastBlockException if key is greater than the last index key.
 */
-int SequencedSet::searchForBlock(string primaryKey)
+int SequencedSet::searchForBlock(string primaryKey, int& indexLocation)
 {
 
 	cout << "Searching for " << primaryKey << "...\n"; string compstring;
@@ -131,8 +134,26 @@ int SequencedSet::searchForBlock(string primaryKey)
 	if (compnum == 1) {
 		 midpoint += 1;
 	}
-	return midpoint;
+	if (midpoint == index.size()) {
+		 throw BeyondLastBlockException("Thrown in SearchForBlock()");
+	}
+	indexLocation = midpoint;
+	return index.getIndex(midpoint).second;
 	
+}
+
+/** Searches the index for the rbn (relative block number) of a block that
+should contain a record with the primary key (if such a record exists).
+
+@param primaryKey The primary key of the record we are searching for.
+
+@returns the rbn of the block that could contain that primary key.
+
+@throws BeyondLastBlockException if key is greater than the last index key.
+*/
+int SequencedSet::searchForBlock(string primaryKey) {
+	 int throwaway = -1;
+	 return SequencedSet::searchForBlock(primaryKey, throwaway);
 }
 
 /** Searches a block for a record.
@@ -200,27 +221,39 @@ int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 
 void SequencedSet::add(Record rec)
 {
-	string primaryKey = rec.getField(0);
-	int blockNum = searchForBlock(primaryKey);
-	Block insertionBlock = getBlockFromFile(blockNum);
-	bool duplicate = false;
+	 string primaryKey = rec.getField(0);
+	 int indexNum = -1;
+	 int blockNum = -1;
+	 Block insertionBlock;
+	 try {
+		  blockNum = searchForBlock(primaryKey, indexNum);
+		  insertionBlock = getBlockFromFile(blockNum);
+	 }
+	 catch (BeyondLastBlockException * e) {
+		  indexNum = index.size() - 1;
+		  blockNum = index.getLastIndex().second;
+		  insertionBlock = getBlockFromFile(blockNum);
+	 }
 	 try {
 		  int insertPoint = searchForInsertion(insertionBlock, primaryKey);
 		  insertionBlock.insertRecord(insertPoint, rec);
 		  cout << primaryKey << " inserted into block " << blockNum << " at position " << insertPoint << endl;
-		  fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
+
 		  if (insertionBlock.recordCount() > header.getBlockCapacity())
 		  {
-				split(insertionBlock);
+				//attempts to redistribute; if it can not, it calls the split function
+				redistributeAdd(&insertionBlock, indexNum);
 		  }
-
+		  else {
+				fileManager.writeBlock(BlockBuffer::pack(insertionBlock.pack()), blockNum);
+		  }
+		  index.updateIndex(insertionBlock.getBlockNumber(), insertionBlock.getLastKey());
+		  fileManager.writeIndexFile(&index);
 	 }
 	 catch (DuplicateRecordException* e) {
 		  cout << e->to_string() << endl;
 	 }
 	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
-	fileManager.closeFile();
-	fileManager.open(fileManager.getFileFileName(), fileManager.getIndexFileName()); 
 }
 
 void SequencedSet::deleteRecord(string primaryKey)
@@ -242,30 +275,85 @@ void SequencedSet::deleteRecord(string primaryKey)
 	 }
 }
 
-void SequencedSet::split(Block blk)
+void SequencedSet::redistributeAdd(Block* blk, int indexNum) {
+	 bool resolved = false;
+	 //last record's key in the overfull block
+	 string lastKey = index.getIndex(indexNum).first;
+	 //get the index entry numbers of siblings
+	 vector<int> siblingIndices = index.getSiblings(indexNum);
+	 // get the index entries themselves
+	 vector<pair<string, int>> siblings = vector<pair<string, int>>();
+	 for (int i = 0; i < siblingIndices.size(); i++) {
+		  siblings.push_back(index.getIndex(siblingIndices[i]));
+	 }
+	 //load blocks 1 at a time.
+	 vector<Block> loadedSiblings = vector<Block>();
+	 for (int i = 0; i < siblings.size(); i++) {
+		  int blockNum = siblings[i].second;
+		  loadedSiblings.push_back(fileManager.getBlock(blockNum));
+		  int siblingSize = loadedSiblings[i].recordCount();
+		  //if there's room in this sibling
+		  if (siblingSize < header.getBlockCapacity()) {
+
+				//if this sibling come before the block
+				if (header.compare(siblings[i].first, lastKey, header.getKeyType()) == -1) {
+					 //move the first record of blk to the end of this sibling
+					 loadedSiblings[i].pushRecord(blk->pop_first());
+					 //update index
+					 index.updateIndex(loadedSiblings[i].getBlockNumber(), loadedSiblings[i].getLastKey());
+					 //update sibling block in file
+					 fileManager.writeBlock(BlockBuffer::pack(loadedSiblings[i].pack()), loadedSiblings[i].getBlockNumber());
+				}
+
+				//if this sibling comes after the block
+				else {
+					 //move the last record of block to the start of this sibling
+					 loadedSiblings[i].insertRecord(0, blk->pop_last());
+					 //update sibling block in file
+					 fileManager.writeBlock(BlockBuffer::pack(loadedSiblings[i].pack()), loadedSiblings[i].getBlockNumber());
+				}
+
+				//update blk block in file
+				fileManager.writeBlock(BlockBuffer::pack(blk->pack()), blk->getBlockNumber());
+				resolved = true;
+				break;
+		  }
+	 }
+	 if (!resolved) {
+		  // in this case, all siblings are full (or there are no siblings). Split this block
+		  // (sibling passed to enable conversion to B+ Tree later)
+		  split(blk, &loadedSiblings[0]);
+	 }
+}
+
+void SequencedSet::split(Block* blk, Block* sibling)
 {
+	 bool availAtEnd = false;
 	int newBlockPosition = header.getStartAvail();
-	int newBlockNext = getBlockFromFile(header.getStartAvail()).getBlockNextNumber();
+	if (newBlockPosition == -1) {
+		 availAtEnd = true;
+		 newBlockPosition = index.size();
+	}
+	else {
+		 header.setStartAvail(getBlockFromFile(header.getStartAvail()).getBlockNextNumber());
+	}
 	vector<Record> newRecords;
 	vector<Record> newRecords2;
-	for (int i = 0; i < blk.recordCount(); i++)
+	for (int i = 0; i < blk->recordCount(); i++)
 	{
-		if (i <= blk.recordCount() / 2)
+		if (i <= blk->recordCount() / 2)
 		{
-			newRecords.push_back(blk.getRecord(i));
+			newRecords.push_back(blk->getRecord(i));
 		}
 		else
-			newRecords2.push_back(blk.getRecord(i));
+			newRecords2.push_back(blk->getRecord(i));
 	}
-	Block newBlock(blk.getBlockNumber(), blk.getBlockNextNumber(), newRecords);
-	Block newBlock2(newBlockPosition, newBlockNext, newRecords2);
+	Block newBlock(newBlockPosition, blk->getBlockNextNumber(), newRecords2);
+	blk = new Block(blk->getBlockNumber(), newBlockPosition, newRecords);
+	fileManager.writeBlock(BlockBuffer::pack(blk->pack()), blk->getBlockNumber());
 	fileManager.writeBlock(BlockBuffer::pack(newBlock.pack()), newBlock.getBlockNumber());
-	fileManager.writeBlock(BlockBuffer::pack(newBlock2.pack()), newBlock2.getBlockNumber());
-	header.setStartAvail(newBlock2.getBlockNextNumber());
-	index.addIndex(newBlock.getRecord(newBlock.recordCount() - 1).getField(0), newBlock.getBlockNumber());
-	index.addIndex(newBlock.getRecord(newBlock2.recordCount() - 1).getField(0), newBlock2.getBlockNumber());
+	index.addIndex(newBlock.getLastKey(), newBlock.getBlockNumber());
 	fileManager.writeHeader(&header);
-	fileManager.writeIndexFile(&index);
 }
 
 void SequencedSet::updateHeader()

@@ -50,9 +50,33 @@ int Block::getBlockNextNumber()
 	 return nextBlock;
 }
 
+string Block::getLastKey()
+{
+	 return records.back().getField(0);
+}
+
+Record Block::pop_first()
+{
+	 Record output = records.front();
+	 records.erase(records.begin());
+	 return output;
+}
+
+Record Block::pop_last()
+{
+	 Record output = records.back();
+	 records.pop_back();
+	 return output;
+}
+
 void Block::insertRecord(int index, Record rec)
 {
 	records.insert(records.begin() + index, rec);
+}
+
+void Block::pushRecord(Record rec)
+{
+	 records.push_back(rec);
 }
 
 void Block::unpack(vector<string> packedBlock)

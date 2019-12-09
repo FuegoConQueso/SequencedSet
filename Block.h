@@ -22,7 +22,12 @@ public:
 	 int getBlockNumber(); //returns the current block number
 	 Record getRecord(int index); 
 	 void insertRecord(int index, Record rec);
+	 void pushRecord(Record rec); //adds record at end of block
 	 int getBlockNextNumber();
+	 string getLastKey();
+
+	 Record pop_first();
+	 Record pop_last();
 private:
 	 //data members
 	 int blockNumber; //what relative block position this block is.

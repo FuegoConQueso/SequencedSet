@@ -98,10 +98,10 @@ void InputFileHeaderReadTest(string inputFile)
 		 int rrn = 0;
 		 try {
 			  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
-			  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
+			  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
 		 }
 		 catch (RecordNotFoundException * e) {
-			  cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist.";
+			  cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." <<endl;
 		 }
 	}
 
@@ -123,14 +123,19 @@ void searchTestFunction()
 	 cin >> primaryKey;
 	 int blockNum = seqSet.searchForBlock(primaryKey);
 	 if (blockNum == -1) {
-		  cout << "Key not found\n";
+		  cout << "Key not located in any blocks\n";
 	 }
 	 else
 	 {
 		  cout << primaryKey << " should be located in block " << blockNum << endl;
-		  int rrn = -1;
-		  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
-		  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+		  int rrn = 0;
+		  try {
+				Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
+				cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+		  }
+		  catch (RecordNotFoundException * e) {
+				cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." << endl;
+		  }
 	 }
 
 }
@@ -155,10 +160,12 @@ void addTestFunction()
 	catch (DuplicateRecordException* e){
 		 cout << e->to_string() << endl;
 	}
-	Record rec = seqSet.specifyRecord();
-	seqSet.add(rec);
-	Record rec2 = seqSet.specifyRecord();
-	seqSet.add(rec2);
+	for (int i = 0; i < 20; i++) {
+		 int location = 400 + i;
+		 string locS = to_string(location);
+		 Record rec = Record(vector<string>{locS, "Hope" + locS, "IT", "Works", locS, "-" + locS});
+		 seqSet.add(rec);
+	}
 
 	//Testing delete
 	cout << "Enter a record's primary key and the record will be removed. > ";
