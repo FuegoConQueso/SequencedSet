@@ -102,6 +102,20 @@ void InputFileHeaderReadTest(string inputFile)
 }
 
 void FileManagerTest() {
+	cout << "FileManagerTest" << endl;
+	SequencedSet p;
+	p.load();
+	Header* header = p.sHeader();
+	vector<Record> hello;
+	int tests = 2;
+	hello = p.searchMatches("MN", tests);
+	cout << hello.size();
+	for (int i = 0; i < hello.size(); i++) {
+		for (int j = 0; j < header->getNumOfFields(); j++) {
+			cout << hello[i].getField(i) << ' ';
+		}
+		cout << "\n";
+	}
 
 }
 
