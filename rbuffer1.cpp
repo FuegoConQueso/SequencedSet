@@ -1,8 +1,9 @@
 #include "rbuffer1.h"
 #include "SequencedSet.h"
 
-/*f1 is a vector containing the fields in the order of zip, placename, state, county, latitude, and longitude.
-fs in a vector containing the maximum size of each field in the same order as f1*/
+/** takes a vector of strings representing the fields of a record and places it into one string
+@param packed: the vector of strings which is to be converted into one string
+*/
 string recordBuffer::pack(vector<string> packed)
 {
 	Header* header = SequencedSet::sHeader();
@@ -17,7 +18,9 @@ string recordBuffer::pack(vector<string> packed)
 	return record;
 }
 
-//I havent tested this with the rest of the sequence set code
+/** takes a string representing an entire record and places it into a vector of strings indicating the fields
+@param record: the string to be split into vector elements (fields)
+*/
 vector<string> recordBuffer::unpack(string record)
 {
 	Header* header = SequencedSet::sHeader();

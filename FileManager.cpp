@@ -1,6 +1,10 @@
 #include "FileManager.h"
 #include "SequencedSet.h"
 
+/** Opens a file for input and output and sets the storage and index file names, with the old conetents of the file immediately removed
+@param filename: name of storage file
+@param indexfilename: name of index file
+*/
 void FileManager::create(string filename, string indexfilename) 
 {
 	 filefile.open(filename, ios::in | ios::out | ios::trunc | ios::binary);
@@ -8,6 +12,10 @@ void FileManager::create(string filename, string indexfilename)
 	 this->indexfilename = indexfilename;
 }
 
+/** Opens a file for input and output and sets the storage and index file names
+@param filename: name of storage file
+@param indexfilename: name of index file
+*/
 void FileManager::open(string filename, string indexfilename)
 {
 	 filefile.open(filename, ios::in | ios::out | ios::binary); 
@@ -15,22 +23,31 @@ void FileManager::open(string filename, string indexfilename)
 	 this->indexfilename = indexfilename;
 }
 
+/** Returns the name of the sequenced set file
+*/
 fstream& FileManager::getFile()
 {
 	return filefile;
 }
 
+/**Returns the name of the index file
+*/
 string FileManager::getIndexFileName()
 {
 	return indexfilename;
 }
 
+
+/** Returns the name of the storage file
+*/
 string FileManager::getFileFileName()
 {
 	return filefilename;
 }
 
-//I used an array is an intermediate step as I am unsure if i can use the write function with a string.
+/** Returns a block with a given block number from the file.
+@param blockNumber: the block number of the block to be retrieved from the file
+*/
 Block FileManager::getBlock(int blockNumber)
 {
 	 Header* header = SequencedSet::sHeader();
@@ -47,6 +64,10 @@ Block FileManager::getBlock(int blockNumber)
 	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 
+/** Write a block in string format at the position dictated by the block number
+@param wBlock: the string-formatted block to be written to the file
+@param blockNumber: the block number of the block to be written to the file
+*/
 void FileManager::writeBlock(string wBlock, int blockNumber)
 {
 	 Header* header = SequencedSet::sHeader();
@@ -59,22 +80,8 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 const char* s = wBlock.c_str();
 	 filefile.write(s, bsize);
 }
-
-void FileManager::createSpace(int blockNumber)
-{
-	filefile.close();
-	filefile.open(this->filefilename, ios::app | ios::in);
-	Header* header = SequencedSet::sHeader();
-	int bsize;
-	int position = header->getHeaderSize();
-	bsize = header->blockSize();
-	position += blockNumber * bsize;
-	filefile.seekg(blockNumber, ios_base::beg);
-	filefile << "\n";
-	filefile.close();
-	this->open(this->filefilename, this->indexfilename);
-}
-
+/**Returns and index object initialized with the contents of the index file
+*/
 Index FileManager::readIndexFile()
 {
 	fstream index1;
@@ -89,6 +96,9 @@ Index FileManager::readIndexFile()
 	return Index(indexPass);
 }
 
+/** Writes the contents of an Index object to an index file
+@param ind: the Index object whose contents are to be written to the index file.
+*/
 void FileManager::writeIndexFile(Index* ind)
 {
 	fstream indexfile;
@@ -101,12 +111,16 @@ void FileManager::writeIndexFile(Index* ind)
 	
 }
 
+/** Returns the header object obtained by unpacking the header of the main contents file.
+*/
 Header FileManager::readHeader()
 {
 
 	 return HeaderBuffer::unpack(filefile, "Storage.txt");
 }
 
+/** Writes the contents of a header object to the file.
+*/
 void FileManager::writeHeader(Header* header)
 {
 	 filefile.seekp(0);
@@ -114,6 +128,8 @@ void FileManager::writeHeader(Header* header)
 	 filefile.write(packed.c_str(), packed.size());
 }
 
+/** Closes the main file
+*/
 void FileManager::closeFile()
 {
 	filefile.close();

@@ -200,6 +200,11 @@ Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 	throw new RecordNotFoundException(midpoint, "Thrown in searchForRecord()");
 }
 
+/** Searches for the insertion index within a block that a given key should be inserted, given that it is
+supposed to be inserted into that block in the first place
+@param toSearch: the Block in which the key needs to be fit
+@param keyToInsert: the key to be inserted into the block
+*/
 int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 {
 	int insertionPoint = 0;
@@ -219,6 +224,12 @@ int SequencedSet::searchForInsertion(Block toSearch, string keyToInsert)
 	return insertionPoint;
 }
 
+/* Adds a record to the sequenced set in the appropriate block, in the appropriate position
+Merges and splits blocks as necessary
+@param rec: the record to be inserted into the sequenced set
+
+@throws duplicateRecordException if a record with the same primary key is already in the sequenced set
+*/
 void SequencedSet::add(Record rec)
 {
 	 string primaryKey = rec.getField(0);
@@ -256,6 +267,11 @@ void SequencedSet::add(Record rec)
 	// These two lines essentially "save" the changes made to the file by closing the file and reopening.
 }
 
+/** Deletes a primary key from the sequenced set if the key is found.  Merges and redistributes blocks as necessary
+@param primaryKey: the primaryKey to be removed
+
+@throws RecordNotFoundException if there is no record with the primary key argument to delete
+*/
 void SequencedSet::deleteRecord(string primaryKey)
 {
 	 try {
@@ -275,6 +291,11 @@ void SequencedSet::deleteRecord(string primaryKey)
 	 }
 }
 
+/** Examines the siblings of the current block to see if redistribution is possible. If it is, redistribute, if it isn't call 
+a split function.
+@param blk: the block whose records are to be redistributed
+@param indexNum: the index number of the block
+*/
 void SequencedSet::redistributeAdd(Block* blk, int indexNum) {
 	 bool resolved = false;
 	 //last record's key in the overfull block
@@ -326,9 +347,13 @@ void SequencedSet::redistributeAdd(Block* blk, int indexNum) {
 	 }
 }
 
+/** Splits the contents of a block amongst itself and it's sibling
+@param blk: the block to be split
+@param sibling: the sibling of the block to be split
+*/
 void SequencedSet::split(Block* blk, Block* sibling)
 {
-	 bool availAtEnd = false;
+	bool availAtEnd = false;
 	int newBlockPosition = header.getStartAvail();
 	if (newBlockPosition == -1) {
 		 availAtEnd = true;
@@ -356,21 +381,30 @@ void SequencedSet::split(Block* blk, Block* sibling)
 	fileManager.writeHeader(&header);
 }
 
+/** Updates the header file with new information such as next block and avail list pointers
+*/
 void SequencedSet::updateHeader()
 {
 	 activeSeqSet->fileManager.writeHeader(&(activeSeqSet->header));
 }
 
+/* Returns a pointer to the header of the active sequenced set
+*/
 Header* SequencedSet::sHeader()
 {
 	 return &(activeSeqSet->header);
 }
 
+/* Returns the active sequenced set pointer
+*/
 SequencedSet* SequencedSet::SeqSet()
 {
 	 return activeSeqSet;
 }
 
+/** Populates a record with a string
+@param line: the string used to populate the record
+*/
 Record SequencedSet::populateRecord(string line) {
 	 int position = 0;
 	 int erasePos = 0;
@@ -397,6 +431,10 @@ Record SequencedSet::populateRecord(string line) {
 	 return Record(recFields2);
 }
 
+/** Returns the vector of all records in the sequenced set whose fields with index fieldNum match the search string
+@param toSearch: the string being searched for amongst field at index fieldNum
+@param fieldNum: the index of the field being searched within the records
+*/
 vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 {
 	vector<Record> matches;
@@ -423,11 +461,18 @@ vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 	return matches;
 }
 
+/** Gets a block object from the file manager using the block number
+@param blkNum: the block number of the block to be retrieved from the file manager
+*/
 Block SequencedSet::getBlockFromFile(int blkNum)
 {
 	 return fileManager.getBlock(blkNum);
 }
 
+/** Returns the record with the highest value of a given field in a vector of records
+@param vecToSearch: the vector of records whose field value is to be searched
+@param fieldNumber: the field number of the field that is getting compared between vectors
+*/
 Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
 {
 	int highest = 0;
@@ -443,6 +488,10 @@ Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
 	return vecToSearch[highest];
 }
 
+/** Returns the record with the lowest value of a given field in a vector of records
+@param vecToSearch: the vector of records whose field value is to be searched
+@param fieldNumber: the field number of the field that is getting compared between vectors
+*/
 Record SequencedSet::findLeast(vector<Record> vecToSearch, int fieldNumber)
 {
 	int lowest = 0;
@@ -457,6 +506,9 @@ Record SequencedSet::findLeast(vector<Record> vecToSearch, int fieldNumber)
 	}
 	return vecToSearch[lowest];
 }
+
+/* Returns a record whose fields are individually specified by a user
+*/
 Record SequencedSet::specifyRecord()
 {
 	vector<string> customFields;
