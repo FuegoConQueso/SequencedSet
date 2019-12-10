@@ -20,8 +20,16 @@ public:
 	 vector<string> pack(); /*returns a vector of strings that the buffer class can prep for writing. Output is as follows: [blockNumber, nextBlock, blockSize, {Each record as a single string}] */
 	 int recordCount(); //returns the current number of records in the block (aka records.size)
 	 int getBlockNumber(); //returns the current block number
-	 int getBlockNextNumber() { return nextBlock; };
-	 Record getRecord(int index);
+	 Record getRecord(int index); 
+	 void insertRecord(int index, Record rec);
+	 void pushRecord(Record rec); //adds record at end of block
+	 int getBlockNextNumber();
+	 string getLastKey();
+
+	 void deleteRecord(int rrn);
+
+	 Record pop_first();
+	 Record pop_last();
 private:
 	 //data members
 	 int blockNumber; //what relative block position this block is.

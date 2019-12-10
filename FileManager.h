@@ -20,6 +20,7 @@ class FileManager
 		void create(string filename, string indexfilename);
 		fstream& getFile();
 		void open(string filname, string indfilname);
+		void closeFile();
 		string getIndexFileName();
 		string getFileFileName();
 
@@ -29,4 +30,5 @@ class FileManager
 		void writeHeader(Header* header);
 		Block getBlock(int blockNumber);
 		void writeBlock(string wBlock, int blockNumber);
+		void createSpace(int blockNumber);
 };

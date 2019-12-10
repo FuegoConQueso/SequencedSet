@@ -124,11 +124,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
-    <ClCompile Include="FileIterator.cpp" />
     <ClCompile Include="Header.cpp" />
     <ClCompile Include="HeaderBuffer.cpp" />
     <ClCompile Include="Index.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="IndexRecord.cpp" />
+    <ClCompile Include="IndexRecordBuffer.cpp" />
     <ClCompile Include="InputFileHeader.cpp" />
     <ClCompile Include="rbuffer1.cpp" />
     <ClCompile Include="Record.cpp" />
@@ -140,7 +141,9 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockBuffer.h" />
-    <ClInclude Include="FileIterator.h" />
+    <ClInclude Include="IndexRecord.h" />
+    <ClInclude Include="IndexRecordBuffer.h" />
+    <ClInclude Include="SeqSetExceptions.h" />
     <ClInclude Include="FileManager.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="HeaderBuffer.h" />

@@ -1,5 +1,8 @@
 #include "HeaderBuffer.h"
 
+/** Takes a header object and converts it into a single string
+@param header: The header object to be packed into a string
+*/
 string HeaderBuffer::pack(Header& header)
 {
 	 string s = header.getHeaderSeperator();
@@ -19,6 +22,10 @@ string HeaderBuffer::pack(Header& header)
 	 return output;
 }
 
+/** Converts the header of a file into a Header object in memory
+@param mainFile: the filestream object whose header is to be read
+@param fileName: the name of the file whose header is to be read into a Header object
+*/
 Header HeaderBuffer::unpack(fstream& mainFile, string fileName)
 {
 	 //create variables

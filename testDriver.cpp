@@ -13,7 +13,7 @@ void InputFileHeaderReadTest(string);
 void BlockStructureTest();
 void FileManagerTest();
 void searchTestFunction();
-void tylersTemporaryTest();
+void addTestFunction();
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	bool blockStructTest = false;
 	bool fileManagerTest = false;
 	bool searchTest = false;
-	bool tylersTest = false;
+	bool addTest = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -48,9 +48,9 @@ int main(int argc, char *argv[])
 				{
 					searchTest = true;
 				}
-			case 't':
+			case 'a':
 				{
-					tylersTest = true;
+					addTest = true;
 				}
 			default:
 				{
@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
 	}
 	if (searchTest)
 		searchTestFunction();
-	if (tylersTest)
-		tylersTemporaryTest();
+	if (addTest)
+		addTestFunction();
 	cin.get();
 	return 0;
 }
@@ -90,13 +90,19 @@ void InputFileHeaderReadTest(string inputFile)
 	cin >> primaryKey;
 	int blockNum = seqSet.searchForBlock(primaryKey);
 	if (blockNum == -1) {
-		 cout << "Key not found\n";
+		 cout << "Key not located in any blocks\n";
 	}
 	else
 	{
 		 cout << primaryKey << " should be located in block " << blockNum << endl;
-		 Record record = seqSet.searchForRecord(blockNum, primaryKey);
-		 cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl; //code terminates here if block found but record not found within block.
+		 int rrn = 0;
+		 try {
+			  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
+			  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+		 }
+		 catch (RecordNotFoundException * e) {
+			  cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." <<endl;
+		 }
 	}
 
 }
@@ -131,45 +137,27 @@ void searchTestFunction()
 	 cin >> primaryKey;
 	 int blockNum = seqSet.searchForBlock(primaryKey);
 	 if (blockNum == -1) {
-		  cout << "Key not found\n";
+		  cout << "Key not located in any blocks\n";
 	 }
 	 else
 	 {
 		  cout << primaryKey << " should be located in block " << blockNum << endl;
-		  Record record = seqSet.searchForRecord(blockNum, primaryKey);
-		  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+		  int rrn = 0;
+		  try {
+				Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
+				cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
+		  }
+		  catch (RecordNotFoundException * e) {
+				cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." << endl;
+		  }
 	 }
 
 }
 
 void BlockStructureTest() {
-	 /*
-	 //set up the record sizes
-	 vector<tuple<string, int, Header::FieldType>> fieldInfos = vector<tuple<string, int, Header::FieldType>>();
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("ZIP", 6, Header::FieldType::U_INTEGER));
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Place", 31, Header::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("State", 2, Header::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("County", 36, Header::FieldType::TEXT));
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Latitude", 9, Header::FieldType::FLOAT));
-	 fieldInfos.push_back(make_tuple<string, int, Header::FieldType>("Longitude", 10, Header::FieldType::FLOAT));
-	 Record::setFieldInfo(fieldInfos);
-
-	 //create the record buffer, test said buffer
-	 vector<string> rec;
-	 recordBuffer r0;
-	 string rec2;
-	 rec.push_back("1001");
-	 rec.push_back("Agawam");
-	 rec.push_back("NY");
-	 rec.push_back("Hampden");
-	 rec.push_back("42.0702");
-	 rec.push_back("-72.6227");
-	 rec2 = r0.pack(rec);
-	 cout << rec2;
-	 */
 }
 
-void tylersTemporaryTest()
+void addTestFunction()
 {
 	SequencedSet seqSet = SequencedSet();
 	seqSet.load();
@@ -179,10 +167,24 @@ void tylersTemporaryTest()
 	string searchTerm;
 	cout << "What record would you like to insert into the above block? > ";
 	cin >> searchTerm;
-	int insertPoint = seqSet.searchForInsertion(blk, searchTerm);
-	cout << "Term can be inserted at position " << insertPoint << endl;
-	cout << "Next, pick a primary key to do a global search on: > " << endl;
-	cin >> searchTerm;
-	seqSet.add(searchTerm);
+	try {
+		 int insertPoint = seqSet.searchForInsertion(&blk, searchTerm);
+		 cout << "Term can be inserted at position " << insertPoint << endl;
+	}
+	catch (DuplicateRecordException* e){
+		 cout << e->to_string() << endl;
+	}
+	for (int i = 0; i < 20; i++) {
+		 int location = 400 + i;
+		 string locS = to_string(location);
+		 Record rec = Record(vector<string>{locS, "Hope" + locS, "IT", "Works", locS, "-" + locS});
+		 seqSet.add(rec);
+	}
+
+	//Testing delete
+	cout << "Enter a record's primary key and the record will be removed. > ";
+	string primaryKey;
+	cin >> primaryKey;
+	seqSet.deleteRecord(primaryKey);
 }
 

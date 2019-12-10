@@ -13,18 +13,23 @@ class Index
 {
 private:
 	 Header::FieldType keyType;
-	 vector<pair<string, int>> indices;
+	 vector<IndexRecord> indices;
 	 string outputFileName;
+	 int findIndex(string key); //returns indexNum
+	 int findIndex(string key, bool isInsertion);
 public:
 	 Index();
-	 Index(vector<pair<string, int>> indices);
+	 Index(vector<IndexRecord> indices);
 	 Index(string packed);
 	 void Create();
 	 string pack();
+
 	 void addIndex(string key, int blockNum);
-	 pair<string, int> getIndex(int indexPosition);
-	 void deleteIndex(int indexPosition);
+	 void deleteIndex(string oldkey);
+	 void updateIndex(string oldkey, string newkey);
+
+	 IndexRecord getIndex(int indexPosition);
+	 IndexRecord getLastIndex();
+	 vector<IndexRecord> getSiblings(int indexPosition); //returns the indices of the siblings.
 	 int size();
-	 void writeIndex(ofstream& indexOutput);
-	 
 };

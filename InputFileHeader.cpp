@@ -5,7 +5,7 @@ InputFileHeader::InputFileHeader()
 {
 	headerSize = 0;
 	recordSize = 0;
-	filename = " ";
+	name = "";
 }
 
 vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
@@ -17,10 +17,12 @@ vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
 	 return fieldInfo;
 }
 
+/** Reads the header file of an input file into the input file header object.
+@param inputFile: the file whose contents are to be read into the parameters of the input file header object
+*/
 void InputFileHeader::readHeader(ifstream &inputFile){
 	char dummyChar;
 	char* buf = new char[128];
-	string name;
 	string headerSizeString;
 	string recordSizeString;
 	string s1, s2;
@@ -66,16 +68,25 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 	//Record::setFieldInfo(recordFields);
 }
 
+/** Returns the field name of the i-th field
+@param i: the index of the field sought
+*/
 string InputFileHeader::getFieldName(int i)
 {
 	return get<0>(recordFields[i]);
 }
 
+/** Returns the field size of the i-th field
+@param i: the index of the field sought
+*/
 int InputFileHeader::getFieldSize(int i)
 {
 	 return fieldSizes[i];
 }
 
+/** Returns the field type of the i-th field
+@param i: the index of the field sought
+*/
 Header::FieldType InputFileHeader::getFieldType(int i)
 {
 	return Header::toFieldType(fieldTypes[i]);

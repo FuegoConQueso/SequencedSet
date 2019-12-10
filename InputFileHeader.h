@@ -12,7 +12,7 @@ class InputFileHeader {
 	private:
 		int headerSize;
 		int recordSize;
-		string filename;
+		string name;
 		vector<int> fieldSizes;
 		vector<string> fieldTypes;
 		vector<string> fieldNames;
@@ -21,7 +21,7 @@ class InputFileHeader {
 		void readHeader(ifstream &inputFile);
 		int getHeaderSize(){return headerSize;}
 		int getRecordSize(){return recordSize;}
-		string getFileName() { return filename; }
+		string getFileName() { return name; }
 		string getFieldName(int i);
 		int getFieldSize(int i);
 		Header::FieldType getFieldType(int i);

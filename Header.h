@@ -49,6 +49,7 @@ public:
 	 int getHeaderSizeSize(); //returns the size (in chars) of the header's size string
 	 int getStartBlock(); //returns the index of the start block
 	 int getStartAvail(); //returns the index of the start of the avail list
+	 
 	 void setStartBlock(int index); //sets the start block index
 	 void setStartAvail(int index); //sets the start of the avail list's index
 	 
@@ -72,7 +73,6 @@ public:
 	 //padding and unpadding methods
 	 string pad(string toPad, int paddedSize); //pads a string toPad (on the right), using padChar, to make it size paddedSize
 	 string unpad(string padded); //unpads a string on both left and right, removing padChar
-
 
 	 //comparison method
 	 static int compare(string a, string b, FieldType f);
