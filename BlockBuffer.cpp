@@ -3,24 +3,24 @@
 
 /** Given a vector of strings containing the records of a block, returns a single string with 
 all relevant information.
-@param recbloc1: the vector of strings containing the block information.
+@param topack: the block to be packed
 */
-string BlockBuffer::pack(vector<string> recbloc1, int& place) {
-
+string BlockBuffer::pack(Block* topack, int& place) {
 	 {
+		  Header* header = SequencedSet::sHeader();
+
 		  string strb = "\n"; //new block starts with a newline
 		  //tell the calling function where this block is located
-		  place = stoi(recbloc1[0]);
-		  Header* header = SequencedSet::sHeader();
+		  place = topack->getBlockNumber();
 		  //pad the nextBlock
-		  recbloc1[1] = header->pad(recbloc1[1], header->nextBlockSize());
+		  int nextBlock = topack->getBlockNextNumber();
+		  strb += header->pad(to_string(nextBlock), header->nextBlockSize());
 		  //pad the recordCount
-		  int recordCount = stoi(recbloc1[2]);
-		  recbloc1[2] = header->pad(recbloc1[2], header->blockRecordCountSize());
-
+		  int recordCount = topack->recordCount();
+		  strb += header->pad(to_string(recordCount), header->blockRecordCountSize());
 		  // fill in the block with the nextblock, count, and records
-		  for (int i = 1; i < recbloc1.size(); i++) {
-				strb.append(recbloc1[i]);
+		  for (int i = 0; i < topack->recordCount(); i++) {
+				strb.append(recordBuffer::pack(topack->getRecord(i)));
 		  }
 
 		  //add blank records up to capacity
@@ -32,11 +32,11 @@ string BlockBuffer::pack(vector<string> recbloc1, int& place) {
 }
 
 /** Packs the input vector of strings with place parameter zero.
-@param recbloc1: the vector of strings to be packed
+@param topack: the block to be packed
 */
-string BlockBuffer::pack(vector<string> recbloc1) {
+string BlockBuffer::pack(Block* topack) {
 	 int callback = 0;
-	 return pack(recbloc1, callback);
+	 return pack(topack, callback);
 }
 
 /** Returns a block with a given block number and records as defined in a string.

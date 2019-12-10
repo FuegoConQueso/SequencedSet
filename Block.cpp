@@ -69,6 +69,10 @@ string Block::getLastKey()
 	 return records.back().getField(0);
 }
 
+
+void Block::deleteRecord(int rrn) {
+	 records.erase(records.begin() + rrn);
+}
 /**
 Returns the first record of the block while erasing it.
 */

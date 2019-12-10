@@ -1,17 +1,17 @@
 #include "rbuffer1.h"
 #include "SequencedSet.h"
 
-/** takes a vector of strings representing the fields of a record and places it into one string
-@param packed: the vector of strings which is to be converted into one string
+/** takes a Record and places it into one string
+@param packed: the Record which is to be converted into one string
 */
-string recordBuffer::pack(vector<string> packed)
+string recordBuffer::pack(Record packed)
 {
 	Header* header = SequencedSet::sHeader();
 	string field;
 	string record;
-	for(int index = 0; index < packed.size(); index++)
+	for(int index = 0; index < header->getNumOfFields(); index++)
 	{
-		field = packed[index];		//the field in the vector is copied to string f2
+		field = packed.getField(index);		//the field in the vector is copied to string f2
 		field = header->pad(field, header->getFieldSize(index));
 		record.append(field);	//the field with padding is appended to string Record
 	}
