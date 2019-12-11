@@ -7,6 +7,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SequencedSet", "SequencedSe
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "findcardextremes", "..\findcardextremes\findcardextremes.vcxproj", "{B529D7A2-4BDD-4CD1-8DB1-117723728348}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F67F5696-2F0C-4173-B66F-A46E70BCC709}"
+	ProjectSection(SolutionItems) = preProject
+		BTreeNode.cpp = BTreeNode.cpp
+		BTreeNode.h = BTreeNode.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

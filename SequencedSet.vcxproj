@@ -124,6 +124,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="BTreeNode.cpp" />
     <ClCompile Include="Header.cpp" />
     <ClCompile Include="HeaderBuffer.cpp" />
     <ClCompile Include="Index.cpp" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockBuffer.h" />
+    <ClInclude Include="BTreeNode.h" />
     <ClInclude Include="IndexRecord.h" />
     <ClInclude Include="IndexRecordBuffer.h" />
     <ClInclude Include="SeqSetExceptions.h" />
