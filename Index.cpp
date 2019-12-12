@@ -100,6 +100,42 @@ vector<IndexRecord> Index::getSiblings(int indexPosition)
 	 return siblings;
 }
 
+void Index::BTreeSplitChild(BTreeNode x, int i)
+{
+	BTreeNode* z = new BTreeNode(minDegree);
+	BTreeNode* y;
+	y = x.getChild(i);
+	z->setLeaf(y->getLeaf());
+	z->setNumKeys(minDegree - 1);
+	for (int j = 0; j < minDegree - 1; j++)
+	{
+		z->addKey(y->getKey(j + minDegree));
+	}
+	if (!y->getLeaf())
+	{
+		for (int j = 0; j < minDegree; j++)
+		{
+			z->addChild(y->getChild(j + minDegree));
+		}
+	}
+	y->setNumKeys(minDegree - 1);
+	BTreeNode* dummyNode;
+	x.addChild(dummyNode);
+	for (int j = x.getNumKeys(); j > (i); j--)
+	{
+		x.setChild(x.getChild(j - 1), j);
+	}
+	x.setChild(z, i);
+	IndexRecord dummyRecord(0,0);
+	x.addKey(dummyRecord);
+	for (int j = x.getNumKeys - 1; j > (i - 1); j--)
+	{
+		x.setKey(x.getKey(j-1), j);
+	}
+	x.setKey(y->getKey(minDegree - 1), i - 1);
+	x.setNumKeys(x.getNumKeys() + 1);
+}
+
 void Index::deleteIndex(string key)
 {
 	 indices.erase(indices.begin() + findIndex(key));
