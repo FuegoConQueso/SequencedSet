@@ -32,21 +32,6 @@ int main(int argc, char *argv[])
 		char c = argv[i][1];
 		switch(c)
 		{
-			case 'c':
-				{
-					createCheck = true;
-					break;
-				}
-			case 'b':
-				{
-					blockStructTest = true;
-					break;
-				}
-			case 'f':
-	 			{
-					fileManagerTest = true;
-					break;
-				}
 			case 's':
 				{
 					searchTest = true;
@@ -60,26 +45,21 @@ int main(int argc, char *argv[])
 
 			case 'p':
 				{
-				populateTest = true;
-				break;
+					populateTest = true;
+					break;
 				}
 
 			case 'l':
-			{
-				loadTest = true;
-				break;
-			}
+				{
+					loadTest = true;
+					break;
+				}
 
 			case 'r':
-			{
-				removeTest = true;
-				break;
-			}
-
-			case 'm':
-			{
-
-			}
+				{
+					removeTest = true;
+					break;
+				}
 
 			default:
 				{
@@ -128,9 +108,9 @@ int main(int argc, char *argv[])
 	if (populateTest)
 		seqMain1 = populate(inputFile);
 	if (searchTest)
-		searchTestFunction();
+		search(seqMain1);
 	if (addTest)
-		addTestFunction();
+		addRecord(seqMain1);
 	if (removeTest)
 		remove(seqMain1);
 	cin.get();
@@ -192,20 +172,6 @@ void addRecord(SequencedSet* seqAddPoint)
 	seqAddPoint->add(addRec);
 }
 
-void addMany(SequencedSet* manySeq, int howMany)
-{
-	int key;
-	cout << "Enter a key to insert the duplicates:";
-	cin >> key;
-	for (int i = 0; i < howMany; i++)
-	{
-
-		string keyS = to_string(key + i);
-		Record manyRec = Record(vector<string>{keyS, "ManyAddTest", "ST", "County", "10.01", "-10.01"});
-		manySeq->add(manyRec);
-	}
-}
-
 void remove(SequencedSet* seqPoint)
 {
 	string key;
@@ -213,127 +179,3 @@ void remove(SequencedSet* seqPoint)
 	cin >> key;
 	seqPoint->deleteRecord(key);
 }
-
-void removeMany(SequencedSet* seqPoint, int howMany)
-{
-	int key;
-	cout << "please enter a key:";
-	cin >> key;
-	for (int i = 0; i < howMany; i++)
-	{
-		string keyS = to_string(key + i);
-		seqPoint->deleteRecord(keyS);
-	}
-
-}
-
-void InputFileHeaderReadTest(string inputFile)
-{
-	SequencedSet seqSet = SequencedSet();
-	cout << "populating...\n";
-	seqSet.populate(inputFile);
-	cout << "done";
-	string primaryKey;
-	cout << "\nSearch test is on.\n";
-	cout << "What zip code would you like to search for? > ";
-	cin >> primaryKey;
-	int blockNum = seqSet.searchForBlock(primaryKey);
-	if (blockNum == -1) {
-		 cout << "Key not located in any blocks\n";
-	}
-	else
-	{
-		 cout << primaryKey << " should be located in block " << blockNum << endl;
-		 int rrn = 0;
-		 try {
-			  Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
-			  cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
-		 }
-		 catch (RecordNotFoundException * e) {
-			  cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." <<endl;
-		 }
-	}
-
-}
-
-void FileManagerTest() {
-	cout << "FileManagerTest" << endl;
-	SequencedSet p;
-	p.load();
-	Header* header = p.sHeader();
-	vector<Record> hello;
-	int tests = 2;
-	hello = p.searchMatches("MN", tests);
-	cout << hello.size();
-	for (int i = 0; i < hello.size(); i++) {
-		for (int j = 0; j < header->getNumOfFields(); j++) {
-			cout << hello[i].getField(i) << ' ';
-		}
-		cout << "\n";
-	}
-
-}
-
-void searchTestFunction()
-{
-	 SequencedSet seqSet = SequencedSet();
-	 cout << "loading...\n";
-	 seqSet.load();
-	 cout << "done";
-	 string primaryKey;
-	 cout << "\nSearch test is on.\n";
-	 cout << "What zip code would you like to search for? > ";
-	 cin >> primaryKey;
-	 int blockNum = seqSet.searchForBlock(primaryKey);
-	 if (blockNum == -1) {
-		  cout << "Key not located in any blocks\n";
-	 }
-	 else
-	 {
-		  cout << primaryKey << " should be located in block " << blockNum << endl;
-		  int rrn = 0;
-		  try {
-				Record record = seqSet.searchForRecord(blockNum, primaryKey, rrn);
-				cout << endl << "Record:\n" << recordBuffer::pack(record.pack()) << endl;
-		  }
-		  catch (RecordNotFoundException * e) {
-				cout << "No matching record found in block " + to_string(blockNum) << "; record does not exist." << endl;
-		  }
-	 }
-
-}
-
-void BlockStructureTest() {
-}
-
-void addTestFunction()
-{
-	SequencedSet seqSet = SequencedSet();
-	seqSet.load();
-	Block blk = seqSet.getBlockFromFile(455);
-	for (int i = 0; i < blk.pack().size(); i++)
-		cout << blk.pack()[i];
-	string searchTerm;
-	cout << "What record would you like to insert into the above block? > ";
-	cin >> searchTerm;
-	try {
-		 int insertPoint = seqSet.searchForInsertion(&blk, searchTerm);
-		 cout << "Term can be inserted at position " << insertPoint << endl;
-	}
-	catch (DuplicateRecordException* e){
-		 cout << e->to_string() << endl;
-	}
-	for (int i = 0; i < 20; i++) {
-		 int location = 400 + i;
-		 string locS = to_string(location);
-		 Record rec = Record(vector<string>{locS, "Hope" + locS, "IT", "Works", locS, "-" + locS});
-		 seqSet.add(rec);
-	}
-
-	//Testing delete
-	cout << "Enter a record's primary key and the record will be removed. > ";
-	string primaryKey;
-	cin >> primaryKey;
-	seqSet.deleteRecord(primaryKey);
-}
-
