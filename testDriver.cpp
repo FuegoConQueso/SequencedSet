@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 			return 0;
 	}
 	string inputFile(argv[i]);
-	SequencedSet* seqMain1;
+	SequencedSet* seqMain1 = new SequencedSet;
 	if(populateTest && loadTest)
 	{
 		int end;
