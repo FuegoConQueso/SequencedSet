@@ -80,6 +80,19 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 const char* s = wBlock.c_str();
 	 filefile.write(s, bsize);
 }
+
+void FileManager::createSpace(int blockNumber)
+{
+	Header* header = SequencedSet::sHeader();
+	int bsize;
+	int position = header->getHeaderSize();
+	bsize = header->blockSize();
+	position += blockNumber * bsize;
+	filefile.seekg(position, ios_base::beg);
+	const char* output = header->pad("", bsize).c_str();
+	filefile.write(output, bsize);
+}
+
 /**Returns and index object initialized with the contents of the index file
 */
 Index FileManager::readIndexFile()

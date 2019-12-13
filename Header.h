@@ -50,8 +50,8 @@ public:
 	 int getStartBlock(); //returns the index of the start block
 	 int getStartAvail(); //returns the index of the start of the avail list
 	 
-	 void setStartBlock(int index); //sets the start block index
-	 void setStartAvail(int index); //sets the start of the avail list's index
+	 void setStartBlock(int index, bool updateFile = true); //sets the start block index
+	 void setStartAvail(int index, bool updateFile = true); //sets the start of the avail list's index
 	 
 	 //FieldType conversion methods
 	 static FieldType toFieldType(string name); //takes a string and converts it to a FieldType

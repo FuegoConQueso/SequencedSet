@@ -146,19 +146,23 @@ int Header::getStartAvail()
 /** Sets the start block number to a given index parameter and updates the header of the sequenced set (rewriting header to file)
 @param index: the value that the start block number is to be set to
 */
-void Header::setStartBlock(int index)
+void Header::setStartBlock(int index, bool updateFile)
 {
 	 startBlock = index;
-	 SequencedSet::updateHeader();
+	 if (updateFile) {
+		  SequencedSet::updateHeader();
+	 }
 }
 
 /** Sets the start of the avail list to a given block number and updates the header of the sequenced set (rewriting header to file)
 @param index: the value that the avail list start number is to be set to.
 */
-void Header::setStartAvail(int index)
+void Header::setStartAvail(int index, bool updateFile)
 {
 	 startAvail = index;
-	 SequencedSet::updateHeader();
+	 if (updateFile) {
+		  SequencedSet::updateHeader();
+	 }
 }
 
 Header::Header()
