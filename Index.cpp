@@ -136,6 +136,39 @@ void Index::BTreeSplitChild(BTreeNode x, int i)
 	x.setNumKeys(x.getNumKeys() + 1);
 }
 
+void Index::BTreeInsertNonFull(BTreeNode x, string k)
+{
+	Header* header = SequencedSet::sHeader();
+	int i = x.getNumKeys();
+	IndexRecord dummyRecord(0,0);
+	x.addKey(dummyRecord);
+	if (x.getLeaf())
+	{
+		while ((i >= 0) && (header->compare(k, x.getKey(i-1).key, header->getKeyType())) == -1)
+		{
+			x.setKey(x.getKey(i-1), i);
+			i--;
+		}
+		IndexRecord addedRecord(k, 0); //How to compute block number for key?
+		x.setKey(addedRecord, i+1);
+		x.setNumKeys(x.getNumKeys() + 1);
+	}
+	else
+	{
+		while ((i >= 0) && (header->compare(k, x.getKey(i - 1).key, header->getKeyType())) == -1)
+		{
+			i--;
+		}
+		if (x.getChild(i - 1)->getNumKeys() == 2 * minDegree - 1)
+		{
+			BTreeSplitChild(x, i);
+			if (header->compare(k, x.getKey(i - 1).key, header->getKeyType()) == 1)
+				i++;
+		}
+		BTreeInsertNonFull(*(x.getChild(i-1)), k);
+	}
+}
+
 void Index::deleteIndex(string key)
 {
 	 indices.erase(indices.begin() + findIndex(key));

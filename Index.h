@@ -35,5 +35,6 @@ public:
 	 IndexRecord getLastIndex();
 	 vector<IndexRecord> getSiblings(int indexPosition); //returns the indices of the siblings.
 	 void BTreeSplitChild(BTreeNode x, int i);
+	 void BTreeInsertNonFull(BTreeNode x, string k);
 	 int size();
 };
