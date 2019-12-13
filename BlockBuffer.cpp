@@ -1,7 +1,10 @@
 #include "BlockBuffer.h"
 #include "SequencedSet.h"
 
-
+/** Given a vector of strings containing the records of a block, returns a single string with 
+all relevant information.
+@param topack: the block to be packed
+*/
 string BlockBuffer::pack(Block* topack, int& place) {
 	 {
 		  Header* header = SequencedSet::sHeader();
@@ -31,12 +34,18 @@ string BlockBuffer::pack(Block* topack, int& place) {
 	 }
 }
 
+/** Packs the input vector of strings with place parameter zero.
+@param topack: the block to be packed
+*/
 string BlockBuffer::pack(Block* topack) {
 	 int callback = 0;
 	 return pack(topack, callback);
 }
 
-// this works on the hard code without a header.
+/** Returns a block with a given block number and records as defined in a string.
+@param blocknum: the block number
+@param blocrec1: the records of the block in string format.
+*/
 Block BlockBuffer::unpack(int blockNum, string blocrec1)
 {
 	 Header* header = SequencedSet::sHeader();

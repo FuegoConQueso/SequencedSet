@@ -1,6 +1,11 @@
 #include "IndexBuffer.h"
 #include "SequencedSet.h"
 
+
+/** Takes a vector of Index Records and a fieldType and places them all into one string
+@param indices: the vector of index records to be appended to the string
+@param fieldType: the string indicating field type to be placed at the beginning of the string
+*/
 string IndexBuffer::pack(vector<IndexRecord> indices, string fieldType)
 {
 	 Header* header = SequencedSet::sHeader();
@@ -15,6 +20,11 @@ string IndexBuffer::pack(vector<IndexRecord> indices, string fieldType)
 	 return packed;
 }
 
+
+/** Creates a vector of Index Records from a string containing them in order
+@param packed: the string to be split into string-integer pairs
+@param fieldType: tests if the fieldType listed in the string is compatible with the testType in the packed string
+*/
 vector<IndexRecord> IndexBuffer::unpack(string packed, string fieldType)
 {
 

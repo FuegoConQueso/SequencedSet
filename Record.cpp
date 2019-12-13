@@ -11,11 +11,16 @@ Record::Record(vector<string> fields)
 	 this->fields = fields;
 }
 
+/*Returns the fields of the Record object
+*/
 vector<string> Record::pack()
 {
 	 return fields;
 }
 
+/* Returns the field at a given index of the record object
+@param index: the index of the field to be retrieved
+*/
 string Record::getField(int index)
 {
 	 return fields[index];
