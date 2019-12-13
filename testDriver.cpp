@@ -9,11 +9,12 @@
 
 using namespace std;
 
-void InputFileHeaderReadTest(string);
-void BlockStructureTest();
-void FileManagerTest();
-void searchTestFunction();
-void addTestFunction();
+SequencedSet* populate(string);
+SequencedSet* populate(string, string);
+SequencedSet* load(string);
+void search(SequencedSet*);
+void addRecord(SequencedSet*);
+void remove(SequencedSet*);
 
 int main(int argc, char *argv[])
 {
@@ -93,10 +94,6 @@ int main(int argc, char *argv[])
 		cout << "Please enter any key to terminate ";
 		cin >> end1;
 		return 0;
-	}
-	if (createCheck == true)
-	{
-		InputFileHeaderReadTest(inputFile);
 	}
 	if (loadTest)
 		seqMain1 = load(inputFile);
