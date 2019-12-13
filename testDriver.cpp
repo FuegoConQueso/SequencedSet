@@ -98,11 +98,6 @@ int main(int argc, char *argv[])
 	{
 		InputFileHeaderReadTest(inputFile);
 	}
-	if (blockStructTest == true)
-		BlockStructureTest();
-	if (fileManagerTest) {
-		 FileManagerTest();
-	}
 	if (loadTest)
 		seqMain1 = load(inputFile);
 	if (populateTest)
