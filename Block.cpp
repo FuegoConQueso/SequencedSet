@@ -6,16 +6,11 @@ Block::Block() {
 	 records = vector<Record>();
 }
 
-Block::Block(vector<string> packedBlock)
-{
-	 records = vector<Record>();
-	 unpack(packedBlock);
-}
-
-Block::Block(int blockNumber, int nextBlock, vector<Record> records)
+Block::Block(int blockNumber, int nextBlock, int prevBlock, vector<Record> records)
 {
 	 this->blockNumber = blockNumber;
 	 this->nextBlock = nextBlock;
+	 this->prevBlock = prevBlock;
 	 this->records = records;
 }
 
@@ -66,8 +61,16 @@ int Block::getBlockNextNumber()
 	 return nextBlock;
 }
 
-/** Returns the primary key of the final record of the block.
-*/
+void Block::setNextBlockNumber(int nextBlock)
+{
+	 this->nextBlock = nextBlock;
+}
+
+int Block::getPrevBlockNumber()
+{
+	 return prevBlock;
+}
+
 string Block::getLastKey()
 {
 	 return records.back().getField(0);
