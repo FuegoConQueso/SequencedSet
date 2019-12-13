@@ -146,12 +146,19 @@ void BlockStructureTest() {
 void addTestFunction()
 {
 	SequencedSet seqSet = SequencedSet();
+	cout << "Loading..." << endl;
 	seqSet.load();
-	Block blk = seqSet.getBlockFromFile(455);
-	for (int i = 0; i < blk.pack().size(); i++)
-		cout << blk.pack()[i];
+	cout << "done." << endl;
+	cout << "Multi-insertion test active." << endl;
+	cout << "Enter a zipcode to display the corresponding block for insertion: > ";
+	string zipToSearch;
+	cin >> zipToSearch;
+	Block blk = seqSet.getBlockFromFile(seqSet.searchForBlock(zipToSearch));
+	for (int i = 0; i < BlockBuffer::pack(&blk).size(); i++)
+		cout << BlockBuffer::pack(&blk)[i];
+	cout << endl;
 	string searchTerm;
-	cout << "What record would you like to insert into the above block? > ";
+	cout << "What record would you like to insert? > ";
 	cin >> searchTerm;
 	try {
 		 int insertPoint = seqSet.searchForInsertion(&blk, searchTerm);
@@ -161,16 +168,25 @@ void addTestFunction()
 		 cout << e->to_string() << endl;
 	}
 	for (int i = 0; i < 20; i++) {
-		 int location = 400 + i;
+		 int location =stoi(searchTerm) + i;
 		 string locS = to_string(location);
 		 Record rec = Record(vector<string>{locS, "Hope" + locS, "IT", "Works", locS, "-" + locS});
 		 seqSet.add(rec);
 	}
 
 	//Testing delete
+	cout << "Deletion test active." << endl;
+	cout << "Enter a zipcode to display the corresponding block for deletion: > ";
+	string zipToSearch2;
+	cin >> zipToSearch2;
+	Block blk2 = seqSet.getBlockFromFile(seqSet.searchForBlock(zipToSearch2));
+	for (int i = 0; i < BlockBuffer::pack(&blk).size(); i++)
+		 cout << BlockBuffer::pack(&blk)[i];
+	cout << endl;
 	cout << "Enter a record's primary key and the record will be removed. > ";
 	string primaryKey;
 	cin >> primaryKey;
 	seqSet.deleteRecord(primaryKey);
+
 }
 

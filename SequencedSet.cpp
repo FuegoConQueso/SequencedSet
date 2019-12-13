@@ -27,19 +27,20 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 	 header = Header(fileName, hfile.getFileName(), hfile.makeTuples(), 0, -1);
 	 activeSeqSet = this;
 	 //get the filestream to use for the main file
-	 fstream& outputFile = fileManager.getFile();
 	 //write the header to the file
-	 outputFile << HeaderBuffer::pack(header);
+	 fileManager.writeHeader(&header);
 	 //create the Index
 	 index = Index();
 	 index.Create();
 	 //variables used for the loop
 	 int recordCount = 0;
-	 int blockCount = 0;
+	 int blockCount = -1;
+	 int prevBlock = -1;
 	 int blockMinSize = header.getBlockMinSize();
 	 int blockCapacity = header.getBlockCapacity();
 	 int blockInitialSize = blockMinSize + (blockCapacity - blockMinSize) / 2;
 	 Block tempBlock;
+	 Block tempPrevBlock;
 	 vector<Record> tempRecords = vector<Record>();
 	 //deal with extra newline character
 	 string garbage;
@@ -52,42 +53,60 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 		  recordCount++;
 		  //if we have reached the desired number of records in the block, create the block
 		  if (recordCount == blockInitialSize) {
-				//create a block, which will be block number blockCount, with a pointer to Block blockCount+1
-				tempBlock = Block(blockCount, blockCount + 1, tempRecords);
-				blockCount++;
-				//pack the block for output
-				string output = BlockBuffer::pack(&tempBlock);
-				outputFile << output;
-				// create the index entry for this block
-				string indexKey = tempRecords.back().getField(0);
-				int indexBlockNum = tempBlock.getBlockNumber();
-				index.addIndex(indexKey, indexBlockNum);
-				//reset recordCount
-				recordCount = 0;
-				tempRecords.clear();
+				if (blockCount == -1)
+				{
+					 blockCount = header.getStartBlock();
+					 tempPrevBlock = Block(blockCount, -1, -1, tempRecords);
+					 prevBlock = blockCount;
+					 fileManager.createSpace(blockCount);
+					 header.setStartBlock(blockCount + 1, false);
+					 recordCount = 0;
+					 tempRecords.clear();
+				}
+				else {
+					 //create a block, which will be block number blockCount, with a pointer to Block blockCount+1
+					 blockCount = header.getStartBlock();
+					 tempPrevBlock.setNextBlockNumber(blockCount);
+					 fileManager.writeBlock(BlockBuffer::pack(&tempPrevBlock), prevBlock);
+					 fileManager.createSpace(blockCount);
+					 header.setStartBlock(blockCount + 1, false);
+					 tempBlock = Block(blockCount, -1, prevBlock, tempRecords);
+					 prevBlock = blockCount;
+					 // create the index entry
+					 string indexKey = tempPrevBlock.getLastKey();
+					 int indexBlockNum = tempPrevBlock.getBlockNumber();
+					 index.addIndex(indexKey, indexBlockNum);
+					 tempPrevBlock = tempBlock;
+					 //reset recordCount
+					 recordCount = 0;
+					 tempRecords.clear();
+				}
 		  }
 	 }
 	 //if additional records, create final block
 	 if (recordCount > 0) {
-		  tempBlock = Block(blockCount, blockCount + 1, tempRecords);
-		  string output = BlockBuffer::pack(&tempBlock);
-		  outputFile << output;
-		  // create the index entry for this block
-		  string indexKey = tempRecords.back().getField(0);
-		  int indexBlockNum = tempBlock.getBlockNumber();
+		  blockCount = header.getStartBlock();
+		  tempPrevBlock.setNextBlockNumber(blockCount);
+		  fileManager.writeBlock(BlockBuffer::pack(&tempPrevBlock), tempPrevBlock.getBlockNumber());
+		  fileManager.createSpace(blockCount);
+		  header.setStartBlock(blockCount + 1, false);
+		  tempBlock = Block(blockCount, -1, prevBlock, tempRecords);
+		  // create the index entry
+		  string indexKey = tempPrevBlock.getLastKey();
+		  int indexBlockNum = tempPrevBlock.getBlockNumber();
 		  index.addIndex(indexKey, indexBlockNum);
-		  blockCount++;
+		  tempPrevBlock = tempBlock;
+		  prevBlock = blockCount;
 	 }
-	 //update the header's Avail pointer
-	 //header.setStartAvail(blockCount);
-	 //rewrites the header with the new Avail pointer
-	 //TODO: change to Filemanager "update avail start" function call
+
+	 fileManager.writeBlock(BlockBuffer::pack(&tempPrevBlock), tempPrevBlock.getBlockNumber());
+	 // create the index entry
+	 string indexKey = tempPrevBlock.getLastKey();
+	 int indexBlockNum = tempPrevBlock.getBlockNumber();
+	 index.addIndex(indexKey, indexBlockNum);
+	 header.setStartBlock(0, false);
 	 fileManager.writeHeader(&header);
 	 fileManager.writeIndexFile(&index);
-	 //Create empty block at current avail;
-	 /*vector<Record> lastBlockRecords;
-	 Block lastBlock(header.getStartAvail(), header.getStartAvail() + 1, lastBlockRecords);
-	 fileManager.writeBlock(BlockBuffer::pack(lastBlock.pack()), header.getStartAvail());*/
 }
 
 void SequencedSet::load(string fileName, string indexFileName)
@@ -280,7 +299,7 @@ void SequencedSet::deleteRecord(string primaryKey)
 		  int blockNum;
 		  int indexNum;
 		  try {
-				blockNum = searchForBlock(primaryKey, indexNum);
+				blockNum = searchForBlock(primaryKey, indexNum)-1;
 		  }
 		  catch (BeyondLastBlockException * e) {
 				throw new RecordNotFoundException(-1, "searchForBlock() failed in deleteRecord()");
@@ -294,7 +313,9 @@ void SequencedSet::deleteRecord(string primaryKey)
 		  if (recordBlock.recordCount() < header.getBlockMinSize()) {
 				redistributeRemove(&recordBlock, indexNum);
 		  }
-		  fileManager.writeBlock(BlockBuffer::pack(&recordBlock), recordBlock.getBlockNumber());
+		  else {
+				fileManager.writeBlock(BlockBuffer::pack(&recordBlock), recordBlock.getBlockNumber());
+		  }
 		  
 	 }
 	 catch (RecordNotFoundException* e) {
@@ -426,8 +447,8 @@ void SequencedSet::split(Block* blk, Block* sibling)
 				newRecords2.push_back(blk->getRecord(i));
 	 }
 	 //create new blocks
-	 Block newBlock(newBlockPosition, blk->getBlockNextNumber(), newRecords2);
-	 blk = new Block(blk->getBlockNumber(), newBlockPosition, newRecords);
+	 Block newBlock(newBlockPosition, blk->getBlockNextNumber(), blk->getBlockNumber(), newRecords2);
+	 blk = new Block(blk->getBlockNumber(), newBlockPosition, blk->getPrevBlockNumber(), newRecords);
 	 //write blocks
 	 fileManager.writeBlock(BlockBuffer::pack(blk), blk->getBlockNumber());
 	 fileManager.writeBlock(BlockBuffer::pack(&newBlock), newBlock.getBlockNumber());
@@ -439,7 +460,31 @@ void SequencedSet::split(Block* blk, Block* sibling)
 }
 
 void SequencedSet::merge(Block* blk, Block* sibling) {
-
+	 int compNum = Header::compare(blk->getLastKey(), sibling->getLastKey(), header.getKeyType());
+	 //if blk comes before sibling
+	 if (compNum == -1) {
+		  string prevKey = blk->getLastKey();
+		  index.deleteIndex(sibling->getLastKey());
+		  while (sibling->recordCount() > 0) {
+				blk->pushRecord(sibling->pop_first());
+		  }
+		  blk->setNextBlockNumber(sibling->getBlockNextNumber());
+		  fileManager.writeBlock(BlockBuffer::pack(blk), blk->getBlockNumber());
+		  fileManager.writeBlock(BlockBuffer::createAvail(sibling), sibling->getBlockNumber());
+		  index.updateIndex(prevKey, blk->getLastKey());
+	 }
+	 //if sibling comes before blk
+	 else {
+		  string prevKey = sibling->getLastKey();
+		  index.deleteIndex(blk->getLastKey());
+		  while (blk->recordCount() > 0) {
+				sibling->pushRecord(blk->pop_first());
+		  }
+		  sibling->setNextBlockNumber(blk->getBlockNextNumber());
+		  fileManager.writeBlock(BlockBuffer::pack(sibling), sibling->getBlockNumber());
+		  fileManager.writeBlock(BlockBuffer::createAvail(blk), blk->getBlockNumber());
+		  index.updateIndex(prevKey, sibling->getLastKey());
+	 }
 }
 
 void SequencedSet::updateHeader()

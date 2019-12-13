@@ -5,7 +5,7 @@
 #include <vector>
 #include "rbuffer1.h"
 #include "Block.h"
-#include "rbuffer1.h"
+#include "Record.h"
 
 using namespace std;
 
@@ -20,4 +20,5 @@ public:
 	 static string pack(Block* topack, int& place);
 	 static string pack(Block* topack);
 	 static Block unpack(int blockNum, string blocrec1);
+	 static string createAvail(Block* block);
 };

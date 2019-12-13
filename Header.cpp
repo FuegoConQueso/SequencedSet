@@ -111,16 +111,20 @@ int Header::getStartAvail()
 	 return startAvail;
 }
 
-void Header::setStartBlock(int index)
+void Header::setStartBlock(int index, bool updateFile)
 {
 	 startBlock = index;
-	 SequencedSet::updateHeader();
+	 if (updateFile) {
+		  SequencedSet::updateHeader();
+	 }
 }
 
-void Header::setStartAvail(int index)
+void Header::setStartAvail(int index, bool updateFile)
 {
 	 startAvail = index;
-	 SequencedSet::updateHeader();
+	 if (updateFile) {
+		  SequencedSet::updateHeader();
+	 }
 }
 
 Header::Header()

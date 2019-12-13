@@ -12,6 +12,9 @@ string BlockBuffer::pack(Block* topack, int& place) {
 		  //pad the nextBlock
 		  int nextBlock = topack->getBlockNextNumber();
 		  strb += header->pad(to_string(nextBlock), header->nextBlockSize());
+		  //pad the prevBlock
+		  int prevBlock = topack->getPrevBlockNumber();
+		  strb += header->pad(to_string(prevBlock), header->nextBlockSize());
 		  //pad the recordCount
 		  int recordCount = topack->recordCount();
 		  strb += header->pad(to_string(recordCount), header->blockRecordCountSize());
@@ -45,6 +48,10 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 	 string nextBlockStr = blocrec1.substr(startReadPos, header->nextBlockSize());
 	 int nextBlock = stoi(header->unpad(nextBlockStr));
 	 startReadPos += header->nextBlockSize();
+	 //read prev block
+	 string prevBlockStr = blocrec1.substr(startReadPos, header->nextBlockSize());
+	 int prevBlock = stoi(header->unpad(prevBlockStr));
+	 startReadPos += header->nextBlockSize();
 	 //read number of records
 	 string recordCountStr = blocrec1.substr(startReadPos, header->blockRecordCountSize());
 	 int recordCount = stoi(header->unpad(recordCountStr));
@@ -59,5 +66,13 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 		  startReadPos += header->getRecordSize();
 		  holdrec.clear();
 	 }
-	 return Block(blockNum, nextBlock, records);
+	 return Block(blockNum, nextBlock, prevBlock, records);
+}
+
+string BlockBuffer::createAvail(Block* block)
+{
+	 Header* header = SequencedSet::sHeader();
+	 block = new Block(block->getBlockNumber(), header->getStartAvail(), -2, vector<Record>());
+	 header->setStartAvail(block->getBlockNumber());
+	 return BlockBuffer::pack(block);
 }

@@ -6,31 +6,14 @@ Block::Block() {
 	 records = vector<Record>();
 }
 
-Block::Block(vector<string> packedBlock)
-{
-	 records = vector<Record>();
-	 unpack(packedBlock);
-}
-
-Block::Block(int blockNumber, int nextBlock, vector<Record> records)
+Block::Block(int blockNumber, int nextBlock, int prevBlock, vector<Record> records)
 {
 	 this->blockNumber = blockNumber;
 	 this->nextBlock = nextBlock;
+	 this->prevBlock = prevBlock;
 	 this->records = records;
 }
 
-vector<string> Block::pack() {
-	 vector<string> packed = vector<string>();
-	 packed.push_back(to_string(blockNumber));
-	 packed.push_back(to_string(nextBlock));
-	 int size = recordCount();
-	 packed.push_back(to_string(size));
-
-	 for (int i = 0; i < size; i++) {
-		  packed.push_back(recordBuffer::pack(records[i].pack()));
-	 }
-	 return packed;
-}
 
 int Block::recordCount() {
 	 return records.size();
@@ -48,6 +31,16 @@ Record Block::getRecord(int index) {
 int Block::getBlockNextNumber()
 {
 	 return nextBlock;
+}
+
+void Block::setNextBlockNumber(int nextBlock)
+{
+	 this->nextBlock = nextBlock;
+}
+
+int Block::getPrevBlockNumber()
+{
+	 return prevBlock;
 }
 
 string Block::getLastKey()
@@ -83,14 +76,3 @@ void Block::pushRecord(Record rec)
 	 records.push_back(rec);
 }
 
-void Block::unpack(vector<string> packedBlock)
-{
-	 int size = packedBlock.size();
-	 blockNumber = stoi(packedBlock[0]);
-	 nextBlock = stoi(packedBlock[1]);
-	 //skips reading size
-	 for (int i = 3; i < size; i++) {
-		  //unbuffers, and then uses that to construct a new record which is placed at the end
-		  records.emplace_back(recordBuffer::unpack(packedBlock[i]));
-	 }
-}
