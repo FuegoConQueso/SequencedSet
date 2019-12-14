@@ -14,23 +14,6 @@ Block::Block(int blockNumber, int nextBlock, int prevBlock, vector<Record> recor
 	 this->records = records;
 }
 
-/** Returns a vector of strings containing the block number, next block, size, and records (in order)
-of the block object.
-@pre: A block object
-@post: a vector of string containing information about the records of the block object
-*/
-vector<string> Block::pack() {
-	 vector<string> packed = vector<string>();
-	 packed.push_back(to_string(blockNumber));
-	 packed.push_back(to_string(nextBlock));
-	 int size = recordCount();
-	 packed.push_back(to_string(size));
-
-	 for (int i = 0; i < size; i++) {
-		  packed.push_back(recordBuffer::pack(records[i].pack()));
-	 }
-	 return packed;
-}
 
 /** Returns the size of the records object in the block.
 */
@@ -123,22 +106,4 @@ void Block::insertRecord(int index, Record rec)
 void Block::pushRecord(Record rec)
 {
 	 records.push_back(rec);
-}
-
-/** Takes a block in the form of a vector of strings and converts it to a block object
-@param packedBlock: the vector of strings with the block information to be converted
-into a block object.
-@pre: a vector of strings containing the block information
-@post: a block with information that was stored in the packedBlock vector
-*/
-void Block::unpack(vector<string> packedBlock)
-{
-	 int size = packedBlock.size();
-	 blockNumber = stoi(packedBlock[0]);
-	 nextBlock = stoi(packedBlock[1]);
-	 //skips reading size
-	 for (int i = 3; i < size; i++) {
-		  //unbuffers, and then uses that to construct a new record which is placed at the end
-		  records.emplace_back(recordBuffer::unpack(packedBlock[i]));
-	 }
 }

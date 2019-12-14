@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 			return 0;
 	}
 	string inputFile(argv[i]);
-	SequencedSet* seqMain1;
+	SequencedSet* seqMain1 = new SequencedSet;
 	if(populateTest && loadTest)
 	{
 		int end;
@@ -98,7 +98,16 @@ int main(int argc, char *argv[])
 	if (loadTest)
 		seqMain1 = load(inputFile);
 	if (populateTest)
-		seqMain1 = populate(inputFile);
+	{
+		if (i <= argc)
+		{
+			i++;
+			string inputFile2(argv[i]);
+			seqMain1 = populate(inputFile, inputFile2);
+		}
+		else
+			seqMain1 = populate(inputFile);
+	}
 	if (searchTest)
 		search(seqMain1);
 	if (addTest)
