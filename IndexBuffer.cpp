@@ -5,6 +5,8 @@
 /** Takes a vector of Index Records and a fieldType and places them all into one string
 @param indices: the vector of index records to be appended to the string
 @param fieldType: the string indicating field type to be placed at the beginning of the string
+@pre: a vector of indices and a field type
+@post: a string containing the information of all index records in the input vector.
 */
 string IndexBuffer::pack(vector<IndexRecord> indices, string fieldType)
 {
@@ -24,6 +26,8 @@ string IndexBuffer::pack(vector<IndexRecord> indices, string fieldType)
 /** Creates a vector of Index Records from a string containing them in order
 @param packed: the string to be split into string-integer pairs
 @param fieldType: tests if the fieldType listed in the string is compatible with the testType in the packed string
+@pre: A string to be packed and a field type
+@post: A vector of Index Records corresponding to the information in the input string
 */
 vector<IndexRecord> IndexBuffer::unpack(string packed, string fieldType)
 {

@@ -3,6 +3,8 @@
 
 /** takes a Record and places it into one string
 @param packed: the Record which is to be converted into one string
+@pre: a Record object
+@post: a string containing the information of the record object
 */
 string recordBuffer::pack(Record packed)
 {
@@ -20,6 +22,8 @@ string recordBuffer::pack(Record packed)
 
 /** takes a string representing an entire record and places it into a vector of strings indicating the fields
 @param record: the string to be split into vector elements (fields)
+@pre: a string containing record information
+@post: a vector string containing the record information of the string
 */
 vector<string> recordBuffer::unpack(string record)
 {

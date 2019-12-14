@@ -33,6 +33,8 @@ string Header::getName()
 /** Pads an input string with white space to a given size
 @param toPad: string to be padded
 @param paddedeSize: size the string is to be padded out to using white space
+@pre: A string to pad and the size to pad it to
+@post: A padded string of size padded size
 */
 string Header::pad(string toPad, int paddedSize)
 {
@@ -44,6 +46,8 @@ string Header::pad(string toPad, int paddedSize)
 
 /** Takes a padded string and removes extra white space
 @param padded: string for which the extra white space is to be removed
+@pre: a padded string
+@post: the string without the padding
 */
 string Header::unpad(string padded)
 {
@@ -56,6 +60,9 @@ string Header::unpad(string padded)
 /** Compares two strings according to the FieldType object that the strings represent
 @param a, b: The strings to be compared
 @param f: The fieldtype that the strings represent (integer, float, or string).
+@pre: two strings and an object of type FieldType
+@post: -1, 0 or 1 depending on whether the first string is less than, equal to
+or greater than the first string
 */
 int Header::compare(string a, string b, FieldType f)
 {
@@ -143,8 +150,12 @@ int Header::getStartAvail()
 	 return startAvail;
 }
 
-/** Sets the start block number to a given index parameter and updates the header of the sequenced set (rewriting header to file)
+/** Sets the start block number to a given index parameter and updates the header of the 
+sequenced set if (rewriting header to file) if the boolean flag is set to true
 @param index: the value that the start block number is to be set to
+@param updateFile: a boolean flag inidicating whether to update the header
+@pre: an index and a boolean flag 
+@post: the start block is now at index and if the flag was set to true, the header file is updated.
 */
 void Header::setStartBlock(int index, bool updateFile)
 {
@@ -156,6 +167,8 @@ void Header::setStartBlock(int index, bool updateFile)
 
 /** Sets the start of the avail list to a given block number and updates the header of the sequenced set (rewriting header to file)
 @param index: the value that the avail list start number is to be set to.
+@pre: an index and an update file flag
+@post: the start of the avail list is now at the index input and the header file is updated if the boolean flag is true.
 */
 void Header::setStartAvail(int index, bool updateFile)
 {
@@ -235,6 +248,8 @@ int Header::getBlockMinSize()
 
 /** Returns the field name of the field at a given index
 @param index: the index where the field is located in the record
+@pre: an integer index
+@post: the 0th field information at that index
 */
 string Header::getFieldName(int index)
 {
@@ -243,6 +258,8 @@ string Header::getFieldName(int index)
 
 /** Returns the field size of the field at a given index
 @param index: the index where the field is located in the record
+@pre: an integer index
+@post: the 1st field information at that index
 */
 int Header::getFieldSize(int index)
 {
@@ -251,6 +268,8 @@ int Header::getFieldSize(int index)
 
 /** Returns the field type of the field at a given index
 @param index: the index where the field is located in the record
+@pre: an integer index
+@post: the 2nd field information at that index
 */
 Header::FieldType Header::getFieldType(int index)
 {
@@ -266,6 +285,8 @@ int Header::getNumOfFields()
 
 /** Converts a string to an enumerated object of type FieldType (defined in Header class)
 @param name: the string to be converted into a FieldType enumerated class object
+@pre: a string indicating a field type
+@post: a FieldType object corresponding to the string
 */
 Header::FieldType Header::toFieldType(string name)
 {
@@ -285,6 +306,8 @@ Header::FieldType Header::toFieldType(string name)
 
 /** Converts a FieldType (defined in Header class) object to a string
 @param type: the FieldType to be converted to a string
+@pre: a Field Type object
+@post: a string corresponding to the Field Type
 */
 string Header::fieldTypeToString(FieldType type)
 {
@@ -311,6 +334,8 @@ Header::FieldType Header::getKeyType()
 
 /** Returns a boolean variable indicated whether an input FieldType is the same as the type of the primary key
 @param type: the FieldType to be compared with the primary key's FieldType
+@pre: a Field Type
+@post: A boolean flag  indicating whether the field type is the same type as the key's
 */
 bool Header::isKeyType(FieldType type) {
 	 if (type == getKeyType()) {

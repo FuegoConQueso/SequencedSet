@@ -2,6 +2,8 @@
 
 /** Takes a header object and converts it into a single string
 @param header: The header object to be packed into a string
+@pre: A Header object
+@post: a string containing all ofthe information in the Header.
 */
 string HeaderBuffer::pack(Header& header)
 {
@@ -25,6 +27,8 @@ string HeaderBuffer::pack(Header& header)
 /** Converts the header of a file into a Header object in memory
 @param mainFile: the filestream object whose header is to be read
 @param fileName: the name of the file whose header is to be read into a Header object
+@pre: a filestream and a file name
+@post: A Header object containing the information in the file's header text.
 */
 Header HeaderBuffer::unpack(fstream& mainFile, string fileName)
 {

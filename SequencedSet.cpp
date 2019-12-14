@@ -15,6 +15,8 @@ SequencedSet::~SequencedSet(){
 @param inputFileName The name of the file you want to input. Must be located in the SequencedSet directory.
 @param fileName The name of the file that will be used to store the SequencedSet data. Defaults to "Storage.txt"
 @param indexFileName The name of the file that will be used to store the index. Defaults to "Index.txt"
+@pre: A set of input file names
+@post: A set of files in our file storage format.
 */
 void SequencedSet::populate(string inputFileName, string fileName, string indexFileName) {
 	 ifstream inputFile = ifstream(inputFileName);
@@ -109,6 +111,12 @@ void SequencedSet::populate(string inputFileName, string fileName, string indexF
 	 fileManager.writeIndexFile(&index);
 }
 
+/** Opens the storage file and the index file
+@param fileName: name of the storage file
+@param indexFileName: name of the index file
+@pre: The storage file namea nd index file name
+@post: The index and storage files are opened for writing
+*/
 void SequencedSet::load(string fileName, string indexFileName)
 {
 	 //start filemanager
@@ -122,12 +130,10 @@ void SequencedSet::load(string fileName, string indexFileName)
 }
 /** Searches the index for the rbn (relative block number) of a block that
 should contain a record with the primary key (if such a record exists).
-
 @param[in] primaryKey The primary key of the record we are searching for.
 @param[out] indexLocation The index number for the block.
-
-@returns the rbn of the block that could contain that primary key.
-
+@pre: A prinary key and an index location
+@post: the rbn of the block that could contain that primary key.
 @throws BeyondLastBlockException if key is greater than the last index key.
 */
 int SequencedSet::searchForBlock(string primaryKey, int& indexLocation)
@@ -163,10 +169,9 @@ int SequencedSet::searchForBlock(string primaryKey, int& indexLocation)
 
 /** Searches the index for the rbn (relative block number) of a block that
 should contain a record with the primary key (if such a record exists).
-
 @param primaryKey The primary key of the record we are searching for.
-
-@returns the rbn of the block that could contain that primary key.
+@pre: A primary key string
+@post: the rbn of the block that could contain that primary key.
 
 @throws BeyondLastBlockException if key is greater than the last index key.
 */
@@ -176,12 +181,11 @@ int SequencedSet::searchForBlock(string primaryKey) {
 }
 
 /** Searches a block for a record.
-
 @param[in] rbn The rbn (relative block number) of the block we want to search.
 @param[in] primaryKey The key to search for.
 @param[out] rrn The relative record number of the record that is returned.
-
-@returns The record, if found.
+@pre: A block pointer and a primary key string
+@post: The record, if found.
 
 @throws RecordNotFoundException() if no record matching the search key is found.
 */
@@ -218,13 +222,11 @@ Record SequencedSet::searchRecordInBlock(Block* blk, string primaryKey, int& rrn
 }
 
 /** Opens a block and searches it for a record.
-
 @param[in] rbn The rbn (relative block number) of the block we want to search.
 @param[in] primaryKey The key to search for.
 @param[out] rrn The relative record number of the record that is returned.
-
-@returns The record, if found.
-
+@pre: A relative block number and a primary key string with a relative record number
+@post: The record, if found.
 @throws RecordNotFoundException() if no record matching the search key is found.
 */
 Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
@@ -234,6 +236,12 @@ Record SequencedSet::searchForRecord(int rbn, string primaryKey, int& rrn)
 	return searchRecordInBlock(&block, primaryKey, rrn);
 }
 
+/** Searches a block for an insertion point for an input key
+@param toSearch: the block to be searched
+@param keyToInsert: the key to be inserted into the block
+@pre: none
+@post: An integer returning the insertion point of the key into the block
+*/
 int SequencedSet::searchForInsertion(Block* toSearch, string keyToInsert)
 {
 	int insertionPoint = 0;
@@ -256,7 +264,8 @@ int SequencedSet::searchForInsertion(Block* toSearch, string keyToInsert)
 /* Adds a record to the sequenced set in the appropriate block, in the appropriate position
 Merges and splits blocks as necessary
 @param rec: the record to be inserted into the sequenced set
-
+@pre: a Record to be added to the sequenced set
+@post: The record is added, if possible, to the Sequenced set
 @throws duplicateRecordException if a record with the same primary key is already in the sequenced set
 */
 void SequencedSet::add(Record rec)
@@ -299,7 +308,8 @@ void SequencedSet::add(Record rec)
 
 /** Deletes a primary key from the sequenced set if the key is found.  Merges and redistributes blocks as necessary
 @param primaryKey: the primaryKey to be removed
-
+@pre: a primary key string
+@post: The record containing that primary key is deleted from the sequenced set
 @throws RecordNotFoundException if there is no record with the primary key argument to delete
 */
 void SequencedSet::deleteRecord(string primaryKey)
@@ -335,6 +345,8 @@ void SequencedSet::deleteRecord(string primaryKey)
 /** Attempts to redistribute a block at a given index number, if it fails, it calls merge
 @param blk: the block whose contents are to be redistributed
 @param indexNum: the index number of the block whose contents are to be redistributed
+@pre: a block pointer and an index number
+@post: the elements of the block at the given index number are redistributed.
 */
 void SequencedSet::redistributeRemove(Block* blk, int indexNum) {
 	 bool resolved = false;
@@ -390,6 +402,8 @@ void SequencedSet::redistributeRemove(Block* blk, int indexNum) {
 a split function.
 @param blk: the block whose records are to be redistributed
 @param indexNum: the index number of the block
+@pre: a block pointer and an index number
+@post: the records of the blocks are redistributed 
 */
 void SequencedSet::redistributeAdd(Block* blk, int indexNum) {
 	 bool resolved = false;
@@ -444,6 +458,8 @@ void SequencedSet::redistributeAdd(Block* blk, int indexNum) {
 /** Splits the contents of a block amongst itself and it's sibling
 @param blk: the block to be split
 @param sibling: the sibling of the block to be split
+@pre: A pointer to a block and a pointer to it's sibling
+@post: the contents of the block are split between itselfa nd it's sibling
 */
 void SequencedSet::split(Block* blk, Block* sibling)
 {
@@ -481,6 +497,12 @@ void SequencedSet::split(Block* blk, Block* sibling)
 	 fileManager.writeHeader(&header);
 }
 
+/** Merges the contents of a block and it's sibling
+@param blk: the block to be merged with it's sibling
+@param sibling: the sibling that the block is to be merged with
+@pre: two pointers to blocks
+@post: the contents of the two blocks are merged into one block
+*/
 void SequencedSet::merge(Block* blk, Block* sibling) {
 	 int compNum = Header::compare(blk->getLastKey(), sibling->getLastKey(), header.getKeyType());
 	 //if blk comes before sibling
@@ -510,6 +532,8 @@ void SequencedSet::merge(Block* blk, Block* sibling) {
 }
 
 /** Updates the header file with new information such as next block and avail list pointers
+@pre: none
+@post: the header file is updated
 */
 void SequencedSet::updateHeader()
 {
@@ -517,6 +541,8 @@ void SequencedSet::updateHeader()
 }
 
 /* Returns a pointer to the header of the active sequenced set
+@pre: none
+@post: pointer to header of active sequenced set
 */
 Header* SequencedSet::sHeader()
 {
@@ -532,6 +558,8 @@ SequencedSet* SequencedSet::SeqSet()
 
 /** Populates a record with a string
 @param line: the string used to populate the record
+@pre: a line string
+@post: A Record object with the contents of the string input
 */
 Record SequencedSet::populateRecord(string line) {
 	 int position = 0;
@@ -562,6 +590,9 @@ Record SequencedSet::populateRecord(string line) {
 /** Returns the vector of all records in the sequenced set whose fields with index fieldNum match the search string
 @param toSearch: the string being searched for amongst field at index fieldNum
 @param fieldNum: the index of the field being searched within the records
+@pre: a search string and a field number
+@post: a vector of records whose fields at the input field number index contain
+the search string
 */
 vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 {
@@ -591,6 +622,8 @@ vector<Record> SequencedSet::searchMatches(string toSearch, int fieldNum)
 
 /** Gets a block object from the file manager using the block number
 @param blkNum: the block number of the block to be retrieved from the file manager
+@pre: a block number
+@post: a Block object from the block number in the file
 */
 Block SequencedSet::getBlockFromFile(int blkNum)
 {
@@ -600,6 +633,8 @@ Block SequencedSet::getBlockFromFile(int blkNum)
 /** Returns the record with the highest value of a given field in a vector of records
 @param vecToSearch: the vector of records whose field value is to be searched
 @param fieldNumber: the field number of the field that is getting compared between vectors
+@pre: a vector of records and a field number
+@post: the Record with the highest value of the indicated field number in the input vector of records
 */
 Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
 {
@@ -619,7 +654,8 @@ Record SequencedSet::findMost(vector<Record> vecToSearch, int fieldNumber)
 /** Returns the record with the lowest value of a given field in a vector of records
 @param vecToSearch: the vector of records whose field value is to be searched
 @param fieldNumber: the field number of the field that is getting compared between vectors
-*/
+@pre: a vector of records and a field number
+@post: the Record with the lowest value of the indicated field number in the input vector of records*/
 Record SequencedSet::findLeast(vector<Record> vecToSearch, int fieldNumber)
 {
 	int lowest = 0;
@@ -636,6 +672,8 @@ Record SequencedSet::findLeast(vector<Record> vecToSearch, int fieldNumber)
 }
 
 /* Returns a record whose fields are individually specified by a user
+@pre: none
+@post: A record specified by the user
 */
 Record SequencedSet::specifyRecord()
 {

@@ -1,6 +1,11 @@
 #include "IndexRecordBuffer.h"
 #include "SequencedSet.h"
 
+/** Takes an Index Record object and places it's information into a string
+@param topack: the Index Record object that is to be packed into a string
+@pre: an Index Record
+@post: a string containing th einformation of the input index record
+*/
 string IndexRecordBuffer::pack(IndexRecord topack)
 {
 	 Header* header = SequencedSet::sHeader();
@@ -15,6 +20,11 @@ string IndexRecordBuffer::pack(IndexRecord topack)
 	 return (key + blockNum);
 }
 
+/* Takes a string and outputs a corresponding Index Record object
+@param packed: the string whose information is to be put into an index record object
+@pre: a string
+@post: an IndexRecord with the information conveyed by the string
+*/
 IndexRecord IndexRecordBuffer::unpack(string packed)
 {
 	 Header* header = SequencedSet::sHeader();

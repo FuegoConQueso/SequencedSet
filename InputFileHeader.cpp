@@ -1,6 +1,8 @@
 #include "InputFileHeader.h"
 using namespace std;
 
+/** Constructor of the input file header class
+*/
 InputFileHeader::InputFileHeader()
 {
 	headerSize = 0;
@@ -8,6 +10,11 @@ InputFileHeader::InputFileHeader()
 	name = "";
 }
 
+/** Makes populates the fieldInfo vector of tuples with the information in the record fields.
+@param fieldInfo: the vector of tuples to be written to
+@pre: a vector of tuples
+@post: the vector of tuples with the information of the recordFields member object
+*/
 vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
 	 vector<tuple<string, int, Header::FieldType>> fieldInfo = vector<tuple<string, int, Header::FieldType>>();
 	 for (int i = 0; i < recordFields.size(); i++)
@@ -19,6 +26,8 @@ vector<tuple<string, int, Header::FieldType>> InputFileHeader::makeTuples() {
 
 /** Reads the header file of an input file into the input file header object.
 @param inputFile: the file whose contents are to be read into the parameters of the input file header object
+@pre: an input file stream
+@post: An Input Header File with the header information of the input file stream
 */
 void InputFileHeader::readHeader(ifstream &inputFile){
 	char dummyChar;
@@ -70,6 +79,8 @@ void InputFileHeader::readHeader(ifstream &inputFile){
 
 /** Returns the field name of the i-th field
 @param i: the index of the field sought
+@pre: an integer
+@post: A string containing the contents of the record field at the index of that integer
 */
 string InputFileHeader::getFieldName(int i)
 {
@@ -78,6 +89,8 @@ string InputFileHeader::getFieldName(int i)
 
 /** Returns the field size of the i-th field
 @param i: the index of the field sought
+@pre: an integer
+@post: An integer containing the contents of the record field at the index of that integer
 */
 int InputFileHeader::getFieldSize(int i)
 {
@@ -86,6 +99,8 @@ int InputFileHeader::getFieldSize(int i)
 
 /** Returns the field type of the i-th field
 @param i: the index of the field sought
+@pre: an integer index
+@post: A field type indicating the type of the field at that index
 */
 Header::FieldType InputFileHeader::getFieldType(int i)
 {
