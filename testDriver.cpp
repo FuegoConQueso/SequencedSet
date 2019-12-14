@@ -24,7 +24,7 @@ void remove(SequencedSet*);
 */
 int main(int argc, char *argv[])
 {
-	//ifstream inputFile("us_postal_codes.txt");
+	 cout << "do something";
 	bool createCheck = false;
 	bool blockStructTest = false;
 	bool fileManagerTest = false;
@@ -33,6 +33,7 @@ int main(int argc, char *argv[])
 	bool loadTest = false;
 	bool populateTest = false;
 	bool removeTest = false;
+	bool fastMode = false;
 	int i = 1;
 	while((i < argc) && (argv[i][0] == '-'))
 	{
@@ -67,7 +68,11 @@ int main(int argc, char *argv[])
 					removeTest = true;
 					break;
 				}
-
+			case 'f':
+				 {
+					  fastMode = true;
+					  break;
+				 }
 			default:
 				{
 					break;
@@ -79,8 +84,10 @@ int main(int argc, char *argv[])
 	{
 			int end2;
 			cout << "error: file not provided" << '\n';
-			cout << "Please enter any key to terminate ";
-			cin >> end2;
+			if (!fastMode) {
+				 cout << "Please enter any key to terminate ";
+				 cin.get();
+			}
 			return 0;
 	}
 	string inputFile(argv[i]);
@@ -89,16 +96,20 @@ int main(int argc, char *argv[])
 	{
 		int end;
 		cout << "error: cannot have the populate flag and load flag true at same time" << '\n';
-		cout << "Please enter any key to terminate ";
-		cin >> end;
+		if (!fastMode) {
+			 cout << "Please enter any key to terminate ";
+			 cin.get();
+		}
 		return 0;
 	}
 	if (!populateTest && !loadTest)
 	{
 		int end1;
 		cout << "error: the populate flag or the load flag must be true" << '\n';
-		cout << "Please enter any key to terminate ";
-		cin >> end1;
+		if (!fastMode) {
+			 cout << "Please enter any key to terminate ";
+			 cin.get();
+		}
 		return 0;
 	}
 	if (loadTest)
@@ -120,7 +131,10 @@ int main(int argc, char *argv[])
 		addRecord(seqMain1);
 	if (removeTest)
 		remove(seqMain1);
-	cin.get();
+
+	if (!fastMode) {
+		 cin.get();
+	}
 	return 0;
 }
 

@@ -161,12 +161,12 @@
       <DeploymentContent>false</DeploymentContent>
     </Text>
     <Text Include="tinysample.txt" />
-    <Text Include="us_postal_codes.txt">
+    <Text Include="build\us_postal_codes.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="testBash.sh">
+    <None Include="build\testBash.sh">
       <DeploymentContent>true</DeploymentContent>
     </None>
   </ItemGroup>

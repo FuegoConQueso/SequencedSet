@@ -105,13 +105,13 @@
   <ItemGroup>
     <Text Include="currentHeader.txt" />
     <Text Include="tinysample.txt" />
-    <Text Include="us_postal_codes.txt" />
     <Text Include="Storage.txt" />
     <Text Include="Makefile">
       <Filter>Header Files</Filter>
     </Text>
+    <Text Include="build\us_postal_codes.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="testBash.sh" />
+    <None Include="build\testBash.sh" />
   </ItemGroup>
 </Project>
