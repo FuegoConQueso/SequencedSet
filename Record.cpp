@@ -1,11 +1,15 @@
 #include "Record.h"
 #include "SequencedSet.h"
 
+/** The default constructor of the Record class.
+*/
 Record::Record()
 {
 	 fields = vector<string>();
 }
 
+/** The constructor of the Record object which intitializes the fields vector
+*/
 Record::Record(vector<string> fields)
 {
 	 this->fields = fields;
@@ -20,6 +24,8 @@ vector<string> Record::pack()
 
 /* Returns the field at a given index of the record object
 @param index: the index of the field to be retrieved
+@pre: an integer index
+@post: a string with the field located at the index
 */
 string Record::getField(int index)
 {
