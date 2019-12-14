@@ -35,7 +35,8 @@ vector<IndexRecord> IndexBuffer::unpack(string packed, string fieldType)
 	 string testType;
 	 getline(data, testType);
 	 if (testType.compare(fieldType) != 0) {
-		  throw new exception("Invalid index file");
+		  cout << "Invalid index file";
+		  throw (- 1);
 	 }
 	 int keySize = header->getFieldSize(0);
 	 for (string line; getline(data, line);) {

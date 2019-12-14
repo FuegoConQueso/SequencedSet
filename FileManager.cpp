@@ -70,6 +70,20 @@ Block FileManager::getBlock(int blockNumber)
 	 return BlockBuffer::unpack(blockNumber, blockG);
 }
 
+
+
+void FileManager::createSpace(int blockNumber)
+{
+	 Header* header = SequencedSet::sHeader();
+	 int bsize;
+	 int position = header->getHeaderSize();
+	 bsize = header->blockSize();
+	 position += blockNumber * bsize;
+	 filefile.seekg(position, ios_base::beg);
+	 const char* output = header->pad("", bsize).c_str();
+	 filefile.write(output, bsize);
+}
+
 /** Write a block in string format at the position dictated by the block number
 @param wBlock: the string-formatted block to be written to the file
 @param blockNumber: the block number of the block to be written to the file

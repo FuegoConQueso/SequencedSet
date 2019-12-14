@@ -92,13 +92,13 @@
     <ClInclude Include="FileManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SeqSetExceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IndexRecord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IndexRecordBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SeqSetExceptions.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

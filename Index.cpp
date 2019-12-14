@@ -57,7 +57,7 @@ Index::Index(string packed)
 {
 	 Header* header = SequencedSet::sHeader();
 	 string headerStr = header->fieldTypeToString(header->getKeyType());
-	 *this = Index::Index(IndexBuffer::unpack(packed, headerStr));
+	 *this = Index(IndexBuffer::unpack(packed, headerStr));
 }
 
 void Index::Create() {

@@ -14,7 +14,7 @@
 #include "Header.h"
 #include "HeaderBuffer.h"
 #include "FileManager.h"
-#include "SeqSetExceptions.h"
+#include "SeqSetExceptions.cpp"
 using namespace std;
 
 class SequencedSet{
