@@ -4,6 +4,8 @@
 /** Opens a file for input and output and sets the storage and index file names, with the old conetents of the file immediately removed
 @param filename: name of storage file
 @param indexfilename: name of index file
+@pre: none
+@post: index and output files opened, filenames set
 */
 void FileManager::create(string filename, string indexfilename) 
 {
@@ -15,6 +17,8 @@ void FileManager::create(string filename, string indexfilename)
 /** Opens a file for input and output and sets the storage and index file names
 @param filename: name of storage file
 @param indexfilename: name of index file
+@pre: none
+@post: index and output files opened
 */
 void FileManager::open(string filename, string indexfilename)
 {
@@ -47,6 +51,8 @@ string FileManager::getFileFileName()
 
 /** Returns a block with a given block number from the file.
 @param blockNumber: the block number of the block to be retrieved from the file
+@pre: a block number
+@post: a block at the block number in the file
 */
 Block FileManager::getBlock(int blockNumber)
 {
@@ -67,6 +73,8 @@ Block FileManager::getBlock(int blockNumber)
 /** Write a block in string format at the position dictated by the block number
 @param wBlock: the string-formatted block to be written to the file
 @param blockNumber: the block number of the block to be written to the file
+@pre: a string and a block number
+@post: the file has the text block written to it at the given block number
 */
 void FileManager::writeBlock(string wBlock, int blockNumber)
 {
@@ -79,18 +87,6 @@ void FileManager::writeBlock(string wBlock, int blockNumber)
 	 filefile.seekp(position, ios_base::beg);
 	 const char* s = wBlock.c_str();
 	 filefile.write(s, bsize);
-}
-
-void FileManager::createSpace(int blockNumber)
-{
-	Header* header = SequencedSet::sHeader();
-	int bsize;
-	int position = header->getHeaderSize();
-	bsize = header->blockSize();
-	position += blockNumber * bsize;
-	filefile.seekg(position, ios_base::beg);
-	const char* output = header->pad("", bsize).c_str();
-	filefile.write(output, bsize);
 }
 
 /**Returns and index object initialized with the contents of the index file
@@ -111,6 +107,8 @@ Index FileManager::readIndexFile()
 
 /** Writes the contents of an Index object to an index file
 @param ind: the Index object whose contents are to be written to the index file.
+@pre: A pointer to an index
+@post: The index file is written according to the contents of the index pointer
 */
 void FileManager::writeIndexFile(Index* ind)
 {
