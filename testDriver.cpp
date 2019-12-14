@@ -16,6 +16,12 @@ void search(SequencedSet*);
 void addRecord(SequencedSet*);
 void remove(SequencedSet*);
 
+/** Test Driver: contains flags for testing the sequenced set
+@param argc: the number of string arguments taken at the command prompt
+@param argv: A two-dimensional array of the characters in the command arguments
+@pre: none
+@post: Testing of various aspects of the Sequenced set
+*/
 int main(int argc, char *argv[])
 {
 	//ifstream inputFile("us_postal_codes.txt");
@@ -118,6 +124,11 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+/** Tests the populate function with default output file name
+@param inputFile: the name of the input file
+@pre: none
+@post: Returns a sequenced set pointer populated with the input file
+*/
 SequencedSet* populate(string inputFile)
 {
 	SequencedSet* seqPoint;
@@ -126,6 +137,11 @@ SequencedSet* populate(string inputFile)
 	return seqPoint;
 }
 
+/** Tests the populate function with specified output file name
+@param inputFile: the name of the input file
+@pre: none
+@post: Returns a sequenced set pointer populated with the input file
+*/
 SequencedSet* populate(string inputFile, string outputFile)
 {
 	SequencedSet* seqPoint;
@@ -134,6 +150,11 @@ SequencedSet* populate(string inputFile, string outputFile)
 	return seqPoint;
 }
 
+/** Tests the load function of the sequenced set
+@param inputFile: the input file the sequenced set is loading
+@pre: none
+@post: the sequenced set loads the input file and is returned
+*/
 SequencedSet* load(string inputFile)
 {
 	SequencedSet* seqLoad;
@@ -142,6 +163,11 @@ SequencedSet* load(string inputFile)
 	return seqLoad;
 }
 
+/** Tests the search functionality of the sequenced set
+@param seqSearch: the sequenced set being searched
+@pre: none
+@post: The user is prompted for a search key, and the key is searched for.
+*/
 void search(SequencedSet* seqSearch)
 {
 	string primaryKey;
@@ -166,6 +192,11 @@ void search(SequencedSet* seqSearch)
 	}
 }
 
+/** Tests the ability to add a record to the sequenced set
+@param seqAddPoint: the sequenced set to which a record is to be added
+@pre: none
+@post: A record is added to the sequenced set
+*/
 void addRecord(SequencedSet* seqAddPoint)
 {
 	Record addRec;
@@ -173,6 +204,12 @@ void addRecord(SequencedSet* seqAddPoint)
 	seqAddPoint->add(addRec);
 }
 
+/** Test the ability to remove a record from the sequenced set
+@param seqPoint: the sequenced set from which the point is to be removed
+@pre: none
+@post: The user is prompted for a key and a record with that key is 
+attempted to be removed.
+*/
 void remove(SequencedSet* seqPoint)
 {
 	string key;
