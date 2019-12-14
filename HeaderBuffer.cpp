@@ -34,6 +34,7 @@ Header HeaderBuffer::unpack(fstream& mainFile, string fileName)
 	 string startBlockStr;
 	 string startAvailStr;
 	 string indexName;
+	 mainFile.seekg(0, mainFile.beg);
 	 vector<tuple<string, int, Header::FieldType>> fieldInfos = vector<tuple<string,int,Header::FieldType>>();
 	 //get headerSize
 	 getline(mainFile, headerSizeString);

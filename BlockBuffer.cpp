@@ -4,6 +4,9 @@
 /** Given a vector of strings containing the records of a block, returns a single string with 
 all relevant information.
 @param topack: the block to be packed
+@param place: an integer which gets the block number of topack
+@pre: a block pointer and a place
+@post: a string containing the information of the block at block number place
 */
 string BlockBuffer::pack(Block* topack, int& place) {
 	 {
@@ -36,6 +39,8 @@ string BlockBuffer::pack(Block* topack, int& place) {
 
 /** Packs the input vector of strings with place parameter zero.
 @param topack: the block to be packed
+@pre: a pointer to a block
+@post: a string with the information in the block
 */
 string BlockBuffer::pack(Block* topack) {
 	 int callback = 0;
@@ -45,6 +50,8 @@ string BlockBuffer::pack(Block* topack) {
 /** Returns a block with a given block number and records as defined in a string.
 @param blocknum: the block number
 @param blocrec1: the records of the block in string format.
+@pre: a block number less than the size of the blocks in the sequenced set
+@post: a block with records as defined in the string
 */
 Block BlockBuffer::unpack(int blockNum, string blocrec1)
 {
@@ -78,6 +85,11 @@ Block BlockBuffer::unpack(int blockNum, string blocrec1)
 	 return Block(blockNum, nextBlock, prevBlock, records);
 }
 
+/** Creates an empty block at the avail spot
+@param block: a pointer to the block to be placed at the avail list spot
+@pre: none
+@post: an empty block at the next avail list spot in the storage file
+*/
 string BlockBuffer::createAvail(Block* block)
 {
 	 Header* header = SequencedSet::sHeader();
